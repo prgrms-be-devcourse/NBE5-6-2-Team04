@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: NBE5-6-2-Team04
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
