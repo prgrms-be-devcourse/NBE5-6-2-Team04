@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Nbe562Team04Application {
 
+    // hello
     public static void main(String[] args) {
         SpringApplication.run(Nbe562Team04Application.class, args);
     }
