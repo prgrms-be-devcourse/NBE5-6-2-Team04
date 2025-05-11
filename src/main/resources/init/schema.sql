@@ -42,7 +42,7 @@ CREATE TABLE goal_company (
                               content TEXT,
                               company_name VARCHAR(255),
                               created_at TIMESTAMP NULL,
-                              PRIMARY KEY (company_id, user_id),
+                              PRIMARY KEY (company_id),
                               FOREIGN KEY (user_id) REFERENCES User(user_id)
 );
 
@@ -76,7 +76,7 @@ CREATE TABLE achievement (
                              name VARCHAR(255),
                              description VARCHAR(255),
                              PRIMARY KEY (achieve_id, user_id),
-                             FOREIGN KEY (user_id) REFERENCES usersAchieve(user_id)
+                             FOREIGN KEY (user_id) REFERENCES User(user_id)
 );
 
 CREATE TABLE usersAchieve (

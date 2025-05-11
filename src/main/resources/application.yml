@@ -3,7 +3,7 @@ spring:
     name: NBE5-6-2-Team04
 
   datasource:
-    url: jdbc:mysql://localhost:3306/todorpg
+    url: jdbc:mysql://localhost:3306/todoRpg
     username: bm
     password: 123qwe!@#
     driver-class-name: com.mysql.cj.jdbc.Driver
