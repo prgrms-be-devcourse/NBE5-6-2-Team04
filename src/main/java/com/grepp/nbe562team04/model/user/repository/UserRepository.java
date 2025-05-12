@@ -1,6 +1,6 @@
-package com.grepp.nbe562team04.user.repository;
+package com.grepp.nbe562team04.model.user.repository;
 
-import com.grepp.nbe562team04.user.entity.User;
+import com.grepp.nbe562team04.model.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {

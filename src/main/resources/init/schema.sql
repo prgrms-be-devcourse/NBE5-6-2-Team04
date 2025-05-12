@@ -10,8 +10,7 @@ DROP TABLE IF EXISTS ai_feedback;
 DROP TABLE IF EXISTS user_image;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS level;
-
--- LEVEL 테이블
+-- level
 CREATE TABLE level (
                        level_id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                        level_name VARCHAR(255),
@@ -19,61 +18,61 @@ CREATE TABLE level (
                        xp INT
 );
 
--- USER 테이블
-CREATE TABLE `User` (
-                        user_id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                        level_id BIGINT NOT NULL,
-                        user_image VARCHAR(255),
-                        email VARCHAR(255) NOT NULL,
-                        password VARCHAR(255) NOT NULL,
-                        nickname VARCHAR(255) NOT NULL,
-                        role VARCHAR(255) NOT NULL,
-                        exp INT NOT NULL,
-                        profile_image_url VARCHAR(255),
-                        created_at TIMESTAMP NULL,
-                        comment VARCHAR(255),
-                        FOREIGN KEY (level_id) REFERENCES level(level_id)
+-- user
+CREATE TABLE user (
+                      user_id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                      level_id BIGINT NOT NULL,
+                      user_image VARCHAR(255),
+                      email VARCHAR(255) NOT NULL,
+                      password VARCHAR(255) NOT NULL,
+                      nickname VARCHAR(255) NOT NULL,
+                      role VARCHAR(255) NOT NULL,
+                      exp INT NOT NULL,
+                      profile_image_url VARCHAR(255),
+                      created_at TIMESTAMP NULL,
+                      comment VARCHAR(255),
+                      FOREIGN KEY (level_id) REFERENCES level(level_id)
 );
 
--- usersAchieve
-CREATE TABLE usersAchieve (
-                              id BIGINT NOT NULL AUTO_INCREMENT,
-                              user_id BIGINT NOT NULL,
-                              achieved_at TIMESTAMP NULL,
-                              PRIMARY KEY (id),
-                              FOREIGN KEY (user_id) REFERENCES `User`(user_id)
+-- users_achieve
+CREATE TABLE users_achieve (
+                               id BIGINT NOT NULL AUTO_INCREMENT,
+                               user_id BIGINT NOT NULL,
+                               achieved_at TIMESTAMP NULL,
+                               PRIMARY KEY (id),
+                               FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
--- User_image
-CREATE TABLE User_image (
+-- user_image
+CREATE TABLE user_image (
                             user_image_id BIGINT NOT NULL AUTO_INCREMENT,
                             user_id BIGINT NOT NULL,
-                            ORIGIN_FILE_NAME VARCHAR(255),
-                            RENAME_FILE_NAME VARCHAR(255),
-                            SAVE_PATH VARCHAR(255),
+                            origin_file_name VARCHAR(255),
+                            rename_file_name VARCHAR(255),
+                            save_path VARCHAR(255),
                             created_at TIMESTAMP NULL,
                             PRIMARY KEY (user_image_id),
-                            FOREIGN KEY (user_id) REFERENCES `User`(user_id)
+                            FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
--- ProjectRecommendation
-CREATE TABLE ProjectRecommendation (
-                                       recom_id BIGINT NOT NULL AUTO_INCREMENT,
-                                       user_id BIGINT NOT NULL,
-                                       content VARCHAR(255),
-                                       created_at TIMESTAMP NULL,
-                                       PRIMARY KEY (recom_id),
-                                       FOREIGN KEY (user_id) REFERENCES `User`(user_id)
+-- project_recommendation
+CREATE TABLE project_recommendation (
+                                        recom_id BIGINT NOT NULL AUTO_INCREMENT,
+                                        user_id BIGINT NOT NULL,
+                                        content VARCHAR(255),
+                                        created_at TIMESTAMP NULL,
+                                        PRIMARY KEY (recom_id),
+                                        FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
--- AI_feedback
-CREATE TABLE `AI_feedback` (
-                               feedback_id BIGINT NOT NULL AUTO_INCREMENT,
-                               user_id BIGINT NOT NULL,
-                               feedback VARCHAR(255),
-                               created_at TIMESTAMP NULL,
-                               PRIMARY KEY (feedback_id),
-                               FOREIGN KEY (user_id) REFERENCES `User`(user_id)
+-- ai_feedback
+CREATE TABLE ai_feedback (
+                             feedback_id BIGINT NOT NULL AUTO_INCREMENT,
+                             user_id BIGINT NOT NULL,
+                             feedback VARCHAR(255),
+                             created_at TIMESTAMP NULL,
+                             PRIMARY KEY (feedback_id),
+                             FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
 -- goal_company
@@ -86,11 +85,11 @@ CREATE TABLE goal_company (
                               status VARCHAR(255),
                               end_date DATETIME,
                               PRIMARY KEY (company_id),
-                              FOREIGN KEY (user_id) REFERENCES `User`(user_id)
+                              FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
--- Goal
-CREATE TABLE Goal (
+-- goal
+CREATE TABLE goal (
                       goal_id BIGINT NOT NULL AUTO_INCREMENT,
                       company_id BIGINT NOT NULL,
                       title VARCHAR(255) NOT NULL,
@@ -111,25 +110,25 @@ CREATE TABLE todos_table (
                              end_date TIMESTAMP NULL,
                              is_done BOOLEAN,
                              PRIMARY KEY (todo_id),
-                             FOREIGN KEY (goal_id) REFERENCES Goal(goal_id)
+                             FOREIGN KEY (goal_id) REFERENCES goal(goal_id)
 );
 
--- Achievement
-CREATE TABLE Achievement (
+-- achievement
+CREATE TABLE achievement (
                              achieve_id BIGINT NOT NULL AUTO_INCREMENT,
                              user_id BIGINT NOT NULL,
                              name VARCHAR(255),
                              description VARCHAR(255),
                              PRIMARY KEY (achieve_id),
-                             FOREIGN KEY (user_id) REFERENCES `User`(user_id)
+                             FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
--- Interest
-CREATE TABLE Interest (
+-- interest
+CREATE TABLE interest (
                           interest_id BIGINT NOT NULL AUTO_INCREMENT,
                           user_id BIGINT NOT NULL,
                           job_type VARCHAR(255) NOT NULL,
                           dev_lang VARCHAR(255) NOT NULL,
                           PRIMARY KEY (interest_id),
-                          FOREIGN KEY (user_id) REFERENCES `User`(user_id)
+                          FOREIGN KEY (user_id) REFERENCES user(user_id)
 );

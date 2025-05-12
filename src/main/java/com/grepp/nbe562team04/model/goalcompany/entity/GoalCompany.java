@@ -1,6 +1,6 @@
-package com.grepp.nbe562team04.goalcompany.entity;
+package com.grepp.nbe562team04.model.goalcompany.entity;
 
-import com.grepp.nbe562team04.user.entity.User;
+import com.grepp.nbe562team04.model.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
