@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TODO 대시보드</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Pretendard', sans-serif;
+      background-color: #f8f8fa;
+      color: #333;
+      padding: 40px;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+    .logo a {
+      font-size: 24px;
+      font-weight: 700;
+      color: #5b2be0;
+    }
+    .nav a {
+      margin-left: 24px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .container {
+      display: flex;
+      gap: 40px;
+    }
+    .sidebar {
+      width: 260px;
+    }
+    .profile-box {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+    .profile-box img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 8px 0;
+    }
+    .profile-box .level {
+      font-size: 14px;
+      color: #2e8b57;
+      font-weight: 700;
+    }
+    .xp-bar {
+      margin: 10px 0;
+      width: 100%;
+      height: 8px;
+      background: #e1e1e1;
+      border-radius: 4px;
+    }
+    .xp-fill {
+      width: 55%;
+      height: 100%;
+      background: #58cc02;
+      border-radius: 4px;
+    }
+    .tags {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #888;
+    }
+
+    .alert-box {
+      background-color: #ffecec;
+      color: #d8000c;
+      font-size: 13px;
+      padding: 16px;
+      border-radius: 12px;
+      text-align: left;
+    }
+
+    .main {
+      flex: 1;
+    }
+    .main h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .todo-frame {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .todo-grid {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .todo-card {
+      background: #eaf8ec;
+      flex: 1 1 250px;
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .todo-card.yellow {
+      background: #fff9db;
+    }
+    .todo-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .todo-card p {
+      font-size: 13px;
+      margin: 4px 0;
+      color: #555;
+    }
+
+    .add-card {
+      background: #f7f7f7;
+      border: 2px dashed #ccc;
+      border-radius: 12px;
+      flex: 1 1 250px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: #888;
+      text-align: center;
+    }
+    .add-card p {
+      margin: 4px 0;
+      font-size: 13px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+      }
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 16px;
+      width: 400px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+    }
+
+    .close {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+  </style>
+</head>
+<body>
+<header>
+  <div class="logo"><a href="/">DevQuest</a></div>
+  <div class="nav">
+    <a href="signin.html">로그아웃</a>
+  </div>
+</header>
+
+<div class="container">
+  <aside class="sidebar">
+    <div class="profile-box">
+      <p style="font-size: 14px; font-weight: 500; color: #555;">마이페이지</p>
+      <img src="/assets/img/profile.png" alt="프로필 이미지">
+      <p class="level">새싹 개발자</p>
+      <p style="font-size: 20px; font-weight: bold; margin: 6px 0;">Lv.2</p>
+      <div class="xp-bar">
+        <div class="xp-fill"></div>
+      </div>
+      <div class="tags">#백엔드 #Java</div>
+    </div>
+
+    <div class="alert-box">
+      <p><strong>📢 주요 알림</strong></p>
+      <p style="margin-top: 8px; font-weight: bold;">Naver 코딩테스트 D-3일 전입니다</p>
+    </div>
+  </aside>
+
+  <main class="main">
+    <h2>TODO</h2>
+    <div class="todo-frame">
+      <div class="todo-grid">
+        <div class="todo-card">
+          <h3>Naver <span style="float: right; color: #d04400;">D-3</span></h3>
+          <p>네이버 개발자가 되기 위한 작은 도전기</p>
+          <p>서류 마감: ~ 4.17</p>
+          <p>코딩테스트: ~ 5.02</p>
+        </div>
+        <div class="todo-card yellow">
+          <h3>Kakao <span style="float: right; color: #d04400;">D-10</span></h3>
+          <p>지난번엔 서류 탈, 이번엔 면접 합격까지 가보자</p>
+          <p>서류 마감: ~ 4.17</p>
+          <p>코딩테스트: ~ 5.02</p>
+        </div>
+        <div class="add-card" onclick="openModal('companyModal')">
+          <p><strong>+ 목표 기업 TODO 생성</strong></p>
+          <p>목표 기업은 최대 3개까지 생성 가능합니다</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+
+<!-- 목표 기업 생성 모달 -->
+<div id="companyModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('companyModal')">&times;</span>
+    <h2>목표 기업 생성</h2>
+    <form id="create-form">
+      <input type="text" name="companyName" placeholder="기업명을 입력해주세요" required><br><br>
+      <input type="text" name="content" placeholder="어떤 개발자가 되고 싶은지 한마디" required><br><br>
+      <label>일정</label><br>
+      <select name="schedule">
+        <option>서류 마감</option>
+        <option>코딩테스트</option>
+        <option>과제</option>
+        <option>인성역량검사</option>
+        <option>1차 면접</option>
+        <option>2차 면접</option>
+        <option>3차 면접 (최종)</option>
+      </select><br><br>
+      <label>D-Day</label><br>
+      <input type="date" name="dDay"><br><br>
+      <button type="submit">생성</button>
+    </form>
+  </div>
+</div>
+
+<!-- 목표 기업 생성 모달 -->
+<script>
+  function openModal(companyModal) {
+    document.getElementById(companyModal).style.display = "flex";
+  }
+
+  function closeModal(companyModal) {
+    document.getElementById(companyModal).style.display = "none";
+  }
+
+</script>
+
+</body>
+</html>

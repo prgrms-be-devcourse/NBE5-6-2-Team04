@@ -1,5 +1,6 @@
 package com.grepp.nbe562team04.model.user.entity;
 
+import com.grepp.nbe562team04.model.auth.code.Role;
 import com.grepp.nbe562team04.model.level.entity.Level;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,7 +12,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
-import javax.management.relation.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
