@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>DevQuest Dashboard</title>
+  <link rel="stylesheet" href="/static/css/dashboard.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+<body>
+<div class="dashboard">
+
+  <!-- 좌측 사이드바 -->
+  <aside class="sidebar">
+    <h1 class="logo">DevQuest</h1>
+    <p class="day-count"><span>200</span>일째 성장하는 개발자를 꿈꾸는</p>
+    <h2 th:text="${user.name} + ' 님'">화려한 강낭콩 님</h2>
+
+    <div class="tags">
+      <span class="tag">#백엔드</span>
+      <span class="tag">#Java</span>
+    </div>
+
+    <p class="mypage">
+      <span class="material-icons">account_circle</span>
+      마이페이지
+    </p>
+
+    <!-- 프로필 카드 -->
+    <div class="profile-card">
+      <div class="profile-card">
+        <div class="profile-info">
+          <img class="avatar" src="/static/img/profile.png" alt="프로필" />
+          <div class="level-info">
+            <p class="level-label">새싹 개발자</p>
+            <p class="level-value">Lv.2</p>
+          </div>
+        </div>
+        <div class="xp-label">55xp</div>
+        <div class="xp-bar">
+          <div class="xp-progress" style="width: 55%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toggle-box">
+      <label>알림</label>
+      <input type="checkbox" checked>
+    </div>
+
+    <div class="alert-box">
+      <h3>🔔 주요 알림 <span class="count">3</span></h3>
+      <ul>
+        <li><strong style="color:red">Naver</strong> 코딩테스트 3일 전입니다</li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- 메인 영역 -->
+  <main class="main-content">
+    <div class="logout">로그아웃</div>
+
+    <h2 class="section-title">Company List</h2>
+
+    <div class="company-list">
+
+      <!-- Naver 카드 -->
+      <a th:href="@{/company/naver}" class="company-card naver">
+        <div class="card-header">
+          <span class="label">코테</span>
+          <span class="dday">D-3</span>
+          <div class="dropdown">
+            <button class="dropdown-toggle" type="button">⋮</button>
+            <ul class="dropdown-menu">
+              <li>수정</li>
+              <li>삭제</li>
+            </ul>
+          </div>
+        </div>
+        <h3>Naver</h3>
+        <p>네이버 개발자가 되기 위한 취준 도전기</p>
+        <p>서류 마감 &nbsp;&nbsp;~ <strong>4.17</strong></p>
+        <p>코딩테스트 ~ <strong>5.02</strong></p>
+      </a>
+
+      <!-- Kakao 카드 -->
+      <a th:href="@{/company/kakao}" class="company-card kakao">
+        <div class="card-header">
+          <span class="label">서류 마감</span>
+          <span class="dday">D-10</span>
+          <div class="dropdown">
+            <button class="dropdown-toggle" type="button">⋮</button>
+            <ul class="dropdown-menu">
+              <li>수정</li>
+              <li>삭제</li>
+            </ul>
+          </div>
+        </div>
+        <h3>Kakao</h3>
+        <p>지난번엔 서류 탈, 이번엔 면접 합격까지 가보자</p>
+        <p>서류 마감 &nbsp;&nbsp;~ <strong>4.17</strong></p>
+        <p>코딩테스트 ~ <strong>5.02</strong></p>
+      </a>
+
+      <!-- TODO 생성 카드 -->
+      <a th:href="@{/todo/create}" class="company-card create">
+        <p>＋ 목표 기업 TODO 생성</p>
+        <p class="sub">목표 기업은 최대 3개까지 생성 가능합니다</p>
+      </a>
+
+    </div>
+  </main>
+</div>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggles = document.querySelectorAll('.dropdown-toggle');
+
+    toggles.forEach((toggle) => {
+      toggle.addEventListener('click', (e) => {
+        e.stopPropagation(); // 다른 곳 클릭 막기
+        // 모든 드롭다운 닫기
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+          if (menu !== toggle.nextElementSibling) {
+            menu.style.display = 'none';
+          }
+        });
+        // 현재 것만 토글
+        const menu = toggle.nextElementSibling;
+        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+      });
+    });
+
+    // 페이지 어디든 클릭하면 메뉴 닫힘
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        menu.style.display = 'none';
+      });
+    });
+  });
+</script>
+
+
+</body>
+</html>
