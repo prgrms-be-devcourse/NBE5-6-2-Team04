@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevQuest 로그인</title>
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      font-size: 30px;
+      font-weight: bolder;
+    }
+
+    .input-box {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    input {
+      padding: 14px;
+      border: transparent;
+      border-radius: 10px;
+      font-size: 15px;
+    }
+
+    .error {
+      color: red;
+      font-size: 12px;
+      margin-top: -8px;
+      margin-bottom: 8px;
+      text-align: left;
+    }
+
+    .submit {
+      margin-top: 20px;
+      text-align: right;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .submit:hover {
+      text-decoration: underline;
+    }
+
+    .links {
+      margin-top: 24px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      font-size: 14px;
+      /*color: #888;*/
+    }
+
+    .links a {
+      color: #9099B8;
+      text-decoration: none;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 30px 16px;
+        box-shadow: none;
+        border-radius: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+<div id="logo-container"></div>
+<div class="container">
+<h1>로그인</h1>
+  <div class="input-box">
+    <input id="email" type="email" placeholder="이메일을 입력해주세요">
+    <input id="password" type="password" placeholder="비밀번호를 입력해주세요">
+<!--    <div id="loginError" class="error">비밀번호가 일치하지 않습니다</div>-->
+  </div>
+  <a href="/user/signin">
+    <div class="submit" onclick="handleSignin()">로그인 →</div>
+  </a>
+  <div class="links">
+    <a href="/user/signup">회원가입</a>
+    <a href="#">ID/PW 찾기</a>
+  </div>
+</div>
+
+<script>
+  // 왼쪽 상단 로고
+  fetch('/css/logo.html')
+  .then(res => res.text())
+  .then(html => {
+    document.getElementById('logo-container').innerHTML = html;
+  });
+
+  // 로그인
+  function handleSignin() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    // const loginError = document.getElementById('loginError');
+
+    // if (email !== "test@example.com" || password !== "Test1234!") {
+    //   loginError.style.display = 'block';
+    // } else {
+    //   loginError.style.display = 'none';
+    //   alert('로그인 성공!');
+    // }
+  }
+
+</script>
+</body>
+</html>
