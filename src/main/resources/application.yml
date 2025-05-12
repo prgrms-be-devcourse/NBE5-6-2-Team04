@@ -1,7 +1,17 @@
 spring:
   application:
     name: NBE5-6-2-Team04
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/todoRpg
+    username: bm
+    password: 123qwe!@#
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none # 또는 update, create 등 개발 상황에 따라 변경 가능
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
