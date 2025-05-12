@@ -1,8 +1,9 @@
 package com.grepp.nbe562team04.model.todo.entity;
 
-import com.grepp.nbe562team04.model.goalcompany.entity.GoalCompany;
+import com.grepp.nbe562team04.model.goal.entity.Goal;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,8 +21,8 @@ public class Todo {
     private Long todoId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
-    private GoalCompany goalCompany;
+    @JoinColumn(name = "goal_id", nullable = false)
+    private Goal goal;
 
     private String content;
 

@@ -3,6 +3,7 @@ package com.grepp.nbe562team04.model.goal.entity;
 import com.grepp.nbe562team04.model.goalcompany.entity.GoalCompany;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,8 +21,8 @@ public class Goal {
     private Long goalId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
-    private GoalCompany goalCompany;
+    @JoinColumn(name = "company_id", nullable = false)
+    private GoalCompany company;
 
     @Column(nullable = false)
     private String title;
@@ -31,8 +32,6 @@ public class Goal {
 
     @Column(name = "end_date")
     private LocalDateTime endDate;
-
-    private String status;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
