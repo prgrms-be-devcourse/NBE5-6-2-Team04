@@ -25,7 +25,7 @@ public class GoalCompanyApiController {
         return ResponseEntity.ok("등록 완료");
     }
 
-    // 조회(단순 화면 상에 출력)
+    // 조회(단순 화면 상에 출력) -> 추후 뷰 컨트롤러로 이동 필요
     @GetMapping
     public List<GoalCompanyResponseDto> getAllCompanies(){
         return goalCompanyService.getAllGoalCompanies();

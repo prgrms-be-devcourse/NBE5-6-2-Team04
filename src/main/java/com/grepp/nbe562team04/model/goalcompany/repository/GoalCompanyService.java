@@ -46,7 +46,14 @@ public class GoalCompanyService {
 
     // 기업 리스트 조회
     public List<GoalCompanyResponseDto> getAllGoalCompanies() {
-        return null;
+        return goalCompanyRepository.findByUserUserId(2L).stream()
+                .map(company -> GoalCompanyResponseDto.builder()
+                        .companyName(company.getCompanyName())
+                        .content(company.getContent())
+                        .status(company.getStatus().name())
+                        .endDate(company.getEndDate())
+                        .build())
+                .toList();
     }
 
     // 해당 기업 상세 조회
