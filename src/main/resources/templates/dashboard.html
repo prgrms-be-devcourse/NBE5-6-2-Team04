@@ -274,6 +274,39 @@
   function closeModal(companyModal) {
     document.getElementById(companyModal).style.display = "none";
   }
+  // 목표 기업 생성 form 처리
+  document.getElementById("create-form").addEventListener("submit", function (e) {
+    e.preventDefault(); // 기본 제출 막기
+
+    const form = e.target;
+
+    const data = {
+      userId: 1, // TODO: 실제 로그인 사용자로 대체
+      companyName: form.companyName.value,
+      content: form.content.value
+    };
+
+    fetch("/dashboard/company", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+            .then(res => res.text())
+            .then(msg => {
+              alert(msg); // "기업 등록 완료!" 라는 백엔드 응답
+              closeModal("companyModal");
+              form.reset();
+              // TODO: 등록 후 기업 리스트 새로고침 or 동적 추가
+            })
+            .catch(err => {
+              alert("등록 실패");
+              console.error(err);
+            });
+  });
+
+
 </script>
 
 </body>
