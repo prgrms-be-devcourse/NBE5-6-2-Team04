@@ -59,7 +59,17 @@ public class GoalCompanyService {
 
     // 해당 기업 상세 조회
     public GoalCompanyResponseDto getCompanyById(Long id) {
-        return null;
+        GoalCompany company = goalCompanyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("해당 기업이 존재하지 않습니다."));
+
+        GoalCompanyResponseDto dto = GoalCompanyResponseDto.builder()
+                .companyName(company.getCompanyName())
+                .content(company.getContent())
+                .status(company.getStatus().name())
+                .endDate(company.getEndDate())
+                .build();
+
+        return dto;
     }
 
     // 수정
