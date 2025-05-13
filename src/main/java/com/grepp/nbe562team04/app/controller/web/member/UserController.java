@@ -46,9 +46,6 @@ public class UserController {
     @GetMapping("signin")
     public String signin(SigninRequest form) { return "user/signin"; }
 
-    // 로그인
-//    @PostMapping("signin")
-
 
 
 }
