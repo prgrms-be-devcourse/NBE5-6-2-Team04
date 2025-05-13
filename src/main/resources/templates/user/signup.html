@@ -57,6 +57,10 @@
       font-weight: 700;
       cursor: pointer;
       font-size: 20px;
+      background: none;
+      border: none;
+      padding: 0;
+      color: inherit;
     }
 
     .submit:hover {
@@ -97,16 +101,18 @@
 <body>
 <div id="logo-container"></div>
 <div class="container">
-<h1>회원가입</h1>
-  <div class="input-box">
-    <input id="nickname" type="nickname" placeholder="닉네임을 입력해주세요">
-    <input id="email" type="email" placeholder="이메일을 입력해주세요">
-    <input id="password" type="password" placeholder="비밀번호를 입력해주세요">
-<!--    <div id="loginError" class="error">비밀번호가 일치하지 않습니다</div>-->
-  </div>
-  <a href="/user/signin">
-    <div class="submit" onclick="handleSignup()">시작하기 →</div>
-  </a>
+  <h1>회원가입</h1>
+
+  <form action="/user/signup" method="post">
+    <div class="input-box">
+      <input id="nickname" name="nickname" type="text" placeholder="닉네임을 입력해주세요" required>
+      <input id="email" name="email" type="email" placeholder="이메일을 입력해주세요" required>
+      <input id="password" name="password" type="password" placeholder="비밀번호를 입력해주세요" required>
+    </div>
+
+    <button class="submit" type="submit">시작하기 →</button>
+  </form>
+
   <div class="login-link">계정이 있으신가요? <a href="/user/signin">로그인</a></div>
 </div>
 
@@ -119,19 +125,19 @@
   });
 
   // 회원가입
-  function handleSignup() {
-    const nickname = document.getElementById('nickname').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    // const loginError = document.getElementById('loginError');
-
-    // if (email !== "test@example.com" || password !== "Test1234!") {
-    //   loginError.style.display = 'block';
-    // } else {
-    //   loginError.style.display = 'none';
-    //   alert('로그인 성공!');
-    // }
-  }
+  // function handleSignup() {
+  //   const nickname = document.getElementById('nickname').value;
+  //   const email = document.getElementById('email').value;
+  //   const password = document.getElementById('password').value;
+  //   // const loginError = document.getElementById('loginError');
+  //
+  //   if (email && password && nickname) {
+  //     // 처리 후 수동 이동
+  //     window.location.href = '/user/signup';
+  //   } else {
+  //     alert('모든 값을 입력해 주세요.');
+  //   }
+  // }
 
 </script>
 </body>
