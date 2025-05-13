@@ -11,6 +11,8 @@ import lombok.ToString;
 public class Level {
 
     @Id
-    private String levelId;
+    private Long levelId;
+    private String levelName;
+    private Integer xp;
 
 }
