@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DevQuest Intro</title>
+  <title>DevQuest Index</title>
   <link rel="stylesheet" href="/css/common.css">
   <style>
     * {
@@ -14,7 +14,11 @@
     }
     body {
       background-image: url('/img/Index.png');
-      background-size: cover;
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+      background-attachment: fixed;
+
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -26,6 +30,7 @@
       flex-direction: column;
       gap: 16px;
       margin-top: 300px;
+      margin-left: 100px;
     }
     .links a {
       font-size: 16px;
