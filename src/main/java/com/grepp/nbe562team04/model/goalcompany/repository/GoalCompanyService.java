@@ -7,6 +7,7 @@ import com.grepp.nbe562team04.model.user.entity.User;
 import com.grepp.nbe562team04.model.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -62,11 +63,23 @@ public class GoalCompanyService {
     }
 
     // 수정
+    @Transactional
     public void updateGoalCompany(Long id, GoalCompanyRequestDto dto) {
+        GoalCompany company = goalCompanyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("해당 기업이 존재하지 않습니다."));
+
+        company.setCompanyName(dto.getCompanyName());
+        company.setContent(dto.getContent());
+        company.setStatus(dto.getStatus());
+        company.setEndDate(dto.getEndDate());
     }
 
     // 삭제
+    @Transactional
     public void deleteGoalCompany(Long id) {
+        GoalCompany company = goalCompanyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("해당 기업이 존재하지 않습니다."));
 
+        goalCompanyRepository.delete(company);
     }
 }

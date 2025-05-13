@@ -38,14 +38,14 @@ public class GoalCompanyApiController {
     }
 
     // 수정
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/edit")
     public ResponseEntity<String> updateCompany(@PathVariable Long id, @RequestBody GoalCompanyRequestDto dto) {
         goalCompanyService.updateGoalCompany(id, dto);
         return ResponseEntity.ok("수정 완료");
     }
 
     // 삭제
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/delete")
     public ResponseEntity<String> deleteCompany(@PathVariable Long id) {
         goalCompanyService.deleteGoalCompany(id);
         return ResponseEntity.ok("삭제 완료");
