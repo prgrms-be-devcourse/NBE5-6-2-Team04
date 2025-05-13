@@ -1,12 +1,13 @@
 -- DROP TABLES (자식 → 부모 순서)
-DROP TABLE IF EXISTS goal;
-DROP TABLE IF EXISTS todos_table;
-DROP TABLE IF EXISTS goal_company;
+DROP TABLE IF EXISTS users_achieve;
 DROP TABLE IF EXISTS achievement;
-DROP TABLE IF EXISTS usersAchieve;
-DROP TABLE IF EXISTS interest;
+DROP TABLE IF EXISTS todos;
+DROP TABLE IF EXISTS goal;
+DROP TABLE IF EXISTS goal_company;
 DROP TABLE IF EXISTS project_recommendation;
 DROP TABLE IF EXISTS ai_feedback;
+DROP TABLE IF EXISTS interest;
+DROP TABLE IF EXISTS user_interest;
 DROP TABLE IF EXISTS user_image;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS level;
@@ -101,16 +102,16 @@ CREATE TABLE goal (
                       FOREIGN KEY (company_id) REFERENCES goal_company(company_id)
 );
 
--- todos_table
-CREATE TABLE todos_table (
-                             todo_id BIGINT NOT NULL AUTO_INCREMENT,
-                             goal_id BIGINT NOT NULL,
-                             content VARCHAR(255),
-                             start_date TIMESTAMP NULL,
-                             end_date TIMESTAMP NULL,
-                             is_done BOOLEAN,
-                             PRIMARY KEY (todo_id),
-                             FOREIGN KEY (goal_id) REFERENCES goal(goal_id)
+-- todos
+CREATE TABLE todos (
+                       todo_id BIGINT NOT NULL AUTO_INCREMENT,
+                       goal_id BIGINT NOT NULL,
+                       content VARCHAR(255),
+                       start_date TIMESTAMP NULL,
+                       end_date TIMESTAMP NULL,
+                       is_done BOOLEAN,
+                       PRIMARY KEY (todo_id),
+                       FOREIGN KEY (goal_id) REFERENCES goal(goal_id)
 );
 
 -- achievement
@@ -126,9 +127,18 @@ CREATE TABLE achievement (
 -- interest
 CREATE TABLE interest (
                           interest_id BIGINT NOT NULL AUTO_INCREMENT,
-                          user_id BIGINT NOT NULL,
-                          job_type VARCHAR(255) NOT NULL,
-                          dev_lang VARCHAR(255) NOT NULL,
-                          PRIMARY KEY (interest_id),
-                          FOREIGN KEY (user_id) REFERENCES user(user_id)
+                          type VARCHAR(255) NOT NULL   comment '관심분야 종류 (직업/언어/프레임워크)',
+                          interest_name VARCHAR(255) NOT NULL   comment '관심분야명 (백엔드/Java/SpringBoot)',
+                          PRIMARY KEY (interest_id)
 );
+
+-- user_interest
+CREATE TABLE user_interest (
+                               id BIGINT NOT NULL AUTO_INCREMENT,
+                               user_id BIGINT NOT NULL,
+                               interest_id BIGINT NOT NULL,
+                               PRIMARY KEY (id),
+                               FOREIGN KEY (user_id) REFERENCES user(user_id),
+                               FOREIGN KEY (interest_id) REFERENCES interest(interest_id)
+);
+
