@@ -57,6 +57,10 @@
       font-weight: 700;
       cursor: pointer;
       font-size: 20px;
+      background: none;
+      border: none;
+      padding: 0;
+      color: inherit;
     }
 
     .submit:hover {
@@ -93,15 +97,18 @@
 <body>
 <div id="logo-container"></div>
 <div class="container">
-<h1>로그인</h1>
-  <div class="input-box">
-    <input id="email" type="email" placeholder="이메일을 입력해주세요">
-    <input id="password" type="password" placeholder="비밀번호를 입력해주세요">
-<!--    <div id="loginError" class="error">비밀번호가 일치하지 않습니다</div>-->
-  </div>
-  <a href="/user/signin">
-    <div class="submit" onclick="handleSignin()">로그인 →</div>
-  </a>
+  <h1>로그인</h1>
+  <form th:action="@{/user/signin}" th:object="${signinRequest}" method="post">
+    <div class="input-box">
+      <input th:field="*{email}" type="email" placeholder="이메일을 입력해주세요">
+      <input th:field="*{password}" type="password" placeholder="비밀번호를 입력해주세요">
+    </div>
+    <div th:if="${param.error}" class="error">
+      이메일 또는 비밀번호가 올바르지 않습니다.
+    </div>
+
+    <button type="submit" class="submit">로그인 →</button>
+  </form>
   <div class="links">
     <a href="/user/signup">회원가입</a>
     <a href="#">ID/PW 찾기</a>
@@ -115,21 +122,6 @@
   .then(html => {
     document.getElementById('logo-container').innerHTML = html;
   });
-
-  // 로그인
-  function handleSignin() {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    // const loginError = document.getElementById('loginError');
-
-    // if (email !== "test@example.com" || password !== "Test1234!") {
-    //   loginError.style.display = 'block';
-    // } else {
-    //   loginError.style.display = 'none';
-    //   alert('로그인 성공!');
-    // }
-  }
-
 </script>
 </body>
 </html>
