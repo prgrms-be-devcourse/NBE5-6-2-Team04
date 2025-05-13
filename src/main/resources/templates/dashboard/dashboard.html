@@ -12,7 +12,11 @@
 
   <!-- 좌측 사이드바 -->
   <aside class="sidebar">
-    <h1 class="logo">DevQuest</h1>
+    <h1 class="logo">
+      <a th:href="@{/}" style="text-decoration: none; color:inherit;">
+        DevQuest
+      </a>
+    </h1>
     <div class="createdAt-comment">
       <span class="day-count" th:text="${dashboard.createdAt} + '일째'">N 일째</span>
       <span class="comment" th:text="${dashboard.comment}">슬로건</span>
@@ -27,8 +31,9 @@
     </div>
 
     <p class="mypage">
-      <span class="material-icons">account_circle</span>
-      마이페이지
+      <a th:href="@{/mypage}" style="text-decoration: none; color: inherit;">
+        <span class="material-icons">account_circle</span>마이페이지
+      </a>
     </p>
 
     <!-- 프로필 카드 -->
@@ -73,13 +78,20 @@
 
   <!-- 메인 영역 -->
   <main class="main-content">
-    <div class="logout">로그아웃</div>
+    <div class="logout">
+      <a th:href="@{/logout}" style="text-decoration: none; color: inherit;">
+        로그아웃
+      </a>
+    </div>
 
     <p class="section-title">Company List</p>
 
     <div class="company-list">
-      <div th:each="company : ${dashboard.goalCompanies}" class="company-card"
-           th:classappend="${company.companyName.toLowerCase()}">
+      <a th:each="company : ${dashboard.goalCompanies}"
+         th:href="@{/company/{id}(id=${company.id})}"
+         class="company-card"
+         th:classappend="${company.companyName.toLowerCase()}">
+
         <div class="card-header">
           <span class="status" th:text="${company.status}">진행 상태</span>
           <span class="dday" th:text="'D-' + ${company.DDay}">D-day</span>
@@ -91,13 +103,15 @@
             </ul>
           </div>
         </div>
+
         <p class="company-name" th:text="${company.companyName}">회사명</p>
         <p class="content" th:text="${company.content}">내용</p>
+
         <div class="status-dday">
           <span class="status" th:text="${company.status}">진행 상태</span>
           <span class="endDate" th:text="'~' + ${company.endDate}">~마감일</span>
         </div>
-      </div>
+      </a>
 
       <!-- TODO 생성 카드 -->
       <a th:href="@{/todo/create}" class="company-card create">
