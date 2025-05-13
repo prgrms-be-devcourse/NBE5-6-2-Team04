@@ -19,28 +19,11 @@ body {
 
 /* ===== Sidebar ===== */
 .sidebar {
-  width: 300px;
+  width: 400px;
   background: #f1f1f5;
   padding: 2rem 1.5rem;
   border-right: 1px solid #ddd;
   position: relative;
-}
-
-.logo {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #5f3dc4;
-  margin-bottom: 0.5rem;
-}
-
-.day-count {
-  font-size: 0.9rem;
-  margin-bottom: 0.3rem;
-}
-
-.day-count span {
-  color: #5f3dc4;
-  font-weight: bold;
 }
 
 .sidebar h2 {
@@ -51,6 +34,44 @@ body {
   align-items: center;
 }
 
+.logo {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #5f3dc4;
+  margin-bottom: 0.5rem;
+}
+
+/*로고 하단(N일째 + 한마디)*/
+.day-count {
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+  color: #5f3dc4;
+  font-weight: bold;
+}
+
+.comment{
+  color: #000000;
+  font-weight: bold;
+
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+}
+
+.nickname{
+  color: #000000;
+  font-weight: bold;
+  font-size: 1.8rem;
+  margin-bottom: 0.3rem;
+}
+
+.nickname-sir {
+  color: #000000;
+  font-weight: normal;
+  font-size: 1.8rem;
+  margin-bottom: 0.3rem;
+}
+
+/* 관심분야 태그 */
 .tags {
   display: flex;
   justify-content: flex-end;
@@ -64,23 +85,22 @@ body {
   font-weight: 500;
   border-radius: 5px;
   padding: 2px 8px;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
 }
 
-/* ===== 마이페이지 ===== */
+/* 마이페이지 */
 .mypage {
   display: flex;
   align-items: center;
-  font-size: 0.9rem;
+  font-size: 1rem;
   margin-bottom: 1rem;
-  color: #000;
   font-weight: 500;
   gap: 0.5rem;
 }
 
 .mypage .material-icons {
-  font-size: 18px;
-  color: #000;
+  font-size: 1.5rem;
+  color: #666666;
 }
 
 /* ===== Profile Card ===== */
@@ -94,11 +114,12 @@ body {
 .profile-info {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 2rem;
   margin-bottom: 0.5rem;
 }
 
 .avatar {
+  align-items: center;
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -106,18 +127,23 @@ body {
 }
 
 .level-info {
+  text-align: right;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: flex-end;
 }
 
 .level-label {
+  text-align: left;
   color: #018c77;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  justify-content: right;
 }
 
 .level-value {
-  font-size: 1.3rem;
+  text-align: left;
+  font-size: 1.8rem;
   font-weight: bold;
   color: #018c77;
 }
@@ -134,7 +160,7 @@ body {
 .xp-progress {
   background-color: #35c23f;
   height: 100%;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   color: white;
   text-align: center;
   position: relative;
@@ -154,7 +180,7 @@ body {
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .toggle-box input[type="checkbox"] {
@@ -182,7 +208,7 @@ body {
 }
 
 .toggle-box input[type="checkbox"]:checked {
-  background: #3c82f6;
+  background: #5f3dc4;
 }
 
 .toggle-box input[type="checkbox"]:checked::before {
@@ -217,7 +243,7 @@ body {
 
 .alert-box ul {
   list-style: none;
-  font-size: 0.85rem;
+  font-size: 1rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -239,17 +265,16 @@ body {
 }
 
 .section-title {
-  font-size: 1.4rem;
+  font-size: 2rem;
   font-weight: bold;
   margin-bottom: 1rem;
 }
 
 .company-list {
   display: flex;
-  gap: 1rem;
   flex-wrap: wrap;
-
-
+  gap: 1rem;
+  font-weight: bold;
   background: white;
   border-radius: 10px;
   padding: 1rem;
@@ -257,20 +282,15 @@ body {
 }
 
 .company-card {
+  flex: 0 1 calc(50% - 1rem);
+  min-height: 300px;
+  box-sizing: border-box;
   background: white;
   border-radius: 16px;
   padding: 1.2rem 1.5rem;
   width: 280px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   position: relative;
-}
-
-.company-card.naver {
-  background-color: #e9fbe9;
-}
-
-.company-card.kakao {
-  background-color: #fffed6;
 }
 
 .company-card.create {
@@ -294,10 +314,16 @@ body {
   font-weight: bold;
 }
 
-.company-card.create .sub {
-  font-size: 0.8rem;
+.company-card.create .goal-todo-desc-top {
+  font-size: 1.3rem;
   margin-top: 0.5rem;
 }
+
+.company-card.create .goal-todo-desc-bottom {
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+
 
 .card-header {
   display: flex;
@@ -307,11 +333,52 @@ body {
   font-weight: bold;
 }
 
-.dday {
-  font-size: 1.2rem;
-  font-weight: bold;
+/* 목표기업 카드 : 상태, 디데이 */
+.status-dday {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
+.company-name {
+  font-weight: bold;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.status {
+  font-weight: normal;
+  font-size: 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.content {
+  font-size: 1.2rem;
+  font-weight: normal;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.dday {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.endDate {
+  font-size: 1.2rem;
+  font-weight: normal;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* 드롭다운 (수정,삭제 버튼)*/
 .dropdown {
   position: absolute;
   top: 10px;
@@ -357,7 +424,7 @@ body {
   position: absolute;
   top: 1.5rem;
   right: 2rem;
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: #aaa;
 }
 
