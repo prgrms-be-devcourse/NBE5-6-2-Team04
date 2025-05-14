@@ -3,6 +3,7 @@ package com.grepp.nbe562team04.model.user.entity;
 import com.grepp.nbe562team04.model.auth.code.Role;
 import com.grepp.nbe562team04.model.interest.entity.Interest;
 import com.grepp.nbe562team04.model.level.entity.Level;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -45,4 +46,6 @@ public class User {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interest_id")
     private Interest interest;
+    @Column(name = "is_notification_on")
+    private boolean isNotificationOn;
 }

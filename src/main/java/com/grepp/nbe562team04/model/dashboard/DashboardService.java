@@ -4,6 +4,7 @@ import com.grepp.nbe562team04.model.dashboard.dto.DashboardDto;
 import com.grepp.nbe562team04.model.dashboard.dto.GoalCompanyDto;
 import com.grepp.nbe562team04.model.goalcompany.entity.GoalCompany;
 import com.grepp.nbe562team04.model.user.entity.User;
+import com.grepp.nbe562team04.model.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -13,9 +14,12 @@ import org.springframework.stereotype.Service;
 public class DashboardService {
 
     private final DashboardRepository dashboardRepository;
+    private final UserRepository userRepository;
 
-    public DashboardService(DashboardRepository dashboardRepository) {
+    public DashboardService(DashboardRepository dashboardRepository,
+        UserRepository userRepository) {
         this.dashboardRepository = dashboardRepository;
+        this.userRepository = userRepository;
     }
 
     // 대시보드 조회
@@ -51,6 +55,11 @@ public class DashboardService {
         return convertToDto(company);
     }
 
+    // 알림 토글 처리 로직
+    public void toggleNotification(User user) {
+        user.setNotificationOn(!user.isNotificationOn());
+        userRepository.save(user);
+    }
 
     private GoalCompanyDto convertToDto(GoalCompany company) {
         GoalCompanyDto dto = new GoalCompanyDto();

@@ -27,4 +27,7 @@ public class DashboardDto {
     // 목표 기업
     private List<GoalCompanyDto> goalCompanies;
 
+    // 알림 토글
+    private boolean notificationOn;
+
 }

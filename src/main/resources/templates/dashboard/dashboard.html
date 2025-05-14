@@ -57,8 +57,13 @@
     </div>
 
     <div class="toggle-box">
-      <label>알림</label>
-      <input type="checkbox" checked>
+      <form th:action="@{/dashboard/notification-toggle}" method="post">
+        <label>알림</label>
+        <input type="checkbox" checked
+               name="notification"
+               th:checked="${dashboard.notificationOn}"
+               onchange="this.form.submit()">
+      </form>
     </div>
 
     <div class="alert-box">
