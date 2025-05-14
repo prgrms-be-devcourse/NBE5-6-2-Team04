@@ -1,4 +1,5 @@
 -- DROP TABLES (자식 → 부모 순서)
+
 DROP TABLE IF EXISTS user_interest;
 DROP TABLE IF EXISTS todos;
 DROP TABLE IF EXISTS goal;
@@ -8,9 +9,9 @@ DROP TABLE IF EXISTS user_image;
 DROP TABLE IF EXISTS project_recommendation;
 DROP TABLE IF EXISTS ai_feedback;
 DROP TABLE IF EXISTS goal_company;
-DROP TABLE IF EXISTS interest;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS level;
+DROP TABLE IF EXISTS interest;
 
 -- level (최상위 부모)
 CREATE TABLE level (
@@ -33,6 +34,7 @@ CREATE TABLE user (
                       comment VARCHAR(255),
                       created_at TIMESTAMP NULL,
                       deleted_at TIMESTAMP NULL,
+                      is_notification_on BOOLEAN DEFAULT false,
                       FOREIGN KEY (level_id) REFERENCES level(level_id)
 );
 

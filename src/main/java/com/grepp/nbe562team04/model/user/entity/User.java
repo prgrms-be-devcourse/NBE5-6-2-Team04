@@ -46,9 +46,9 @@ public class User {
     private String comment;
 
 //    @OneToOne(fetch = FetchType.LAZY)
-    @OneToOne
-    @JoinColumn(name = "interest_id")
-    private Interest interest;
+//    @OneToOne
+//    @JoinColumn(name = "interest_id")
+//    private Interest interest;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserInterest> userInterests;
