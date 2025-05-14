@@ -14,5 +14,5 @@ public interface DashboardRepository extends JpaRepository<GoalCompany, Long> {
     List<GoalCompany> findGoalCompaniesByUser(User user);
 
     // ID로 목표 기업 상세 조회
-    Optional<GoalCompany> findGoalCompanyById(Long id);
+    Optional<GoalCompany> findByCompanyId(Long companyId);
 }

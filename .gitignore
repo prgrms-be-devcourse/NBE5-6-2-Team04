@@ -208,3 +208,6 @@ Temporary Items
 *.icloud
 
 # End of https://www.toptal.com/developers/gitignore/api/java,macos,intellij
+
+# 설정 파일 무시
+application.yml

@@ -2,6 +2,7 @@ package com.grepp.nbe562team04.model.todo.entity;
 
 import com.grepp.nbe562team04.model.goal.entity.Goal;
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -30,7 +31,7 @@ public class Todo {
     private LocalDateTime startDate;
 
     @Column(name = "end_date")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     @Column(name = "is_done")
     private Boolean isDone;

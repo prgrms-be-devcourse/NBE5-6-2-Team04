@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>DevQuest Dashboard</title>
-  <link rel="stylesheet" href="/static/css/dashboard.css">
+  <!--  <link rel="stylesheet" href="src/main/resources/static/css/dashboard.css">-->
+  <link rel="stylesheet" th:href="@{/css/dashboard.css}">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 </head>
 <body>
+<!--<div id="logo-container"></div>-->
 <div class="dashboard">
 
   <!-- 좌측 사이드바 -->
@@ -18,18 +20,25 @@
       </a>
     </h1>
     <div class="createdAt-comment">
-      <span class="day-count" th:text="${dashboard.createdAt} + '일째'">N 일째</span>
+      <span class="day-count" th:text="${dashboard.dayCount} + '일째'">N 일째</span>
       <span class="comment" th:text="${dashboard.comment}">슬로건</span>
     </div>
     <span class="nickname" th:text="${dashboard.nickname}">회원</span>
     <span class="nickname-sir">님</span>
 
+    <!--  관심분야 태그  -->
     <div class="tags">
-      <span class="tag" th:text="'#' + ${dashboard.jobType[0]}">#직무</span>
-      <span class="tag" th:text="'#' + ${dashboard.devLang[0]}">#언어</span>
-      <span class="tag" th:text="'#' + ${dashboard.framework[0]}">#프레임워크</span>
+      <span class="tag"
+            th:if="${dashboard.jobType != null and !dashboard.jobType.isEmpty()}"
+            th:text="'#' + ${dashboard.jobType[0]}">#직무</span>
+      <span class="tag"
+            th:unless="${dashboard.jobType != null and !dashboard.jobType.isEmpty()}">#직무 없음</span>
+
+      <span class="tag" th:each="lang : ${dashboard.devLang}" th:text="'#' + ${lang}">#언어</span>
+      <span class="tag" th:each="fw : ${dashboard.framework}" th:text="'#' + ${fw}">#프레임워크</span>
     </div>
 
+    <!--  마이페이지  -->
     <p class="mypage">
       <a th:href="@{/mypage}" style="text-decoration: none; color: inherit;">
         <span class="material-icons">account_circle</span>마이페이지
@@ -46,6 +55,8 @@
             <p class="level-value" th:text="'Lv.' + ${dashboard.levelValue}">Lv.N</p>
           </div>
         </div>
+
+        <!--  xp 진행바  -->
         <div class="xp-label" th:text="${dashboard.exp} + 'xp'">N xp</div>
         <div class="xp-bar">
           <div class="xp-progress"
@@ -56,11 +67,13 @@
       </div>
     </div>
 
+    <!--  알림 토글  -->
     <div class="toggle-box">
       <form th:action="@{/dashboard/notification-toggle}" method="post">
+        <!-- 서현님 csrf 토큰 추가 후 주석해제 -->
+        <!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
         <label>알림</label>
-        <input type="checkbox" checked
-               name="notification"
+        <input type="checkbox" name="notification"
                th:checked="${dashboard.notificationOn}"
                onchange="this.form.submit()">
       </form>
@@ -136,6 +149,14 @@
 
 
 <script>
+  // 왼쪽 상단 로고
+  // fetch('/css/logo.html')
+  // .then(res => res.text())
+  // .then(html => {
+  //   document.getElementById('logo-container').innerHTML = html;
+  // });
+
+  // 드롭다운(수정, 삭제)
   document.addEventListener('DOMContentLoaded', () => {
     const toggles = document.querySelectorAll('.dropdown-toggle');
 

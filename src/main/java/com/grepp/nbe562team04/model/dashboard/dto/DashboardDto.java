@@ -13,11 +13,13 @@ public class DashboardDto {
     private String nickname;
     private String comment;
     private LocalDateTime createdAt;
+    private long dayCount;
 
     // 관심 분야
     private List<String> jobType;
     private List<String> devLang;
     private List<String> framework;
+    private List<InterestDto> interests;
 
     // 레벨 정보
     private String levelName;
@@ -29,5 +31,6 @@ public class DashboardDto {
 
     // 알림 토글
     private boolean notificationOn;
+
 
 }
