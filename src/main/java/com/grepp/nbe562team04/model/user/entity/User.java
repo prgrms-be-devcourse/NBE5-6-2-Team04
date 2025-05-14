@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,13 +31,13 @@ public class User {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
-    private String userImage;
     private String profileImageUrl;
     private String nickname;
     @ManyToOne
     @JoinColumn(name = "level_id")
     private Level level;
     private Integer exp;
-    private LocalDateTime createdAt;
     private String comment;
+    private LocalDateTime createdAt;
+    private LocalDateTime deletedAt;
 }
