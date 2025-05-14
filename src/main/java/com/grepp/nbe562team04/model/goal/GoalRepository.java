@@ -1,4 +1,4 @@
-package com.grepp.nbe562team04.model.goal.repository;
+package com.grepp.nbe562team04.model.goal;
 
 import com.grepp.nbe562team04.model.goal.entity.Goal;
 import org.springframework.data.jpa.repository.JpaRepository;

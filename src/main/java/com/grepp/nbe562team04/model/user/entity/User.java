@@ -33,6 +33,7 @@ public class User {
     private Role role;
     private String profileImageUrl;
     private String nickname;
+    private String userImage;
     @ManyToOne
     @JoinColumn(name = "level_id")
     private Level level;

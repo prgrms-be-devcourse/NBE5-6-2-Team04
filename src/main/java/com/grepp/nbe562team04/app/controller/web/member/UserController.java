@@ -3,7 +3,7 @@ package com.grepp.nbe562team04.app.controller.web.member;
 import com.grepp.nbe562team04.app.controller.web.member.payload.SigninRequest;
 import com.grepp.nbe562team04.app.controller.web.member.payload.SignupRequest;
 import com.grepp.nbe562team04.model.auth.code.Role;
-import com.grepp.nbe562team04.model.user.repository.UserService;
+import com.grepp.nbe562team04.model.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
