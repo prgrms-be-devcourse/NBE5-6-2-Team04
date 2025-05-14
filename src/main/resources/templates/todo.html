@@ -204,7 +204,7 @@
       <p th:text="${reply}"> Gemini 응답 출력 </p>
 
       <!--챗봇 형식 질문 받기 일단 비활성화 했어요-->
-      <form action="/ai/chat" method="post">
+      <form action="/ai/feedback" method="post">
         <label for="userMessage">메시지:</label><br>
         <input type="text" id="userMessage" name="userMessage" placeholder="질문해 보세요" required>
         <br><br>
@@ -212,12 +212,12 @@
       </form>
 
     <div>
-      <form action="/ai/chat" method="post">
+      <form action="/ai/feedback" method="post">
         <input type="hidden" value="긍적적인대답 혹은 네" name="userMessage">
         <button type="submit">긍정</button>
       </form>
 
-      <form action="/ai/chat" method="post">
+      <form action="/ai/feedback" method="post">
         <input type="hidden" value="부정적인대답 혹은 아니요" name="userMessage">
         <button type="submit">부정</button>
       </form>

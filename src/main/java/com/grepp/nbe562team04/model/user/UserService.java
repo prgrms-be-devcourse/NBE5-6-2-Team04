@@ -40,7 +40,7 @@ public class UserService {
 
         User user = mapper.map(dto, User.class);
         Level defaultLevel = levelRepository.findFirstByOrderByLevelIdAsc()
-                .orElseThrow(() -> new IllegalStateException("기본 레벨이 존재하지 않습니다."));
+            .orElseThrow(() -> new IllegalStateException("기본 레벨이 존재하지 않습니다."));
 
         String encodedPassword = passwordEncoder.encode(dto.getPassword());
         user.setPassword(encodedPassword);

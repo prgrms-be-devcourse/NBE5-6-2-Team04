@@ -1,6 +1,7 @@
 spring:
   application:
     name: NBE5-6-2-Team04
+
   servlet:
     multipart:
       max-file-size: 10MB
@@ -13,7 +14,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none # 또는 update, create 등 개발 상황에 따라 변경 가능
+      ddl-auto: none  # 개발 중엔 update 권장
     show-sql: true
     properties:
       hibernate:
@@ -21,5 +22,4 @@ spring:
 
 gemini:
   base-url: https://generativelanguage.googleapis.com
-  api-key: AIzaSyDJ2t_TcJ7ZwV0AI5AePRiVdUtqhvnvkN4
-
+  api-key:
