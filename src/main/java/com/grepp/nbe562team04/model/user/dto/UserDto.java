@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -16,9 +17,11 @@ public class UserDto {
     private String password;
     private Role role;
     private String nickname;
-    private String userImageId;
+    private String userImage;
     private Level level;
     private Integer exp;
     private String comment;
     private LocalDateTime createdAt;
+
+    private MultipartFile userImageFile;
 }
