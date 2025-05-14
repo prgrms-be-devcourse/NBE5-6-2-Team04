@@ -1,8 +1,6 @@
-DROP TABLE IF EXISTS `level`;
-
-CREATE TABLE `level` (
-                         `level_id` BIGINT NOT NULL PRIMARY KEY,
-                         `level_name` VARCHAR(100) NULL,
-                         `level_image_url` VARCHAR(255) NULL,
-                         `xp` INT NULL
-);
+INSERT INTO level (level_name, xp) VALUES
+            ('씨앗 개발자', 100),
+            ('새싹 개발자', 200),
+            ('잎새 개발자', 400),
+            ('나무 개발자', 700),
+            ('숲 개발자', 1000);
