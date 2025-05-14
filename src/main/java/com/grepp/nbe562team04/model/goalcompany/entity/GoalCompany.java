@@ -1,16 +1,30 @@
 package com.grepp.nbe562team04.model.goalcompany.entity;
 
 import com.grepp.nbe562team04.model.goal.entity.Goal;
-import com.grepp.nbe562team04.model.goalcompany.code.RecruitStep;
 import com.grepp.nbe562team04.model.goalcompany.code.GoalStatus;
 import com.grepp.nbe562team04.model.user.entity.User;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.time.LocalDate;
-import lombok.*;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "goal_company")
@@ -38,7 +52,6 @@ public class GoalCompany {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private RecruitStep status;
     private GoalStatus status;
 
     @Column(name = "end_date")
