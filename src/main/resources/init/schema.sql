@@ -1,4 +1,3 @@
-SET FOREIGN_KEY_CHECKS = 0;
 -- DROP TABLES (자식 → 부모 순서)
 DROP TABLE IF EXISTS user_interest;
 DROP TABLE IF EXISTS todos;
@@ -12,7 +11,6 @@ DROP TABLE IF EXISTS goal_company;
 DROP TABLE IF EXISTS interest;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS level;
-SET FOREIGN_KEY_CHECKS = 1;
 
 -- level (최상위 부모)
 CREATE TABLE level (
