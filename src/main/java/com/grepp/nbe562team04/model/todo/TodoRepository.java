@@ -1,4 +1,4 @@
-package com.grepp.nbe562team04.model.todo.repository;
+package com.grepp.nbe562team04.model.todo;
 
 import com.grepp.nbe562team04.model.todo.entity.Todo;
 import org.springframework.data.jpa.repository.JpaRepository;

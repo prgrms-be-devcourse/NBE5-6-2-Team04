@@ -2,7 +2,7 @@ package com.grepp.nbe562team04.app.controller.api.goalCompany;
 
 import com.grepp.nbe562team04.model.goalcompany.dto.GoalCompanyRequestDto;
 import com.grepp.nbe562team04.model.goalcompany.dto.GoalCompanyResponseDto;
-import com.grepp.nbe562team04.model.goalcompany.service.GoalCompanyService;
+import com.grepp.nbe562team04.model.goalcompany.GoalCompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

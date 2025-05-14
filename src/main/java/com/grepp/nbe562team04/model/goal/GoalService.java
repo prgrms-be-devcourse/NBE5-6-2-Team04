@@ -1,11 +1,10 @@
-package com.grepp.nbe562team04.model.goal.repository;
+package com.grepp.nbe562team04.model.goal;
 
 import com.grepp.nbe562team04.model.goal.dto.GoalRequestDto;
 import com.grepp.nbe562team04.model.goal.dto.GoalResponseDto;
 import com.grepp.nbe562team04.model.goal.entity.Goal;
-import com.grepp.nbe562team04.model.goal.repository.GoalRepository;
 import com.grepp.nbe562team04.model.goalcompany.entity.GoalCompany;
-import com.grepp.nbe562team04.model.goalcompany.repository.GoalCompanyRepository;
+import com.grepp.nbe562team04.model.goalcompany.GoalCompanyRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
