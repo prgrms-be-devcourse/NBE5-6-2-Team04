@@ -23,7 +23,7 @@ public class UserController {
 
     // 회원가입 폼
     @GetMapping("signup")
-    public String signup(SignupRequest form) { return "user/signup";}
+    public String signup() { return "user/signup";}
 
     @PostMapping("signup")
     public String signup(

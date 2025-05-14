@@ -28,7 +28,7 @@ public class AuthService implements UserDetailsService {
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new UsernameNotFoundException(email));
 
-        // 사용자 권한 설정 (예: ROLE_USER, ROLE_ADMIN 등)
+        // 사용자 권한 설정
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
 
