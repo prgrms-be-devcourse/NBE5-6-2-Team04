@@ -33,14 +33,12 @@ public class User {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
-    private String userImage;
     private String profileImageUrl;
     private String nickname;
     @ManyToOne
     @JoinColumn(name = "level_id")
     private Level level;
     private Integer exp;
-    private LocalDateTime createdAt;
     private String comment;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -48,4 +46,6 @@ public class User {
     private Interest interest;
     @Column(name = "is_notification_on")
     private boolean isNotificationOn;
+    private LocalDateTime createdAt;
+    private LocalDateTime deletedAt;
 }

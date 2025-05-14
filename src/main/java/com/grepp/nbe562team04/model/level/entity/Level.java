@@ -1,6 +1,5 @@
 package com.grepp.nbe562team04.model.level.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Getter;
@@ -13,14 +12,7 @@ public class Level {
 
     @Id
     private Long levelId;
-
-    @Column(nullable = false)
     private String levelName;
-
-    @Column
-    private String levelImageUrl;
-
-    @Column
     private Integer xp;
 
 }
