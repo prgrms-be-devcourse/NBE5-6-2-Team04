@@ -8,9 +8,9 @@ DROP TABLE IF EXISTS user_image;
 DROP TABLE IF EXISTS project_recommendation;
 DROP TABLE IF EXISTS ai_feedback;
 DROP TABLE IF EXISTS goal_company;
-DROP TABLE IF EXISTS interest;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS level;
+DROP TABLE IF EXISTS interest;
 
 -- level (최상위 부모)
 CREATE TABLE level (
