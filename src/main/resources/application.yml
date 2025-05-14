@@ -1,6 +1,14 @@
 spring:
   application:
     name: NBE5-6-2-Team04
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
+gemini:
+  base-url: https://generativelanguage.googleapis.com
+  api-key:
 
   datasource:
     url: jdbc:mysql://localhost:3306/todoRpg
