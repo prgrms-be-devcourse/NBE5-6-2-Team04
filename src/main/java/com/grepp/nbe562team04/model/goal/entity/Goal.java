@@ -2,9 +2,8 @@ package com.grepp.nbe562team04.model.goal.entity;
 
 import com.grepp.nbe562team04.model.goalcompany.entity.GoalCompany;
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "goal")
@@ -28,13 +27,13 @@ public class Goal {
     private String title;
 
     @Column(name = "start_date")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     @Column(name = "end_date")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     @Column(name = "is_done")
     private Boolean isDone;

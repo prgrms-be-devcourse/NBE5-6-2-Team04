@@ -2,7 +2,7 @@ package com.grepp.nbe562team04.model.user.dto;
 
 import com.grepp.nbe562team04.model.auth.code.Role;
 import com.grepp.nbe562team04.model.level.entity.Level;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -21,7 +21,7 @@ public class UserDto {
     private Level level;
     private Integer exp;
     private String comment;
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     private MultipartFile userImageFile;
 }

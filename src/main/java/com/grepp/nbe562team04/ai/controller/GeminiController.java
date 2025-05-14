@@ -4,7 +4,7 @@ import com.grepp.nbe562team04.ai.dto.ChatMessageDto;
 import com.grepp.nbe562team04.ai.service.ChatHistoryService;
 import com.grepp.nbe562team04.ai.service.GeminiService;
 import jakarta.servlet.http.HttpSession;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,14 +25,14 @@ public class GeminiController {
         Model model) {
 
         // 사용자 입력 (긍정 / 부정) DTO 저장
-        ChatMessageDto userChat = new ChatMessageDto("user",userMessage, LocalDateTime.now());
+        ChatMessageDto userChat = new ChatMessageDto("user",userMessage, LocalDate.now());
         chatHistoryService.saveMessage(session,userChat); //세션에 메세지 저장
 
         // Gemini로 질문을 받음 (입력)
         String reply = geminiService.getGeminiReply(userMessage);
 
 
-        ChatMessageDto aiChat = new ChatMessageDto("ai", reply, LocalDateTime.now());
+        ChatMessageDto aiChat = new ChatMessageDto("ai", reply, LocalDate.now());
         chatHistoryService.saveMessage(session, aiChat);
 
 

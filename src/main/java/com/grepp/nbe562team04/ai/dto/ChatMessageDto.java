@@ -1,7 +1,7 @@
 package com.grepp.nbe562team04.ai.dto;
 
 import com.grepp.nbe562team04.ai.dto.GeminiResponseDto.Candidate;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,5 +16,5 @@ public class ChatMessageDto {
 
     private String role;
     private String message;
-    private LocalDateTime timestamp;
+    private LocalDate timestamp;
 }

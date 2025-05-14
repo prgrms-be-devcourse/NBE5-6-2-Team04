@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
@@ -47,7 +47,7 @@ public class UserService {
         user.setRole(role);
         user.setLevel(defaultLevel);
         user.setExp(0);
-        user.setCreatedAt(LocalDateTime.now());
+        user.setCreatedAt(LocalDate.now());
         log.info("user:{}", user);
         userRepository.save(user);
     }

@@ -29,11 +29,12 @@ public class GoalCompanyApiController {
         return goalCompanyService.getAllGoalCompanies();
     }
 
-    // 상세 조회
-    @GetMapping("/{id}")
-    public GoalCompanyResponseDto getCompanyById(@PathVariable Long id) {
-        return goalCompanyService.getCompanyById(id);
-    }
+    // TODO: api 위치 변경 필요
+//    // 상세 조회
+//    @GetMapping("/{id}")
+//    public GoalCompanyResponseDto getCompanyById(@PathVariable Long id) {
+//        return goalCompanyService.getCompanyById(id);
+//    }
 
     // 수정
     @PutMapping("/{id}/edit")
