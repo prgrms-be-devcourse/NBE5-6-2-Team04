@@ -1,7 +1,7 @@
 package com.grepp.nbe562team04.model.auth;
 
 import com.grepp.nbe562team04.model.auth.domain.Principal;
-import com.grepp.nbe562team04.model.user.UserRepository;
+import com.grepp.nbe562team04.model.user.repository.UserRepository;
 import com.grepp.nbe562team04.model.user.entity.User;
 import java.util.ArrayList;
 import java.util.List;
