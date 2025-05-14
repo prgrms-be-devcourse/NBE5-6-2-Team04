@@ -211,3 +211,4 @@ Temporary Items
 
 # 설정 파일 무시
 application.yml
+src/main/resources/application.yml
