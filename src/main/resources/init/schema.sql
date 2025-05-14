@@ -1,21 +1,21 @@
 -- DROP TABLES (자식 → 부모 순서)
-DROP TABLE IF EXISTS users_achieve;
-DROP TABLE IF EXISTS achievement;
+DROP TABLE IF EXISTS user_interest;
 DROP TABLE IF EXISTS todos;
 DROP TABLE IF EXISTS goal;
-DROP TABLE IF EXISTS goal_company;
+DROP TABLE IF EXISTS achievement;
+DROP TABLE IF EXISTS users_achieve;
+DROP TABLE IF EXISTS user_image;
 DROP TABLE IF EXISTS project_recommendation;
 DROP TABLE IF EXISTS ai_feedback;
+DROP TABLE IF EXISTS goal_company;
 DROP TABLE IF EXISTS interest;
-DROP TABLE IF EXISTS user_interest;
-DROP TABLE IF EXISTS user_image;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS level;
--- level
+
+-- level (최상위 부모)
 CREATE TABLE level (
                        level_id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                        level_name VARCHAR(255),
-                       level_image_url VARCHAR(255),
                        xp INT
 );
 
@@ -30,50 +30,18 @@ CREATE TABLE user (
                       role VARCHAR(255) NOT NULL,
                       exp INT NOT NULL,
                       profile_image_url VARCHAR(255),
-                      created_at TIMESTAMP NULL,
                       comment VARCHAR(255),
+                      created_at TIMESTAMP NULL,
+                      deleted_at TIMESTAMP NULL,
                       FOREIGN KEY (level_id) REFERENCES level(level_id)
 );
 
--- users_achieve
-CREATE TABLE users_achieve (
-                               id BIGINT NOT NULL AUTO_INCREMENT,
-                               user_id BIGINT NOT NULL,
-                               achieved_at TIMESTAMP NULL,
-                               PRIMARY KEY (id),
-                               FOREIGN KEY (user_id) REFERENCES user(user_id)
-);
-
--- user_image
-CREATE TABLE user_image (
-                            user_image_id BIGINT NOT NULL AUTO_INCREMENT,
-                            user_id BIGINT NOT NULL,
-                            origin_file_name VARCHAR(255),
-                            rename_file_name VARCHAR(255),
-                            save_path VARCHAR(255),
-                            created_at TIMESTAMP NULL,
-                            PRIMARY KEY (user_image_id),
-                            FOREIGN KEY (user_id) REFERENCES user(user_id)
-);
-
--- project_recommendation
-CREATE TABLE project_recommendation (
-                                        recom_id BIGINT NOT NULL AUTO_INCREMENT,
-                                        user_id BIGINT NOT NULL,
-                                        content VARCHAR(255),
-                                        created_at TIMESTAMP NULL,
-                                        PRIMARY KEY (recom_id),
-                                        FOREIGN KEY (user_id) REFERENCES user(user_id)
-);
-
--- ai_feedback
-CREATE TABLE ai_feedback (
-                             feedback_id BIGINT NOT NULL AUTO_INCREMENT,
-                             user_id BIGINT NOT NULL,
-                             feedback VARCHAR(255),
-                             created_at TIMESTAMP NULL,
-                             PRIMARY KEY (feedback_id),
-                             FOREIGN KEY (user_id) REFERENCES user(user_id)
+-- interest
+CREATE TABLE interest (
+                          interest_id BIGINT NOT NULL AUTO_INCREMENT,
+                          type VARCHAR(255) NOT NULL COMMENT '관심분야 종류 (직업/언어/프레임워크)',
+                          interest_name VARCHAR(255) NOT NULL COMMENT '관심분야명 (백엔드/Java/SpringBoot)',
+                          PRIMARY KEY (interest_id)
 );
 
 -- goal_company
@@ -124,15 +92,48 @@ CREATE TABLE achievement (
                              FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
--- interest
-CREATE TABLE interest (
-                          interest_id BIGINT NOT NULL AUTO_INCREMENT,
-                          type VARCHAR(255) NOT NULL   comment '관심분야 종류 (직업/언어/프레임워크)',
-                          interest_name VARCHAR(255) NOT NULL   comment '관심분야명 (백엔드/Java/SpringBoot)',
-                          PRIMARY KEY (interest_id)
+-- users_achieve
+CREATE TABLE users_achieve (
+                               id BIGINT NOT NULL AUTO_INCREMENT,
+                               user_id BIGINT NOT NULL,
+                               achieved_at TIMESTAMP NULL,
+                               PRIMARY KEY (id),
+                               FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
--- user_interest
+-- user_image
+CREATE TABLE user_image (
+                            user_image_id BIGINT NOT NULL AUTO_INCREMENT,
+                            user_id BIGINT NOT NULL,
+                            origin_file_name VARCHAR(255),
+                            rename_file_name VARCHAR(255),
+                            save_path VARCHAR(255),
+                            created_at TIMESTAMP NULL,
+                            PRIMARY KEY (user_image_id),
+                            FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
+-- project_recommendation
+CREATE TABLE project_recommendation (
+                                        recom_id BIGINT NOT NULL AUTO_INCREMENT,
+                                        user_id BIGINT NOT NULL,
+                                        content VARCHAR(255),
+                                        created_at TIMESTAMP NULL,
+                                        PRIMARY KEY (recom_id),
+                                        FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
+-- ai_feedback
+CREATE TABLE ai_feedback (
+                             feedback_id BIGINT NOT NULL AUTO_INCREMENT,
+                             user_id BIGINT NOT NULL,
+                             feedback VARCHAR(255),
+                             created_at TIMESTAMP NULL,
+                             PRIMARY KEY (feedback_id),
+                             FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
+-- user_interest (가장 하위 테이블)
 CREATE TABLE user_interest (
                                id BIGINT NOT NULL AUTO_INCREMENT,
                                user_id BIGINT NOT NULL,
@@ -141,4 +142,3 @@ CREATE TABLE user_interest (
                                FOREIGN KEY (user_id) REFERENCES user(user_id),
                                FOREIGN KEY (interest_id) REFERENCES interest(interest_id)
 );
-
