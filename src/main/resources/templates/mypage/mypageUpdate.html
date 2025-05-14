@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지 수정 | DevQuest</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f5f4f8;
+            font-family: "Apple SD Gothic Neo", sans-serif;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 40px;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .title {
+            font-size: 24px;
+            color: #3b2ba8;
+        }
+
+        .menu {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .container {
+            margin-top: 40px;
+        }
+
+        .nickname {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 20px auto;
+        }
+
+        .level-title {
+            color: #5b5b5b;
+            font-size: 14px;
+        }
+
+        .level {
+            font-size: 24px;
+            color: #00c853;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 12px;
+            background-color: #ddd;
+            border-radius: 6px;
+            margin: 10px auto;
+            position: relative;
+        }
+
+        .progress {
+            width: 70%;
+            height: 100%;
+            background-color: #00c853;
+            border-radius: 6px;
+        }
+
+        .edit-box {
+            background-color: #eaeaea;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 300px;
+            margin: 30px auto;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .edit-box label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .edit-box input {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        .error {
+            color: red;
+            font-size: 12px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+
+        .submit-btn {
+            margin-top: 20px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .submit-btn::after {
+            content: " ✎";
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="title">DevQuest</div>
+    <div class="menu"><a href="/dashboard">대시보드</a> &nbsp;&nbsp;|&nbsp;&nbsp; <a href="/logout">로그아웃</a></div>
+</div>
+
+<div class="container">
+    <div class="nickname" th:text="${user.nickname} + ' 님의 마이페이지'"></div>
+    <img class="profile-img" th:src="@{'/images/profile/' + ${user.userImage}}" alt="프로필 이미지">
+
+    <div class="level-title" th:text="${user.level.levelName}"></div>
+    <div class="level" th:text="'Lv.' + ${user.level.levelId}"></div>
+
+    <div class="progress-bar">
+        <div class="progress" th:style="'width:' + ${progressPercent} + '%'"></div>
+    </div>
+
+    <form class="edit-box" method="post" action="/users/update" enctype="multipart/form-data">
+        <label for="userImageFile">프로필 이미지 업로드</label>
+        <input type="file" id="userImageFile" name="userImageFile">
+
+        <label for="currentPassword">현재 비밀번호</label>
+        <input type="password" id="currentPassword" name="currentPassword">
+
+        <div class="error" th:if="${passwordError}" th:text="${passwordError}"></div>
+
+        <label for="password">변경 비밀번호</label>
+        <input type="password" id="password" name="password">
+
+        <label for="comment">한마디</label>
+        <input type="text" id="comment" name="comment" th:value="${user.comment}">
+
+        <button type="submit" class="submit-btn">수정 완료</button>
+    </form>
+</div>
+
+</body>
+</html>
