@@ -34,10 +34,12 @@ public class DashboardService {
 
         user.getUserInterests().forEach(ui -> ui.getInterest().getInterestName());
 
+        // 사용자 정보
         DashboardDto dto = new DashboardDto();
         dto.setNickname(user.getNickname());
         dto.setComment(user.getComment());
         dto.setCreatedAt(user.getCreatedAt());
+        dto.setUserImage(user.getUserImage());
 
         long dayCount = ChronoUnit.DAYS.between(user.getCreatedAt().atStartOfDay().toLocalDate(), LocalDate.now()) + 1;
         dto.setDayCount(dayCount);

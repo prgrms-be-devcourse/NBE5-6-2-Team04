@@ -49,7 +49,10 @@
     <div class="profile-card">
       <div class="profile-card">
         <div class="profile-info">
-          <img class="avatar" src="/static/img/profile.png" alt="프로필"/>
+          <img class="profile-img"
+               th:src="@{'/images/profile/' + ${dashboard.userImage}}"
+               alt="프로필 이미지"/>
+
           <div class="level-info">
             <p class="level-label" th:text="${dashboard.levelName}">레벨명</p>
             <p class="level-value" th:text="'Lv.' + ${dashboard.levelValue}">Lv.N</p>
@@ -60,8 +63,8 @@
         <div class="xp-label" th:text="${dashboard.exp} + 'xp'">N xp</div>
         <div class="xp-bar">
           <div class="xp-progress"
-               th:style="'width:' + (${dashboard.exp} > 100 ? 100 : dashboard.exp) + '%'"
-               th:text="${dashboard.exp} + 'xp'">
+               th:style="'width:' + (${dashboard.exp} > 100 ? 100 : dashboard.exp) + '%'">
+            <span th:text="${dashboard.exp} + 'xp'"></span>
           </div>
         </div>
       </div>
