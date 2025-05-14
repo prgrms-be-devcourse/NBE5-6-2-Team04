@@ -4,7 +4,7 @@ import com.grepp.nbe562team04.model.user.dto.UserDto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.Data;
 
 @Data
@@ -24,7 +24,7 @@ public class SignupRequest {
         userDto.setNickname(nickname);
         userDto.setEmail(email);
         userDto.setPassword(password);
-        userDto.setCreatedAt(LocalDateTime.now());
+        userDto.setCreatedAt(LocalDate.now());
         return userDto;
     }
 }

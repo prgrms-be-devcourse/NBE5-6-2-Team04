@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -39,7 +39,7 @@ public class GoalCompanyService {
                 .content(dto.getContent())
                 .status(dto.getStatus())
                 .endDate(dto.getEndDate())
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDate.now())
                 .build();
 
         goalCompanyRepository.save(company);

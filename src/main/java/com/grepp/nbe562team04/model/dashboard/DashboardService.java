@@ -10,7 +10,6 @@ import com.grepp.nbe562team04.model.user.UserRepository;
 import com.grepp.nbe562team04.model.user.entity.User;
 import com.grepp.nbe562team04.model.user.entity.UserInterest;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -40,7 +39,7 @@ public class DashboardService {
         dto.setComment(user.getComment());
         dto.setCreatedAt(user.getCreatedAt());
 
-        long dayCount = ChronoUnit.DAYS.between(user.getCreatedAt().toLocalDate(), LocalDate.now()) + 1;
+        long dayCount = ChronoUnit.DAYS.between(user.getCreatedAt().atStartOfDay().toLocalDate(), LocalDate.now()) + 1;
         dto.setDayCount(dayCount);
 
         // 관심 분야 필터링

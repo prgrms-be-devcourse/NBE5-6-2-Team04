@@ -1,6 +1,6 @@
 package com.grepp.nbe562team04.model.dashboard.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +12,7 @@ public class DashboardDto {
     // 사용자 정보
     private String nickname;
     private String comment;
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
     private long dayCount;
 
     // 관심 분야

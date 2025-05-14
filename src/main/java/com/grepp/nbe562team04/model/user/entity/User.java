@@ -16,7 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,7 +45,8 @@ public class User {
     private Integer exp;
     private String comment;
 
-    @OneToOne(fetch = FetchType.LAZY)
+//    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "interest_id")
     private Interest interest;
 
@@ -55,7 +56,7 @@ public class User {
     @Column(name = "is_notification_on")
     private boolean isNotificationOn;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime deletedAt;
+    private LocalDate createdAt;
+    private LocalDate deletedAt;
 
 }

@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "goal")
 @Getter
@@ -29,13 +27,13 @@ public class Goal {
     private String title;
 
     @Column(name = "start_date")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     @Column(name = "end_date")
     private LocalDate endDate;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     @Column(name = "is_done")
     private Boolean isDone;

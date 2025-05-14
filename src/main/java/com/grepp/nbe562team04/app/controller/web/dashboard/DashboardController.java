@@ -73,7 +73,7 @@ public class DashboardController {
     }
 
     // 목표기업 상세 : 모달페이지
-    @GetMapping("/dashboard/company/{id}")
+    @GetMapping("dashboard/company/{id}")
     public String companyDetail(
         @PathVariable Long id, Model model
     ){

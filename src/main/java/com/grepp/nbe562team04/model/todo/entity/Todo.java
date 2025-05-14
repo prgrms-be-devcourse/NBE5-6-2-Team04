@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "todos")
 @Getter
@@ -28,7 +26,7 @@ public class Todo {
     private String content;
 
     @Column(name = "start_date")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     @Column(name = "end_date")
     private LocalDate endDate;
