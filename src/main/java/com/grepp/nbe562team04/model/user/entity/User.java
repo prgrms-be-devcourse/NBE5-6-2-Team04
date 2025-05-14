@@ -31,13 +31,13 @@ public class User {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
-    private String userImageId;
     private String profileImageUrl;
     private String nickname;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "level_id")
     private Level level;
     private Integer exp;
-    private LocalDateTime createdAt;
     private String comment;
+    private LocalDateTime createdAt;
+    private LocalDateTime deletedAt;
 }
