@@ -70,6 +70,11 @@ public class UserService {
 
         user.setComment(dto.getComment());
 
+        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+            String hashed = passwordEncoder.encode(dto.getPassword());
+            user.setPassword(hashed);
+        }
+
         if (file != null && !file.isEmpty()) {
             String uploadDir = System.getProperty("user.dir") + "/uploads/profile/";
             String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
