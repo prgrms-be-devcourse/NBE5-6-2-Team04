@@ -1,14 +1,6 @@
 spring:
   application:
     name: NBE5-6-2-Team04
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-
-gemini:
-  base-url: https://generativelanguage.googleapis.com
-  api-key:
 
   datasource:
     url: jdbc:mysql://localhost:3306/todoRpg
@@ -18,8 +10,12 @@ gemini:
 
   jpa:
     hibernate:
-      ddl-auto: none # 또는 update, create 등 개발 상황에 따라 변경 가능
+      ddl-auto: none  # 개발 중엔 update 권장
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+
+gemini:
+  base-url: https://generativelanguage.googleapis.com
+  api-key: AIzaSyDJ2t_TcJ7ZwV0AI5AePRiVdUtqhvnvkN4

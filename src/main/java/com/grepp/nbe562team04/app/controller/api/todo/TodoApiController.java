@@ -2,7 +2,7 @@ package com.grepp.nbe562team04.app.controller.api.todo;
 
 import com.grepp.nbe562team04.model.todo.dto.TodoRequestDto;
 import com.grepp.nbe562team04.model.todo.dto.TodoResponseDto;
-import com.grepp.nbe562team04.model.todo.repository.TodoService;
+import com.grepp.nbe562team04.model.todo.TodoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -10,4 +10,8 @@ public class DashboardViewController {
     public String showDashboard(){
         return "dashboard";
     }
+    @GetMapping("/todo")
+    public String showTodo(){
+        return "todo";
+    }
 }

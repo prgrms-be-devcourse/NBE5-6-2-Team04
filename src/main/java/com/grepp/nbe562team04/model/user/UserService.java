@@ -1,4 +1,4 @@
-package com.grepp.nbe562team04.model.user.repository;
+package com.grepp.nbe562team04.model.user;
 
 import com.grepp.nbe562team04.model.auth.code.Role;
 import com.grepp.nbe562team04.model.level.LevelRepository;
@@ -7,6 +7,7 @@ import com.grepp.nbe562team04.model.user.dto.UserDto;
 import com.grepp.nbe562team04.model.user.entity.User;
 import java.time.LocalDateTime;
 
+import com.grepp.nbe562team04.model.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;

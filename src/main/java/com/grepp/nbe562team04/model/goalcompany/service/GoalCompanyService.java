@@ -1,8 +1,9 @@
-package com.grepp.nbe562team04.model.goalcompany.repository;
+package com.grepp.nbe562team04.model.goalcompany.service;
 
 import com.grepp.nbe562team04.model.goalcompany.dto.GoalCompanyRequestDto;
 import com.grepp.nbe562team04.model.goalcompany.dto.GoalCompanyResponseDto;
 import com.grepp.nbe562team04.model.goalcompany.entity.GoalCompany;
+import com.grepp.nbe562team04.model.goalcompany.repository.GoalCompanyRepository;
 import com.grepp.nbe562team04.model.user.entity.User;
 import com.grepp.nbe562team04.model.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
