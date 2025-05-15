@@ -3,21 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <title>DevQuest Dashboard</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link rel="stylesheet" th:href="@{/css/header.css}">
   <link rel="stylesheet" th:href="@{/css/dashboard.css}">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 </head>
 <body>
-<div id="logo-container"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 <div class="dashboard">
 
   <!-- 좌측 사이드바 -->
   <aside class="sidebar">
-<!--    <h1 class="logo">-->
-<!--      <a th:href="@{/}" style="text-decoration: none; color:inherit;">-->
-<!--        DevQuest-->
-<!--      </a>-->
-<!--    </h1>-->
     <div class="createdAt-comment">
       <span class="day-count" th:text="${dashboard.dayCount} + '일째'">N 일째</span>
       <span class="comment" th:text="${dashboard.comment}">슬로건</span>
@@ -39,7 +36,7 @@
 
     <!--  마이페이지  -->
     <p class="mypage">
-      <a th:href="@{/mypage}" style="text-decoration: none; color: inherit;">
+      <a th:href="@{/mypage}">
         <span class="material-icons">account_circle</span>마이페이지
       </a>
     </p>
@@ -91,9 +88,10 @@
       </h3>
       <ul th:if="${dashboard.notificationOn}">
         <li th:each="company : ${dashboard.goalCompanies}">
-          <strong style="color:red" th:text="${company.companyName}">기업명</strong>
+          <span class="material-icons">access_alarms</span>
+          <strong th:text="${company.companyName} + ' - '">기업명</strong>
           <span th:text="${company.statusLabel != null ? company.statusLabel : '상태없음'}">상태</span>
-          <span th:text="'D-' + ${company.DDay} + '일'">N일</span>전 입니다.
+          <span th:text="${company.DDay == 0} ? '입니다. 🐣' : 'D-' + ${company.DDay} + ' 일 입니다.'">일 입니다. 🐣</span>
         </li>
       </ul>
       <p th:unless="${dashboard.notificationOn}">
@@ -104,11 +102,11 @@
 
   <!-- 메인 영역 -->
   <main class="main-content">
-    <div class="logout">
-      <a th:href="@{/logout}" style="text-decoration: none; color: inherit;">
-        로그아웃
-      </a>
-    </div>
+<!--    <div class="logout">-->
+<!--      <a th:href="@{/logout}" style="text-decoration: none; color: inherit;">-->
+<!--        로그아웃-->
+<!--      </a>-->
+<!--    </div>-->
 
     <!--  Company List   -->
     <p class="section-title">Company List</p>
@@ -168,11 +166,11 @@
 
 
 <script>
-  fetch('/css/logo.html')
-  .then(res => res.text())
-  .then(html => {
-    document.getElementById('logo-container').innerHTML = html;
-  });
+<!--  fetch('/css/logo.html')-->
+<!--  .then(res => res.text())-->
+<!--  .then(html => {-->
+<!--    document.getElementById('logo-container').innerHTML = html;-->
+<!--  });-->
 
   // 드롭다운(수정, 삭제)
   document.addEventListener('DOMContentLoaded', () => {

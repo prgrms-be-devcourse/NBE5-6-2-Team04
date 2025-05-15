@@ -104,8 +104,8 @@ public class GoalCompanyService {
         return companies.stream()
             .filter(gc -> {
                 if (gc.getEndDate() == null) return false;
-                long dday = ChronoUnit.DAYS.between(today, gc.getEndDate());
-                return dday >= 0 && dday <= 3;
+                long dDay = ChronoUnit.DAYS.between(today, gc.getEndDate());
+                return dDay >= 0 && dDay <= 3;
             })
             .collect(Collectors.toList());
     }
