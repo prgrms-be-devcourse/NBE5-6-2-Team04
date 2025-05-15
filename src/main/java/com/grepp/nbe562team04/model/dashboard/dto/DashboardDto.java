@@ -14,6 +14,7 @@ public class DashboardDto {
     private String comment;
     private LocalDate createdAt;
     private long dayCount;
+    private String userImage;
 
     // 관심 분야
     private List<String> jobType;
@@ -31,6 +32,7 @@ public class DashboardDto {
 
     // 알림 토글
     private boolean notificationOn;
+
 
 
 }

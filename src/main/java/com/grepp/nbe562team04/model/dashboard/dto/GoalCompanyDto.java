@@ -21,4 +21,6 @@ public class GoalCompanyDto {
     private String content;
     private LocalDate startDate;
     private LocalDate endDate;
+
+    private String statusLabel; // GoalStatus 라벨을 한글로 변환
 }

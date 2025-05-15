@@ -5,6 +5,8 @@ import com.grepp.nbe562team04.model.goalcompany.dto.GoalCompanyResponseDto;
 import com.grepp.nbe562team04.model.goalcompany.entity.GoalCompany;
 import com.grepp.nbe562team04.model.user.entity.User;
 import com.grepp.nbe562team04.model.user.UserRepository;
+import java.time.temporal.ChronoUnit;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,5 +93,20 @@ public class GoalCompanyService {
                 .orElseThrow(() -> new RuntimeException("해당 기업이 존재하지 않습니다."));
 
         goalCompanyRepository.delete(company);
+    }
+
+    // 알림 생성 (D-3 남았을때 트리거 발생)
+    public List<GoalCompany> getUrgentGoals(User user) {
+        LocalDate today = LocalDate.now();
+
+        List<GoalCompany> companies = goalCompanyRepository.findAllByUser(user);
+
+        return companies.stream()
+            .filter(gc -> {
+                if (gc.getEndDate() == null) return false;
+                long dday = ChronoUnit.DAYS.between(today, gc.getEndDate());
+                return dday >= 0 && dday <= 3;
+            })
+            .collect(Collectors.toList());
     }
 }
