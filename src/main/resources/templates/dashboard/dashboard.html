@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>DevQuest Dashboard</title>
-  <!--  <link rel="stylesheet" href="src/main/resources/static/css/dashboard.css">-->
   <link rel="stylesheet" th:href="@{/css/dashboard.css}">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -75,25 +74,29 @@
       <form th:action="@{/dashboard/notification-toggle}" method="post">
         <!-- 서현님 csrf 토큰 추가 후 주석해제 -->
         <!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
+        <input type="checkbox"
+               name="notification"
+               th:checked="${dashboard.notificationOn}" onchange="this.form.submit()">
         <label>알림</label>
-        <input type="checkbox" name="notification"
-               th:checked="${dashboard.notificationOn}"
-               onchange="this.form.submit()">
       </form>
     </div>
 
+    <!--  주요알림  -->
     <div class="alert-box">
       <h3>
         🔔 주요 알림
         <span class="count" th:text="${#lists.size(dashboard.goalCompanies)}">0</span>
       </h3>
-      <ul>
+      <ul th:if="${dashboard.notificationOn}">
         <li th:each="company : ${dashboard.goalCompanies}">
           <strong style="color:red" th:text="${company.companyName}">기업명</strong>
-          <span th:text="${company.status}">진행 상태</span>
-          <span th:text="'D=' + ${company.DDay} + '일'">N일</span>전 입니다.
+          <span th:text="${company.statusLabel != null ? company.statusLabel : '상태없음'}">상태</span>
+          <span th:text="'D-' + ${company.DDay} + '일'">N일</span>전 입니다.
         </li>
       </ul>
+      <p th:unless="${dashboard.notificationOn}">
+        현재 알림이 꺼져 있어요 🔕
+      </p>
     </div>
   </aside>
 
@@ -105,16 +108,24 @@
       </a>
     </div>
 
+    <!--  Company List   -->
     <p class="section-title">Company List</p>
 
     <div class="company-list">
       <a th:each="company : ${dashboard.goalCompanies}"
-         th:href="@{/company/{id}(id=${company.id})}"
+         th:href="@{/company/{id}(id=${company.companyId})}"
          class="company-card"
-         th:classappend="${company.companyName.toLowerCase()}">
+         th:classappend="|
+                         ${company.companyName.toLowerCase()}
+                         ${(company.companyName == '네이버') ? ' naver' : ''}
+                         ${(company.companyName == '토스') ? ' toss' : ''}
+                         ${(company.companyName == '당근') ? ' danggeun' : ''}
+                         ${(company.companyName == '배달의민족') ? ' baemin' : ''}
+                         ${(company.companyName == '카카오') ? ' kakao' : ''}
+                       |">
 
         <div class="card-header">
-          <span class="status" th:text="${company.status}">진행 상태</span>
+          <span class="status" th:text="${company.statusLabel}">진행 상태</span>
           <span class="dday" th:text="'D-' + ${company.DDay}">D-day</span>
           <div class="dropdown">
             <button class="dropdown-toggle" type="button">⋮</button>
@@ -124,12 +135,10 @@
             </ul>
           </div>
         </div>
-
         <p class="company-name" th:text="${company.companyName}">회사명</p>
         <p class="content" th:text="${company.content}">내용</p>
-
         <div class="status-dday">
-          <span class="status" th:text="${company.status}">진행 상태</span>
+          <span class="status" th:text="${company.statusLabel}">진행 상태</span>
           <span class="endDate" th:text="'~' + ${company.endDate}">~마감일</span>
         </div>
       </a>

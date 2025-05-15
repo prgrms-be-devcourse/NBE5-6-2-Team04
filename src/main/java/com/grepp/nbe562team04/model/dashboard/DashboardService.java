@@ -3,6 +3,7 @@ package com.grepp.nbe562team04.model.dashboard;
 import com.grepp.nbe562team04.model.dashboard.dto.DashboardDto;
 import com.grepp.nbe562team04.model.dashboard.dto.GoalCompanyDto;
 import com.grepp.nbe562team04.model.dashboard.dto.InterestDto;
+import com.grepp.nbe562team04.model.goalcompany.GoalCompanyRepository;
 import com.grepp.nbe562team04.model.goalcompany.entity.GoalCompany;
 import com.grepp.nbe562team04.model.interest.code.Type;
 import com.grepp.nbe562team04.model.interest.entity.Interest;
@@ -12,6 +13,7 @@ import com.grepp.nbe562team04.model.user.entity.UserInterest;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +25,7 @@ public class DashboardService {
     private final UserRepository userRepository;
 
     public DashboardService(DashboardRepository dashboardRepository,
-        UserRepository userRepository) {
+        UserRepository userRepository, GoalCompanyRepository goalCompanyRepository) {
         this.dashboardRepository = dashboardRepository;
         this.userRepository = userRepository;
     }
@@ -72,6 +74,9 @@ public class DashboardService {
         dto.setLevelValue(user.getLevel().getLevelId().intValue());
         dto.setExp(user.getExp());
 
+        // 알림
+        dto.setNotificationOn(user.isNotificationOn());
+
         // 목표기업 정보
         List<GoalCompany> goalCompanies = dashboardRepository.findGoalCompaniesByUser(user);
         List<GoalCompanyDto> companyDtos = goalCompanies.stream()
@@ -97,6 +102,8 @@ public class DashboardService {
         userRepository.save(user);
     }
 
+
+
     private GoalCompanyDto convertToDto(GoalCompany company) {
         GoalCompanyDto dto = new GoalCompanyDto();
         dto.setCompanyName(company.getCompanyName());
@@ -106,7 +113,7 @@ public class DashboardService {
         if (!company.getGoals().isEmpty()) {
             dto.setStartDate(company.getGoals().get(0).getStartDate());
         }
-
+        dto.setStatusLabel(company.getStatus().getLabel());
         dto.setEndDate(company.getEndDate());
         dto.setDDay(ChronoUnit.DAYS.between(LocalDate.now(), company.getEndDate()));
 
