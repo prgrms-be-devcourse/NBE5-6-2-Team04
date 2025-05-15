@@ -21,19 +21,8 @@ public class GoalCompanyService {
     private final GoalCompanyRepository goalCompanyRepository;
     private final UserRepository userRepository;
 
-    public void createGoalCompany(GoalCompanyRequestDto dto) {
-        // 임시: userId 2번 유저 사용 (로그인 연동 전)
-        User user = userRepository.findById(2L).orElseThrow(() -> new RuntimeException("User not found"));
-
-        // 로그인 구현시 사용
-//        CustomUserDetails userDetails = (CustomUserDetails)
-//                SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//
-//        Long userId = userDetails.getUser().getUserId();
-//
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new RuntimeException("User not found"));
-
+    public void createGoalCompany(GoalCompanyRequestDto dto, Long userId ) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         GoalCompany company = GoalCompany.builder()
                 .user(user)
