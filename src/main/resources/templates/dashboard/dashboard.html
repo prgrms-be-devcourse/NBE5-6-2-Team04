@@ -8,16 +8,16 @@
 
 </head>
 <body>
-<!--<div id="logo-container"></div>-->
+<div id="logo-container"></div>
 <div class="dashboard">
 
   <!-- 좌측 사이드바 -->
   <aside class="sidebar">
-    <h1 class="logo">
-      <a th:href="@{/}" style="text-decoration: none; color:inherit;">
-        DevQuest
-      </a>
-    </h1>
+<!--    <h1 class="logo">-->
+<!--      <a th:href="@{/}" style="text-decoration: none; color:inherit;">-->
+<!--        DevQuest-->
+<!--      </a>-->
+<!--    </h1>-->
     <div class="createdAt-comment">
       <span class="day-count" th:text="${dashboard.dayCount} + '일째'">N 일째</span>
       <span class="comment" th:text="${dashboard.comment}">슬로건</span>
@@ -168,12 +168,11 @@
 
 
 <script>
-  // 왼쪽 상단 로고
-  // fetch('/css/logo.html')
-  // .then(res => res.text())
-  // .then(html => {
-  //   document.getElementById('logo-container').innerHTML = html;
-  // });
+  fetch('/css/logo.html')
+  .then(res => res.text())
+  .then(html => {
+    document.getElementById('logo-container').innerHTML = html;
+  });
 
   // 드롭다운(수정, 삭제)
   document.addEventListener('DOMContentLoaded', () => {
