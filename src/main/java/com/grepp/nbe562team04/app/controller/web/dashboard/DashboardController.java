@@ -35,14 +35,31 @@ public class DashboardController {
     // 대시보드
     @GetMapping("/dashboard")
     public String dashboard(@AuthenticationPrincipal Principal principal, Model model) {
-        User detachedUser = principal.getUser();
-
-        User managedUser = userRepository.findById(detachedUser.getUserId())
+        User user = userRepository.findById(principal.getUser().getUserId())
             .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
 
-        DashboardDto dto = dashboardService.getDashboard(managedUser);
+        DashboardDto dto = dashboardService.getDashboard(user);
         model.addAttribute("dashboard", dto);
         return "dashboard/dashboard";
+    }
+
+    // 목표기업 상세 : 모달페이지
+    @GetMapping("/dashboard/company/{id}")
+    public String companyDetail(@PathVariable Long id, Model model) {
+        GoalCompanyDto companyDto = dashboardService.getCompanyDetailById(id);
+        model.addAttribute("company", companyDto);
+
+        return "dashboard/company-detail";
+    }
+
+    // 알림 토글
+    @PostMapping("/dashboard/notification-toggle")
+    public String toggleNotification(@AuthenticationPrincipal Principal principal) {
+        User user = userRepository.findById(principal.getUser().getUserId())
+            .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
+        user.setNotificationOn(!user.isNotificationOn());
+        userRepository.save(user);
+        return "redirect:/dashboard";
     }
 
     // 마이페이지
@@ -68,27 +85,6 @@ public class DashboardController {
 
         dashboardRepository.save(company);
 
-        return "redirect:/dashboard";
-    }
-
-    // 목표기업 상세 : 모달페이지
-    @GetMapping("dashboard/company/{id}")
-    public String companyDetail(
-        @PathVariable Long id, Model model
-    ) {
-        GoalCompanyDto companyDto = dashboardService.getCompanyDetailById(id);
-        model.addAttribute("company", companyDto);
-
-        return "dashboard/company-detail";
-    }
-
-    // 알림 토글
-    @PostMapping("/dashboard/notification-toggle")
-    public String toggleNotification(@AuthenticationPrincipal Principal principal) {
-        User user = userRepository.findById(principal.getUser().getUserId())
-            .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
-        user.setNotificationOn(!user.isNotificationOn());
-        userRepository.save(user);
         return "redirect:/dashboard";
     }
 }
