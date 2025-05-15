@@ -91,4 +91,9 @@ public class DashboardController {
         userRepository.save(user);
         return "redirect:/dashboard";
     }
+
+    @GetMapping("/todo")
+    public String showTodo(){
+        return "todo";
+    }
 }

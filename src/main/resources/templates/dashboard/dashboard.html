@@ -14,7 +14,7 @@
   <!-- 좌측 사이드바 -->
   <aside class="sidebar">
     <h1 class="logo">
-      <a th:href="@{/}" style="text-decoration: none; color:inherit;">
+      <a th:href="@{/static}" style="text-decoration: none; color:inherit;">
         DevQuest
       </a>
     </h1>
@@ -39,7 +39,7 @@
 
     <!--  마이페이지  -->
     <p class="mypage">
-      <a th:href="@{/mypage}" style="text-decoration: none; color: inherit;">
+      <a th:href="@{/templates/mypage}" style="text-decoration: none; color: inherit;">
         <span class="material-icons">account_circle</span>마이페이지
       </a>
     </p>
@@ -151,7 +151,7 @@
       </a>
 
       <!-- TODO 생성 카드 -->
-      <a th:href="@{/todo/create}" class="company-card create">
+      <div class="company-card create" onclick="openModal('companyModal')">
         <p class="goal-todo-desc-top">
           <span class="material-icons">control_point</span>
           목표 기업 TODO 생성
@@ -166,6 +166,30 @@
   </main>
 </div>
 
+<!-- 목표 기업 생성 모달 -->
+<div id="companyModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('companyModal')">&times;</span>
+    <h2>목표 기업 생성</h2>
+    <form id="create-form">
+      <input type="text" name="companyName" placeholder="기업명을 입력해주세요" required><br><br>
+      <input type="text" name="content" placeholder="어떤 개발자가 되고 싶은지 한마디" required><br><br>
+      <label>일정</label><br>
+      <select name="schedule">
+        <option>서류 마감</option>
+        <option>코딩테스트</option>
+        <option>과제</option>
+        <option>인성역량검사</option>
+        <option>1차 면접</option>
+        <option>2차 면접</option>
+        <option>3차 면접 (최종)</option>
+      </select><br><br>
+      <label>D-Day</label><br>
+      <input type="date" name="dDay"><br><br>
+      <button type="submit">생성</button>
+    </form>
+  </div>
+</div>
 
 <script>
   // 왼쪽 상단 로고
@@ -201,6 +225,18 @@
       });
     });
   });
+</script>
+
+<!-- 목표 기업 생성 모달 -->
+<script>
+  function openModal(companyModal) {
+    document.getElementById(companyModal).style.display = "flex";
+  }
+
+  function closeModal(companyModal) {
+    document.getElementById(companyModal).style.display = "none";
+  }
+
 </script>
 
 
