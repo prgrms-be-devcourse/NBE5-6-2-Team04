@@ -17,13 +17,15 @@ public class ChatHistoryService {
         List<ChatMessageDto> history = (List<ChatMessageDto>) session.getAttribute("chatHistory");
 
         if (history == null) {
-            history = new ArrayList<>();
+             history= new ArrayList<>();
         }
 
         history.add(message);
 
         session.setAttribute("chatHistory", history);
 
+        System.out.println("대화 시작");
+        System.out.println("====================================================");
         for (int i = 0; i < history.size(); i++) {
             ChatMessageDto msg = history.get(i);
             System.out.println("[" + msg.getRole() + "] " + msg.getMessage());
