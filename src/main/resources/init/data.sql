@@ -1,8 +1,11 @@
-DROP TABLE IF EXISTS `level`;
-
-CREATE TABLE `level` (
-                         `level_id` BIGINT NOT NULL PRIMARY KEY,
-                         `level_name` VARCHAR(100) NULL,
-                         `level_image_url` VARCHAR(255) NULL,
-                         `xp` INT NULL
-);
+INSERT INTO level (level_name, xp) VALUES
+                                       ('초보 개발자', 0),
+                                       ('수련 개발자', 10),
+                                       ('견습 개발자', 20),
+                                       ('전사 개발자', 30),
+                                       ('정예 개발자', 40),
+                                       ('기사 개발자', 50),
+                                       ('용사 개발자', 60),
+                                       ('마스터 개발자', 70),
+                                       ('전설 개발자', 80),
+                                       ('신화 개발자', 90);

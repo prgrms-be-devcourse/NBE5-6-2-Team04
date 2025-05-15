@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지 | DevQuest</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Apple SD Gothic Neo", sans-serif;
+            background-color: #f5f4f8;
+            color: #333;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 40px;
+            font-weight: bold;
+        }
+
+        .title {
+            font-size: 24px;
+            color: #3b2ba8;
+        }
+
+        .menu {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .container {
+            margin-top: 40px;
+        }
+
+        .nickname {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 20px auto;
+        }
+
+        .level-title {
+            color: #5b5b5b;
+            font-size: 14px;
+        }
+
+        .level {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00c853;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 12px;
+            background-color: #ddd;
+            border-radius: 6px;
+            margin: 10px auto;
+            position: relative;
+        }
+
+        .progress {
+            width: 70%;
+            height: 100%;
+            background-color: #00c853;
+            border-radius: 6px;
+        }
+
+        .info-box {
+            background-color: #eaeaea;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 300px;
+            margin: 20px auto;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .info-box b {
+            display: inline-block;
+            width: 80px;
+        }
+
+        .achievements {
+            background-color: #eaeaea;
+            border-radius: 12px;
+            padding: 15px;
+            max-width: 300px;
+            margin: 20px auto;
+        }
+
+        .achievement-icons {
+            font-size: 24px;
+        }
+
+        .edit {
+            margin-top: 10px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .edit::after {
+            content: " ✎";
+        }
+
+        .logout {
+            position: fixed;
+            bottom: 20px;
+            right: 30px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #444;
+        }
+
+        .logout img {
+            width: 24px;
+        }
+
+        button {
+            padding: 5px 10px;
+            font-size: 12px;
+            border: none;
+            background-color: #ccc;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            width: 400px;
+            border-radius: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .close {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .achievement-item {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="title">DevQuest</div>
+    <div class="menu">
+        <span class="menu-item" onclick="goToDashboard()">대시보드</span>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <span class="menu-item" onclick="logout()">로그아웃</span>
+    </div>
+</div>
+
+<div class="container">
+    <div class="nickname" th:text="${user.nickname} + ' 님의 마이페이지'"></div>
+    <img class="profile-img"
+         th:src="${user.userImage} != null ? '/images/profile/' + ${user.userImage} : '/images/profile/default.png'"
+         alt="프로필 이미지">
+    <div class="level-title" th:text="${user.level.levelName}"></div>
+    <div class="level" th:text="'Lv.' + ${user.level.levelId}"></div>
+
+    <div class="progress-bar">
+        <div class="progress" th:style="'width:' + ${progressPercent} + '%'">
+        </div>
+    </div>
+
+    <div class="info-box">
+        <p><b>이메일</b> <span th:text="${user.email}"></span></p>
+        <p><b>한마디</b> <span th:text="${user.comment}"></span></p>
+    </div>
+
+    <div class="achievements">
+        <b>나의 업적</b>
+        <div class="achievement-icons">🏅 🏅 🏅 </div><button onclick="openModal()">더보기</button>
+    </div>
+
+    <div id="achievementModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>획득한 업적</h3>
+            <div class="achievement-list" id="achievementList">
+
+            </div>
+        </div>
+    </div>
+    <div class="edit" onclick="location.href='/users/update'">수정하기</div>
+</div>
+
+<!--<p>현재 경험치: <span th:text="${user.exp}"></span></p>-->
+<!--<p>현재 레벨 기준 XP: <span th:text="${user.level.xp}"></span></p>-->
+<!--<p>다음 레벨 XP: <span th:text="${nextLevelXp}"></span></p>-->
+<!--<p>진행률: <span th:text="${progressPercent} + '%'"></span></p>-->
+
+<div class="logout">
+    <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="탈퇴 아이콘">
+    <div>계정 탈퇴</div>
+</div>
+</body>
+<script src="/js/header.js" defer></script>
+<script src="/js/mypageModal.js" defer></script>
+</html>
