@@ -291,6 +291,11 @@ body {
   width: 280px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-decoration: none;
+  color: inherit;
 }
 
 .company-card.create {
@@ -306,8 +311,14 @@ body {
   transition: background 0.2s;
 }
 
+.company-card:hover {
+  transform: scale(1.01);
+  transition: 0.2s ease-in-out;
+}
+
 .company-card.create:hover {
   background-color: #f0f0f0;
+  text-decoration:underline;
 }
 
 .company-card.create p:first-child {
@@ -324,11 +335,47 @@ body {
   margin-top: 0.5rem;
 }
 
+/* 네이버 */
+.company-card.naver {
+  background-color: #e8f5e9;
+  color: #1a7f37;
+  border: 2px solid #81c784;
+}
+
+/* 토스 */
+.company-card.toss {
+  background-color: #e8f1ff;
+  color: #0075ff;
+  border: 2px solid #64b5f6;
+}
+
+/* 당근 */
+.company-card.danggeun {
+  background-color: #fff3e0;
+  color: #f57c00;
+  border: 2px solid #f57c00;
+}
+
+/* 배민 */
+.company-card.baemin {
+  background-color: #e0f7fa;
+  color: #00c4c4;
+  border: 2px solid #00c4c4;
+}
+
+/* 카카오 */
+.company-card.kakao {
+  background-color: #fff8e1;
+  color: #3c1e1e;
+  border: 2px solid #f2c300;
+}
+
 
 .card-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.8rem;
   font-size: 0.9rem;
   font-weight: bold;
 }
@@ -338,18 +385,21 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: auto;
 }
 
 .company-name {
   font-weight: bold;
-  font-size: 2rem;
+  font-size: 1.5rem;
   margin-bottom: 0.5rem;
   margin-top: 0.5rem;
 }
 
 .status {
   font-weight: normal;
-  font-size: 1.2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #444;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -358,17 +408,18 @@ body {
 }
 
 .content {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: normal;
   margin-bottom: 0.5rem;
   margin-top: 0.5rem;
 }
 
 .dday {
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
   margin-top: 0.5rem;
+  color: #5f3dc4;
 }
 
 .endDate {

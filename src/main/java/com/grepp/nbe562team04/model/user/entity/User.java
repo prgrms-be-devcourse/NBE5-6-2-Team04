@@ -45,19 +45,13 @@ public class User {
     private Integer exp;
     private String comment;
 
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @OneToOne
-//    @JoinColumn(name = "interest_id")
-//    private Interest interest;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserInterest> userInterests;
 
     @Column(name = "is_notification_on")
-    private boolean isNotificationOn;
+    private boolean NotificationOn;
 
     private LocalDate createdAt;
     @Column(name = "deleted_at")
     private LocalDate deletedAt;
-
 }

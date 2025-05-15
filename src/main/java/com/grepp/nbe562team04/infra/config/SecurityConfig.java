@@ -53,7 +53,7 @@ public class SecurityConfig {
                     .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
 
                 if (isAdmin) {
-                    response.sendRedirect("/admin");
+                    response.sendRedirect("/admin/dashboard");
                     return;
                 }
 

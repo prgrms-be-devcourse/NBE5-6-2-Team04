@@ -10,9 +10,8 @@ INSERT INTO level (level_name, xp) VALUES
                                        ('전설 개발자', 80),
                                        ('신화 개발자', 90);
 
-ALTER TABLE user MODIFY deleted_at DATE NULL DEFAULT NULL;
-# ALTER TABLE user ADD COLUMN interest_id BIGINT;
-#
-# ALTER TABLE user
-#     ADD CONSTRAINT fk_user_interest
-#         FOREIGN KEY (interest_id) REFERENCES interest(interest_id);
+# 대시보드 주요알림 테스트용 데이터
+INSERT INTO goal_company (company_id, company_name, content, status, end_date, user_id)
+VALUES (1, '네이버', '알림테스트용', 'DOCUMENT', DATE_ADD(NOW(), INTERVAL 3 DAY), 1);
+INSERT INTO goal_company (company_id, company_name, content, status, end_date, user_id)
+VALUES (2, '토스', '알림테스트용', 'INTERVIEW_1', DATE_ADD(NOW(), INTERVAL 2 DAY), 1);
