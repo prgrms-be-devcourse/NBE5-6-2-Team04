@@ -212,3 +212,9 @@ Temporary Items
 # 설정 파일 무시
 application.yml
 src/main/resources/application.yml
+
+# profile 폴더 안에 있는 모든 .png 파일 무시
+uploads/profile/*.png
+
+# 하지만 default.png는 예외로 추적 허용
+!uploads/profile/default.png

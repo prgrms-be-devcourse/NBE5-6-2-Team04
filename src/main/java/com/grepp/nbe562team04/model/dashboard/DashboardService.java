@@ -106,6 +106,7 @@ public class DashboardService {
 
     private GoalCompanyDto convertToDto(GoalCompany company) {
         GoalCompanyDto dto = new GoalCompanyDto();
+        dto.setCompanyId(company.getCompanyId());
         dto.setCompanyName(company.getCompanyName());
         dto.setStatus(company.getStatus());
         dto.setContent(company.getContent());
