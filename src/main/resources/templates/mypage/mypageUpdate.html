@@ -120,7 +120,11 @@
 
 <div class="header">
     <div class="title">DevQuest</div>
-    <div class="menu"><a href="/dashboard">대시보드</a> &nbsp;&nbsp;|&nbsp;&nbsp; <a href="/logout">로그아웃</a></div>
+    <div class="menu">
+        <span class="menu-item" onclick="goToDashboard()">대시보드</span>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <span class="menu-item" onclick="logout()">로그아웃</span>
+    </div>
 </div>
 
 <div class="container">
@@ -139,7 +143,7 @@
         <input type="file" id="userImageFile" name="userImageFile">
 
         <label for="currentPassword">현재 비밀번호</label>
-        <input type="password" id="currentPassword" name="currentPassword">
+        <input type="password" id="currentPassword" name="currentPassword" placeholder="현재 비밀번호를 입력해주세요">
 
         <div class="error" th:if="${passwordError}" th:text="${passwordError}"></div>
 
@@ -152,6 +156,6 @@
         <button type="submit" class="submit-btn">수정 완료</button>
     </form>
 </div>
-
 </body>
+<script src="/js/header.js" defer></script>
 </html>

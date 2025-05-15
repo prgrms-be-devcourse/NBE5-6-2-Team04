@@ -22,4 +22,4 @@ spring:
 
 gemini:
   base-url: https://generativelanguage.googleapis.com
-  api-key:
+  api-key: "AIzaSyDJ2t_TcJ7ZwV0AI5AePRiVdUtqhvnvkN4"

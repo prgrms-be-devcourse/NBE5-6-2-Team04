@@ -83,7 +83,7 @@ public class DashboardController {
         return "dashboard/company-detail";
     }
 
-    // 알림 토글
+//     알림 토글
     @PostMapping("/dashboard/notification-toggle")
     public String toggleNotification(
         @AuthenticationPrincipal Principal principal){

@@ -1,6 +1,7 @@
 package com.grepp.nbe562team04.model.user;
 
 import com.grepp.nbe562team04.model.auth.code.Role;
+import com.grepp.nbe562team04.model.auth.domain.Principal;
 import com.grepp.nbe562team04.model.level.LevelRepository;
 import com.grepp.nbe562team04.model.level.entity.Level;
 import com.grepp.nbe562team04.model.user.dto.UserDto;
@@ -11,11 +12,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,7 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class UserService {
+public class UserService implements UserDetailsService{
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -48,13 +53,15 @@ public class UserService {
         user.setLevel(defaultLevel);
         user.setExp(0);
         user.setCreatedAt(LocalDate.now());
+        user.setDeletedAt(null);
         log.info("user:{}", user);
+        log.info("저장 전 최종 비밀번호: {}", user.getPassword()); // 반드시 해시 형태여야 함
         userRepository.save(user);
     }
 
     public User findByEmail(String email) {
 
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmailAndDeletedAtIsNull(email)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: " + email));
 
         Level currentLevel = levelRepository.findTopByXpLessThanEqualOrderByXpDesc(user.getExp())
@@ -85,6 +92,26 @@ public class UserService {
             user.setUserImage(filename);
         }
         userRepository.save(user);
+    }
+
+    public boolean checkPassword(User user, String rawPassword) {
+        return passwordEncoder.matches(rawPassword, user.getPassword());
+    }
+
+    @Transactional
+    public void softDeleteUser(String email) {
+        User user = userRepository.findByEmailAndDeletedAtIsNull(email)
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 사용자입니다."));
+        user.setDeletedAt(LocalDate.now()); // 또는 LocalDateTime.now()
+        userRepository.save(user);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmailAndDeletedAtIsNull(email)
+                .orElseThrow(() -> new UsernameNotFoundException("탈퇴했거나 존재하지 않는 사용자입니다."));
+
+        return new Principal(user);
     }
 
 }

@@ -57,6 +57,7 @@ public class User {
     private boolean isNotificationOn;
 
     private LocalDate createdAt;
+    @Column(name = "deleted_at")
     private LocalDate deletedAt;
 
 }

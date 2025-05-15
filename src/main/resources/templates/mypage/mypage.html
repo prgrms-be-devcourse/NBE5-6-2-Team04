@@ -179,9 +179,7 @@
 
 <div class="container">
     <div class="nickname" th:text="${user.nickname} + ' 님의 마이페이지'"></div>
-    <img class="profile-img"
-         th:src="${user.userImage} != null ? '/images/profile/' + ${user.userImage} : '/images/profile/default.png'"
-         alt="프로필 이미지">
+    <img class="profile-img" th:src="@{'/images/profile/' + ${user.userImage}}" alt="프로필 이미지">
     <div class="level-title" th:text="${user.level.levelName}"></div>
     <div class="level" th:text="'Lv.' + ${user.level.levelId}"></div>
 
@@ -217,11 +215,12 @@
 <!--<p>다음 레벨 XP: <span th:text="${nextLevelXp}"></span></p>-->
 <!--<p>진행률: <span th:text="${progressPercent} + '%'"></span></p>-->
 
-<div class="logout">
+<div class="logout" onclick="deleteAccount()">
     <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="탈퇴 아이콘">
     <div>계정 탈퇴</div>
 </div>
 </body>
 <script src="/js/header.js" defer></script>
 <script src="/js/mypageModal.js" defer></script>
+<script src="/js/withdraw.js" defer></script>
 </html>
