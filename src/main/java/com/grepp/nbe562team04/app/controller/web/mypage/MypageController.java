@@ -1,27 +1,25 @@
 package com.grepp.nbe562team04.app.controller.web.mypage;
 
+import com.grepp.nbe562team04.model.achieve.AchievementService;
 import com.grepp.nbe562team04.model.auth.domain.Principal;
 import com.grepp.nbe562team04.model.level.LevelRepository;
 import com.grepp.nbe562team04.model.level.LevelService;
-import com.grepp.nbe562team04.model.level.entity.Level;
 import com.grepp.nbe562team04.model.user.UserRepository;
 import com.grepp.nbe562team04.model.user.UserService;
 import com.grepp.nbe562team04.model.user.dto.UserDto;
 import com.grepp.nbe562team04.model.user.entity.User;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import jakarta.servlet.http.Cookie;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.util.Optional;
+
 
 @Controller
 @Slf4j
@@ -29,13 +27,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MypageController {
 
-    private final UserRepository userRepository;
-    private final LevelRepository levelRepository;
     private final UserService userService;
     private final LevelService levelService;
+    private final AchievementService achievementService;
 
     @GetMapping("mypage")
-    public String index(@AuthenticationPrincipal Principal principal , Model model){
+    public String index(@AuthenticationPrincipal Principal principal ,
+                        @RequestParam(required = false) String achievement,
+                        @RequestParam(required = false) String name,
+                        Model model){
         String email = principal.getUsername();
         User user = userService.findByEmail(email);
 
@@ -62,7 +62,7 @@ public class MypageController {
                              @RequestParam("userImageFile") MultipartFile file,
                              @RequestParam("currentPassword") String currentPassword,
                              Model model,
-                             HttpServletResponse response) throws IOException {
+                             RedirectAttributes redirectAttributes) throws IOException {
 
         String email = principal.getUsername();
         User user = userService.findByEmail(email);
@@ -75,10 +75,12 @@ public class MypageController {
             model.addAttribute("progressPercent", progress);
             return "mypage/mypageUpdate"; // 다시 수정 페이지로
         }
+
         userService.updateUser(email, dto, file);
-        boolean achieved = userService.giveTutorialAchievement(user.getUserId());
-        if (achieved) {
-            return "redirect:/users/mypage?achievement=true";
+        String achievedName = achievementService.giveTutorialAchievement(user.getUserId());
+
+        if (achievedName != null) {
+            redirectAttributes.addAttribute("achievementName", achievedName);
         }
         return "redirect:/users/mypage";
     }

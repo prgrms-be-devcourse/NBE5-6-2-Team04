@@ -142,6 +142,9 @@
         <label for="userImageFile">프로필 이미지 업로드</label>
         <input type="file" id="userImageFile" name="userImageFile">
 
+        <label for="nickname">닉네임</label>
+        <input type="text" id="nickname" name="nickname" th:value="${user.nickname}">
+
         <label for="currentPassword">현재 비밀번호</label>
         <input type="password" id="currentPassword" name="currentPassword" placeholder="현재 비밀번호를 입력해주세요">
 
@@ -156,17 +159,7 @@
         <button type="submit" class="submit-btn">수정 완료</button>
     </form>
 </div>
-
-<div id="achievementModal" class="modal" style="display:none;">
-    <div class="modal-content">
-        <h3>🎉 축하합니다!</h3>
-        <p>첫 번째 업적 <strong>“튜토리얼을 끝냈어요!”</strong> 를 달성했습니다!</p>
-        <button onclick="closeModal()">닫기</button>
-    </div>
-</div>
 </body>
 <script src="/js/header.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-<script src="/js/achievementCelebrate.js" defer></script>
-<script src="/js/mypageModal.js" defer></script>
+<script src="/js/mypageAchieve.js" defer></script>
 </html>

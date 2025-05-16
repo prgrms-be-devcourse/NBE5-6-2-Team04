@@ -198,29 +198,26 @@
         <div class="achievement-icons">🏅 🏅 🏅 </div><button onclick="openModal()">더보기</button>
     </div>
 
-    <div id="achievementModal" class="modal">
+    <div id="achievementListModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h3>획득한 업적</h3>
-            <div class="achievement-list" id="achievementList">
-
+            <span class="close" onclick="closeListModal()">×</span>
+            <h3>🏅 전체 업적 목록</h3>
+            <div id="achievementList">
             </div>
         </div>
     </div>
+
     <div class="edit" onclick="location.href='/users/update'">수정하기</div>
 </div>
-
-<!--<p>현재 경험치: <span th:text="${user.exp}"></span></p>-->
-<!--<p>현재 레벨 기준 XP: <span th:text="${user.level.xp}"></span></p>-->
-<!--<p>다음 레벨 XP: <span th:text="${nextLevelXp}"></span></p>-->
-<!--<p>진행률: <span th:text="${progressPercent} + '%'"></span></p>-->
 
 <div class="logout" onclick="deleteAccount()">
     <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="탈퇴 아이콘">
     <div>계정 탈퇴</div>
 </div>
+
 </body>
 <script src="/js/header.js" defer></script>
-<script src="/js/mypageModal.js" defer></script>
+<script src="/js/mypageAchieve.js" defer></script>
 <script src="/js/withdraw.js" defer></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>-->
 </html>
