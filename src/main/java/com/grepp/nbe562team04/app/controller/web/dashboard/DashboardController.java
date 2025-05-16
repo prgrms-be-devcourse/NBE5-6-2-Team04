@@ -10,13 +10,12 @@ import com.grepp.nbe562team04.model.user.UserRepository;
 import com.grepp.nbe562team04.model.user.entity.User;
 import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -54,42 +53,48 @@ public class DashboardController {
         return "mypage/mypage";
     }
 
-    // 목표기업 생성
-    @PostMapping("/goal-company")
-    public String createGoalCompany(@AuthenticationPrincipal Principal principal,
-        @RequestParam String companyName,
-        @RequestParam String content,
-        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
-        User user = principal.getUser();
-        GoalCompany company = new GoalCompany();
-        company.setCompanyName(companyName);
-        company.setContent(content);
-        company.setEndDate(endDate);
-        company.setUser(user);
+//    // 목표기업 생성
+//    @PostMapping("/goal-company")
+//    public String createGoalCompany(@AuthenticationPrincipal Principal principal,
+//        @RequestParam String companyName,
+//        @RequestParam String content,
+//        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+//        User user = principal.getUser();
+//        GoalCompany company = new GoalCompany();
+//        company.setCompanyName(companyName);
+//        company.setContent(content);
+//        company.setEndDate(endDate);
+//        company.setUser(user);
+//
+//        dashboardRepository.save(company);
+//
+//        return "redirect:/dashboard";
+//    }
 
-        dashboardRepository.save(company);
-
-        return "redirect:/dashboard";
-    }
-
-    // 목표기업 상세 : 모달페이지
-    @GetMapping("dashboard/company/{id}")
-    public String companyDetail(
-        @PathVariable Long id, Model model
-    ){
+    // 목표기업 단일 조회
+    @GetMapping("/companies/{id}/select")
+    public String companyDetail(@PathVariable Long id, Model model) {
         GoalCompanyDto companyDto = dashboardService.getCompanyDetailById(id);
+
+
         model.addAttribute("company", companyDto);
 
-        return "dashboard/company-detail";
+        return "goal/goal";
     }
 
     // 알림 토글
     @PostMapping("/dashboard/notification-toggle")
-    public String toggleNotification(
-        @AuthenticationPrincipal Principal principal){
-        User user = principal.getUser();
-        dashboardService.toggleNotification(user);
+    public String toggleNotification(@AuthenticationPrincipal Principal principal) {
+        User user = userRepository.findById(principal.getUser().getUserId())
+            .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
         user.setNotificationOn(!user.isNotificationOn());
+        userRepository.save(user);
         return "redirect:/dashboard";
+    }
+
+    // todo 페이지
+    @GetMapping("/todo")
+    public String showTodo(){
+        return "todo";
     }
 }

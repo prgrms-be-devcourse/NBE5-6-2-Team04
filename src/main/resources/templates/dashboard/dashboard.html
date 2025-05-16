@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>DevQuest Dashboard</title>
-  <!--  <link rel="stylesheet" href="src/main/resources/static/css/dashboard.css">-->
   <link rel="stylesheet" th:href="@{/css/dashboard.css}">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -15,7 +14,7 @@
   <!-- 좌측 사이드바 -->
   <aside class="sidebar">
     <h1 class="logo">
-      <a th:href="@{/}" style="text-decoration: none; color:inherit;">
+      <a th:href="@{/static}" style="text-decoration: none; color:inherit;">
         DevQuest
       </a>
     </h1>
@@ -40,7 +39,7 @@
 
     <!--  마이페이지  -->
     <p class="mypage">
-      <a th:href="@{/mypage}" style="text-decoration: none; color: inherit;">
+      <a th:href="@{/templates/mypage}" style="text-decoration: none; color: inherit;">
         <span class="material-icons">account_circle</span>마이페이지
       </a>
     </p>
@@ -49,7 +48,12 @@
     <div class="profile-card">
       <div class="profile-card">
         <div class="profile-info">
-          <img class="avatar" src="/static/img/profile.png" alt="프로필"/>
+          <img class="profile-img"
+               th:src="${dashboard.userImage != null && !dashboard.userImage.isEmpty()
+             ? '/images/profile/' + dashboard.userImage
+             : '/images/profile/default.png'}"
+               alt="프로필 이미지"/>
+
           <div class="level-info">
             <p class="level-label" th:text="${dashboard.levelName}">레벨명</p>
             <p class="level-value" th:text="'Lv.' + ${dashboard.levelValue}">Lv.N</p>
@@ -60,8 +64,8 @@
         <div class="xp-label" th:text="${dashboard.exp} + 'xp'">N xp</div>
         <div class="xp-bar">
           <div class="xp-progress"
-               th:style="'width:' + (${dashboard.exp} > 100 ? 100 : dashboard.exp) + '%'"
-               th:text="${dashboard.exp} + 'xp'">
+               th:style="'width:' + (${dashboard.exp} > 100 ? 100 : dashboard.exp) + '%'">
+            <span th:text="${dashboard.exp} + 'xp'"></span>
           </div>
         </div>
       </div>
@@ -72,25 +76,29 @@
       <form th:action="@{/dashboard/notification-toggle}" method="post">
         <!-- 서현님 csrf 토큰 추가 후 주석해제 -->
         <!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
+        <input type="checkbox"
+               name="notification"
+               th:checked="${dashboard.notificationOn}" onchange="this.form.submit()">
         <label>알림</label>
-        <input type="checkbox" name="notification"
-               th:checked="${dashboard.notificationOn}"
-               onchange="this.form.submit()">
       </form>
     </div>
 
+    <!--  주요알림  -->
     <div class="alert-box">
       <h3>
         🔔 주요 알림
         <span class="count" th:text="${#lists.size(dashboard.goalCompanies)}">0</span>
       </h3>
-      <ul>
+      <ul th:if="${dashboard.notificationOn}">
         <li th:each="company : ${dashboard.goalCompanies}">
           <strong style="color:red" th:text="${company.companyName}">기업명</strong>
-          <span th:text="${company.status}">진행 상태</span>
-          <span th:text="'D=' + ${company.DDay} + '일'">N일</span>전 입니다.
+          <span th:text="${company.statusLabel != null ? company.statusLabel : '상태없음'}">상태</span>
+          <span th:text="'D-' + ${company.DDay} + '일'">N일</span>전 입니다.
         </li>
       </ul>
+      <p th:unless="${dashboard.notificationOn}">
+        현재 알림이 꺼져 있어요 🔕
+      </p>
     </div>
   </aside>
 
@@ -102,17 +110,28 @@
       </a>
     </div>
 
+    <!--  Company List   -->
     <p class="section-title">Company List</p>
 
     <div class="company-list">
       <a th:each="company : ${dashboard.goalCompanies}"
-         th:href="@{/company/{id}(id=${company.id})}"
+         th:href="@{/companies/{companyId}/select(companyId=${company.companyId})}"
          class="company-card"
-         th:classappend="${company.companyName.toLowerCase()}">
+         th:classappend="|
+                         ${company.companyName.toLowerCase()}
+                         ${(company.companyName == '네이버') ? ' naver' : ''}
+                         ${(company.companyName == '토스') ? ' toss' : ''}
+                         ${(company.companyName == '당근') ? ' danggeun' : ''}
+                         ${(company.companyName == '배달의민족') ? ' baemin' : ''}
+                         ${(company.companyName == '카카오') ? ' kakao' : ''}
+                       |">
+
 
         <div class="card-header">
-          <span class="status" th:text="${company.status}">진행 상태</span>
+          <span class="status" th:text="${company.statusLabel}">진행 상태</span>
           <span class="dday" th:text="'D-' + ${company.DDay}">D-day</span>
+
+          <!-- 수정/삭제 드롭다운  -->
           <div class="dropdown">
             <button class="dropdown-toggle" type="button">⋮</button>
             <ul class="dropdown-menu">
@@ -122,17 +141,17 @@
           </div>
         </div>
 
+        <!-- 목표 기업 카드 -->
         <p class="company-name" th:text="${company.companyName}">회사명</p>
         <p class="content" th:text="${company.content}">내용</p>
-
         <div class="status-dday">
-          <span class="status" th:text="${company.status}">진행 상태</span>
+          <span class="status" th:text="${company.statusLabel}">진행 상태</span>
           <span class="endDate" th:text="'~' + ${company.endDate}">~마감일</span>
         </div>
       </a>
 
       <!-- TODO 생성 카드 -->
-      <a th:href="@{/todo/create}" class="company-card create">
+      <div class="company-card create" onclick="openModal('companyModal')">
         <p class="goal-todo-desc-top">
           <span class="material-icons">control_point</span>
           목표 기업 TODO 생성
@@ -147,6 +166,30 @@
   </main>
 </div>
 
+<!-- 목표 기업 생성 모달 -->
+<div id="companyModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('companyModal')">&times;</span>
+    <h2>목표 기업 생성</h2>
+    <form id="create-form">
+      <input type="text" name="companyName" placeholder="기업명을 입력해주세요" required><br><br>
+      <input type="text" name="content" placeholder="어떤 개발자가 되고 싶은지 한마디" required><br><br>
+      <label>일정</label><br>
+      <select name="status">
+        <option value="DOCUMENT">서류 마감</option>
+        <option value="CODING_TEST">코딩테스트</option>
+        <option value="ASSIGNMENT">과제</option>
+        <option value="APTITUDE">인적성검사</option>
+        <option value="INTERVIEW_1">1차 면접</option>
+        <option value="INTERVIEW_2">2차 면접</option>
+        <option value="INTERVIEW_3">3차 면접 (컬처핏)</option>
+      </select><br><br>
+      <label>마감일</label><br>
+      <input type="date" name="endDate"><br><br>
+      <button type="submit">생성</button>
+    </form>
+  </div>
+</div>
 
 <script>
   // 왼쪽 상단 로고
@@ -184,6 +227,58 @@
   });
 </script>
 
+<!-- 목표 기업 생성 모달 -->
+<script>
+  function openModal(companyModal) {
+    document.getElementById(companyModal).style.display = "flex";
+  }
+
+  function closeModal(companyModal) {
+    document.getElementById(companyModal).style.display = "none";
+  }
+
+</script>
+
+<!--목표 기어 생성 모달(post 보내기)-->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("create-form");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const data = {
+        companyName: form.companyName.value,
+        content: form.content.value,
+        status: form.status.value,
+        endDate: form.endDate.value
+      };
+
+      fetch('/companies', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+              .then(res => {
+                if (res.ok) {
+                  alert("등록 완료!");
+                  closeModal('companyModal');
+                  window.location.reload();
+                } else {
+                  alert("등록 실패");
+                }
+              })
+              .catch(err => {
+                console.error(err);
+                alert("에러 발생");
+              });
+    });
+  });
+
+  function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
+  }
+</script>
 
 </body>
 </html>

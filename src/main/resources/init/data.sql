@@ -9,3 +9,9 @@ INSERT INTO level (level_name, xp) VALUES
                                        ('마스터 개발자', 70),
                                        ('전설 개발자', 80),
                                        ('신화 개발자', 90);
+
+# 대시보드 주요알림 테스트용 데이터
+INSERT INTO goal_company (company_id, company_name, content, status, end_date, user_id)
+VALUES (3, '네이버', '알림테스트용', 'DOCUMENT', DATE_ADD(NOW(), INTERVAL 3 DAY), 3);
+INSERT INTO goal_company (company_id, company_name, content, status, end_date, user_id)
+VALUES (5, '토스', '알림테스트용', 'INTERVIEW_1', DATE_ADD(NOW(), INTERVAL 2 DAY), 3);
