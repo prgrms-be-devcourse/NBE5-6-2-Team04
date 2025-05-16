@@ -29,4 +29,8 @@ public class UserInterest {
     @JoinColumn(name = "interest_id")
     private Interest interest;
 
+    public UserInterest(User user, Interest interest) {
+        this.user = user;
+        this.interest = interest;
+    }
 }
