@@ -5,10 +5,18 @@ import com.grepp.nbe562team04.model.dashboard.DashboardRepository;
 import com.grepp.nbe562team04.model.dashboard.DashboardService;
 import com.grepp.nbe562team04.model.dashboard.dto.DashboardDto;
 import com.grepp.nbe562team04.model.dashboard.dto.GoalCompanyDto;
+import com.grepp.nbe562team04.model.goal.GoalService;
+import com.grepp.nbe562team04.model.goal.dto.GoalResponseDto;
 import com.grepp.nbe562team04.model.goalcompany.entity.GoalCompany;
+import com.grepp.nbe562team04.model.todo.TodoService;
+import com.grepp.nbe562team04.model.todo.dto.TodoResponseDto;
 import com.grepp.nbe562team04.model.user.UserRepository;
 import com.grepp.nbe562team04.model.user.entity.User;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -25,11 +33,16 @@ public class DashboardController {
     private final UserRepository userRepository;
     private final DashboardRepository dashboardRepository;
 
+    private final GoalService goalService;
+    private final TodoService todoService;
+
     public DashboardController(DashboardService dashboardService, UserRepository userRepository,
-        DashboardRepository dashboardRepository) {
+        DashboardRepository dashboardRepository, GoalService goalService, TodoService todoService) {
         this.dashboardService = dashboardService;
         this.userRepository = userRepository;
         this.dashboardRepository = dashboardRepository;
+        this.goalService = goalService;
+        this.todoService = todoService;
     }
 
     // 대시보드
@@ -72,12 +85,21 @@ public class DashboardController {
 //    }
 
     // 목표기업 단일 조회
-    @GetMapping("/companies/{id}/select")
-    public String companyDetail(@PathVariable Long id, Model model) {
-        GoalCompanyDto companyDto = dashboardService.getCompanyDetailById(id);
+    @GetMapping("/companies/{CompanyId}/select")
+    public String companyDetail(@PathVariable Long CompanyId, Model model) {
+        GoalCompanyDto companyDto = dashboardService.getCompanyDetailById(CompanyId);
+        List<GoalResponseDto> goalList = goalService.getGoalsByCompanyId(CompanyId);
+
+        Map<Long, List<TodoResponseDto>> todoMap = new HashMap<>();
+        for (GoalResponseDto goal : goalList) {
+            List<TodoResponseDto> todos = todoService.getByGoal(goal.getGoalId());
+            todoMap.put(goal.getGoalId(), todos);
+        }
 
 
-        model.addAttribute("company", companyDto);
+        model.addAttribute("company", companyDto);   // 기업 정보
+        model.addAttribute("goals", goalList);       // 목표 리스트
+        model.addAttribute("todoMap", todoMap);
 
         return "goal/goal";
     }
