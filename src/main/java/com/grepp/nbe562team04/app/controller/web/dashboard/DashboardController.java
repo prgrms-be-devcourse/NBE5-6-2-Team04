@@ -82,16 +82,14 @@ public class DashboardController {
         company.setContent(content);
         company.setEndDate(endDate);
         company.setUser(user);
-
         dashboardRepository.save(company);
+        return "redirect:/dashboard";
     }
 
     // 목표기업 단일 조회
     @GetMapping("/companies/{id}/select")
     public String companyDetail(@PathVariable Long id, Model model) {
         GoalCompanyDto companyDto = dashboardService.getCompanyDetailById(id);
-
-
         model.addAttribute("company", companyDto);
 
         return "goal/goal";
