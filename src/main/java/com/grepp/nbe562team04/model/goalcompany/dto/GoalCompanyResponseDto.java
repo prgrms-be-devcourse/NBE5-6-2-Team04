@@ -1,5 +1,6 @@
 package com.grepp.nbe562team04.model.goalcompany.dto;
 
+import com.grepp.nbe562team04.model.goalcompany.code.GoalStatus;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -17,4 +18,6 @@ public class GoalCompanyResponseDto {
     private LocalDate endDate;
 
     //추후 추가 기능 개발 시 추가 필요
+
+
 }

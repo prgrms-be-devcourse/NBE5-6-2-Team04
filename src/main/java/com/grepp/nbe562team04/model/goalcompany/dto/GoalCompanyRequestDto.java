@@ -15,8 +15,13 @@ import lombok.Setter;
 @Builder
 public class GoalCompanyRequestDto {
 
+    private long companyId; // 생성 시엔 생략 가능
     private String companyName;     // 회사 이름
     private String content;         // 설명 (목표 내용)
     private GoalStatus status;          // ex) 서류 마감 코딩테스트 과제 인적성검사 1차 면접 2차 면접 3차 면접 (컬쳐핏)
     private LocalDate endDate;  // 마감일
+
+
+
+
 }
