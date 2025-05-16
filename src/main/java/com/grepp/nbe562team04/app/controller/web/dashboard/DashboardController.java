@@ -75,6 +75,8 @@ public class DashboardController {
     @GetMapping("/companies/{id}/select")
     public String companyDetail(@PathVariable Long id, Model model) {
         GoalCompanyDto companyDto = dashboardService.getCompanyDetailById(id);
+
+
         model.addAttribute("company", companyDto);
 
         return "goal/goal";
