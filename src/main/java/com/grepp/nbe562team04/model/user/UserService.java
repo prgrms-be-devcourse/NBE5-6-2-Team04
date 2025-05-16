@@ -2,6 +2,7 @@ package com.grepp.nbe562team04.model.user;
 
 import com.grepp.nbe562team04.model.achieve.AchievementService;
 import com.grepp.nbe562team04.model.auth.code.Role;
+import com.grepp.nbe562team04.model.auth.domain.Principal;
 import com.grepp.nbe562team04.model.interest.InterestRepository;
 import com.grepp.nbe562team04.model.interest.entity.Interest;
 import com.grepp.nbe562team04.model.level.LevelRepository;
@@ -10,6 +11,7 @@ import com.grepp.nbe562team04.model.user.dto.UserDto;
 import com.grepp.nbe562team04.model.user.entity.User;
 
 import com.grepp.nbe562team04.model.user.entity.UserInterest;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,6 +25,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -38,7 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class UserService implements UserDetailsService{
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -48,24 +51,23 @@ public class UserService implements UserDetailsService{
     private final UserInterestRepository userInterestRepository;
     private final AchievementService achievementService;
 
-@Transactional
-public Long signup(UserDto dto, Role role){
-    User user = mapper.map(dto, User.class);
-    Level defaultLevel = levelRepository.findFirstByOrderByLevelIdAsc()
-        .orElseThrow(() -> new IllegalStateException("기본 레벨이 존재하지 않습니다."));
+    @Transactional
+    public Long signup(UserDto dto, Role role) {
+        User user = mapper.map(dto, User.class);
+        Level defaultLevel = levelRepository.findFirstByOrderByLevelIdAsc()
+                .orElseThrow(() -> new IllegalStateException("기본 레벨이 존재하지 않습니다."));
 
-    String encodedPassword = passwordEncoder.encode(dto.getPassword());
-    user.setPassword(encodedPassword);
-    user.setRole(role);
-    user.setLevel(defaultLevel);
-    user.setExp(0);
-    user.setCreatedAt(LocalDate.now());
-    user.setDeletedAt(null);
+        String encodedPassword = passwordEncoder.encode(dto.getPassword());
+        user.setPassword(encodedPassword);
+        user.setRole(role);
+        user.setLevel(defaultLevel);
+        user.setExp(0);
+        user.setCreatedAt(LocalDate.now());
+        user.setDeletedAt(null);
 
-    User savedUser = userRepository.save(user);
-    return savedUser.getUserId();
-}
-
+        User savedUser = userRepository.save(user);
+        return savedUser.getUserId();
+    }
 
     public User findByEmail(String email) {
 
@@ -109,21 +111,21 @@ public Long signup(UserDto dto, Role role){
     @Transactional
     public Map<String, List<UserDto>> findUsersGroupedByStatus() {
         List<UserDto> users = Optional.of(userRepository.findAll())
-            .orElse(Collections.emptyList()).stream()
-            .map(UserDto::new)
-            .toList();
+                .orElse(Collections.emptyList()).stream()
+                .map(UserDto::new)
+                .toList();
 
         List<UserDto> activeUsers = users.stream()
-            .filter(user -> user.getDeletedAt() == null && !user.getRole().name().equals("ROLE_ADMIN"))
-            .toList();
+                .filter(user -> user.getDeletedAt() == null && !user.getRole().name().equals("ROLE_ADMIN"))
+                .toList();
 
         List<UserDto> deletedUsers = users.stream()
-            .filter(user -> user.getDeletedAt() != null)
-            .toList();
+                .filter(user -> user.getDeletedAt() != null)
+                .toList();
 
         List<UserDto> adminUsers = users.stream()
-            .filter(user -> user.getRole().name().equals("ROLE_ADMIN") && user.getDeletedAt() == null)
-            .toList();
+                .filter(user -> user.getRole().name().equals("ROLE_ADMIN") && user.getDeletedAt() == null)
+                .toList();
 
         Map<String, List<UserDto>> result = new HashMap<>();
         result.put("activeUsers", activeUsers);
@@ -132,6 +134,7 @@ public Long signup(UserDto dto, Role role){
 
         return result;
     }
+
     public boolean checkPassword(User user, String rawPassword) {
         return passwordEncoder.matches(rawPassword, user.getPassword());
     }
@@ -147,7 +150,7 @@ public Long signup(UserDto dto, Role role){
     @Transactional
     public void softDeleteUser(String email) {
         User user = userRepository.findByEmailAndDeletedAtIsNull(email)
-            .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 사용자입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 사용자입니다."));
         user.setDeletedAt(LocalDate.now()); // 또는 LocalDateTime.now()
         userRepository.save(user);
     }
@@ -155,16 +158,16 @@ public Long signup(UserDto dto, Role role){
 
     public void receiveInterest(Long userId, Long roleId, List<Long> skillIds) {
         User user = userRepository.findByUserId(userId)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Interest role =interestRepository.findById(roleId)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 직무입니다."));
+        Interest role = interestRepository.findById(roleId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 직무입니다."));
 
         userInterestRepository.save(new UserInterest(user, role));
 
         for (Long skillId : skillIds) {
             Interest skill = interestRepository.findById(skillId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 기술 ID입니다: " + skillId));
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 기술 ID입니다: " + skillId));
 
             userInterestRepository.save(new UserInterest(user, skill));
         }
