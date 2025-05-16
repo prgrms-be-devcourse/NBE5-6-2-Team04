@@ -22,7 +22,7 @@ public class GoalCompanyApiController {
     @PostMapping
     public ResponseEntity<String> createCompany(@RequestBody GoalCompanyRequestDto dto,@AuthenticationPrincipal Principal principal) { // json -> dto 자동 변환
         Long userId = principal.getUser().getUserId();  // 로그인된 유저 ID 꺼내기
-        goalCompanyService.createGoalCompany(dto,userId);
+        goalCompanyService.createGoalCompany(dto, userId);
         return ResponseEntity.ok("등록 완료");
     }
 

@@ -44,7 +44,7 @@ public class DashboardController {
     }
 
     // 목표기업 상세 : 모달페이지
-//    @GetMapping("/dashboard/company/{id}")
+//    @GetMapping("/dashboard/companies/{id}")
 //    public String companyDetail(@PathVariable Long id, Model model) {
 //        GoalCompanyDto companyDto = dashboardService.getCompanyDetailById(id);
 //        model.addAttribute("company", companyDto);
@@ -71,7 +71,7 @@ public class DashboardController {
     }
 
     // 목표기업 생성
-    @PostMapping("/goal-company")
+    @PostMapping("/goal/companies")
     public String createGoalCompany(@AuthenticationPrincipal Principal principal,
         @RequestParam String companyName,
         @RequestParam String content,

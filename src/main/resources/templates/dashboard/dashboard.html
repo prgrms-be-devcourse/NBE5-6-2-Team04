@@ -113,7 +113,7 @@
 
     <div class="company-list">
       <a th:each="company : ${dashboard.goalCompanies}"
-         th:href="@{/company/{id}(id=${company.companyId})}"
+         th:href="@{/companies/{id}(id=${company.companyId})}"
          class="company-card"
          th:classappend="|
                          ${company.companyName.toLowerCase()}
