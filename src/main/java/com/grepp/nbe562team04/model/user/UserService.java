@@ -1,5 +1,7 @@
 package com.grepp.nbe562team04.model.user;
 
+import com.grepp.nbe562team04.model.achieve.AchieveRepository;
+import com.grepp.nbe562team04.model.achieve.UsersAchieve;
 import com.grepp.nbe562team04.model.auth.code.Role;
 import com.grepp.nbe562team04.model.auth.domain.Principal;
 import com.grepp.nbe562team04.model.level.LevelRepository;
@@ -13,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +33,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -42,6 +46,8 @@ public class UserService implements UserDetailsService{
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper mapper;
     private final LevelRepository levelRepository;
+    private final UsersAchieveRepository usersAchieveRepository;
+    private final AchieveRepository achieveRepository;
 
     @Transactional
     public void signup(UserDto dto, Role role){
@@ -60,6 +66,7 @@ public class UserService implements UserDetailsService{
         user.setExp(0);
         user.setCreatedAt(LocalDate.now());
         log.info("user:{}", user);
+        log.info("저장 전 최종 비밀번호: {}", user.getPassword()); // 반드시 해시 형태여야 함
         userRepository.save(user);
     }
 
@@ -92,30 +99,34 @@ public class UserService implements UserDetailsService{
             Path filepath = Paths.get(uploadDir, filename);
             Files.createDirectories(filepath.getParent());
             Files.write(filepath, file.getBytes());
-
             user.setUserImage(filename);
         }
         userRepository.save(user);
-    }
 
-    public boolean checkPassword(User user, String rawPassword) {
-        return passwordEncoder.matches(rawPassword, user.getPassword());
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmailAndDeletedAtIsNull(email)
-                .orElseThrow(() -> new UsernameNotFoundException("탈퇴했거나 존재하지 않는 사용자입니다."));
-
-        return new Principal(user);
+        if (isTutorialCompleted(user)) {
+            giveTutorialAchievement(user.getUserId());
+        }
     }
 
     @Transactional
-    public void softDeleteUser(String email) {
-        User user = userRepository.findByEmailAndDeletedAtIsNull(email)
-            .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 사용자입니다."));
-        user.setDeletedAt(LocalDate.now()); // 또는 LocalDateTime.now()
-        userRepository.save(user);
+    public boolean giveTutorialAchievement(Long userId) {
+        Long achieveId = 1L;
+        boolean already = usersAchieveRepository.existsByUser_UserIdAndAchievement_AchieveId(userId, achieveId);
+        if (already) return false;
+
+        UsersAchieve ua = new UsersAchieve();
+        ua.setUser(userRepository.getReferenceById(userId));
+        ua.setAchievement(achieveRepository.getReferenceById(achieveId));
+        ua.setAchievedAt(LocalDateTime.now());
+        usersAchieveRepository.save(ua);
+
+        return true;
+    }
+    public boolean isTutorialCompleted(User user) {
+        return StringUtils.hasText(user.getEmail()) &&
+                StringUtils.hasText(user.getNickname()) &&
+                StringUtils.hasText(user.getComment()) &&
+                StringUtils.hasText(user.getUserImage());
     }
 
     @Transactional
@@ -144,4 +155,24 @@ public class UserService implements UserDetailsService{
 
         return result;
     }
+    public boolean checkPassword(User user, String rawPassword) {
+        return passwordEncoder.matches(rawPassword, user.getPassword());
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmailAndDeletedAtIsNull(email)
+                .orElseThrow(() -> new UsernameNotFoundException("탈퇴했거나 존재하지 않는 사용자입니다."));
+
+        return new Principal(user);
+    }
+
+    @Transactional
+    public void softDeleteUser(String email) {
+        User user = userRepository.findByEmailAndDeletedAtIsNull(email)
+            .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 사용자입니다."));
+        user.setDeletedAt(LocalDate.now()); // 또는 LocalDateTime.now()
+        userRepository.save(user);
+    }
+
 }

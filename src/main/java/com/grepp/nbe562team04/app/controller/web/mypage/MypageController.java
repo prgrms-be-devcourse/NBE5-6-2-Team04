@@ -8,6 +8,7 @@ import com.grepp.nbe562team04.model.user.UserRepository;
 import com.grepp.nbe562team04.model.user.UserService;
 import com.grepp.nbe562team04.model.user.dto.UserDto;
 import com.grepp.nbe562team04.model.user.entity.User;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import jakarta.servlet.http.Cookie;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -59,7 +61,8 @@ public class MypageController {
                              @ModelAttribute UserDto dto,
                              @RequestParam("userImageFile") MultipartFile file,
                              @RequestParam("currentPassword") String currentPassword,
-                             Model model) throws IOException {
+                             Model model,
+                             HttpServletResponse response) throws IOException {
 
         String email = principal.getUsername();
         User user = userService.findByEmail(email);
@@ -73,6 +76,10 @@ public class MypageController {
             return "mypage/mypageUpdate"; // 다시 수정 페이지로
         }
         userService.updateUser(email, dto, file);
+        boolean achieved = userService.giveTutorialAchievement(user.getUserId());
+        if (achieved) {
+            return "redirect:/users/mypage?achievement=true";
+        }
         return "redirect:/users/mypage";
     }
 
