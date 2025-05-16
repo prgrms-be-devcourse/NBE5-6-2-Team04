@@ -43,6 +43,7 @@ CREATE TABLE interest (
                           interest_id BIGINT NOT NULL AUTO_INCREMENT,
                           type VARCHAR(255) NOT NULL COMMENT '관심분야 종류 (직업/언어/프레임워크)',
                           interest_name VARCHAR(255) NOT NULL COMMENT '관심분야명 (백엔드/Java/SpringBoot)',
+                        roadmap_url VARCHAR(255),
                           PRIMARY KEY (interest_id)
 );
 

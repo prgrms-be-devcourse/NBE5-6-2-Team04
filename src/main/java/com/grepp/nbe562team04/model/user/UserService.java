@@ -1,13 +1,14 @@
 package com.grepp.nbe562team04.model.user;
 
 import com.grepp.nbe562team04.model.auth.code.Role;
-import com.grepp.nbe562team04.model.auth.domain.Principal;
+import com.grepp.nbe562team04.model.interest.InterestRepository;
+import com.grepp.nbe562team04.model.interest.entity.Interest;
 import com.grepp.nbe562team04.model.level.LevelRepository;
 import com.grepp.nbe562team04.model.level.entity.Level;
 import com.grepp.nbe562team04.model.user.dto.UserDto;
 import com.grepp.nbe562team04.model.user.entity.User;
 
-import jakarta.persistence.EntityNotFoundException;
+import com.grepp.nbe562team04.model.user.entity.UserInterest;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,12 +21,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,34 +32,34 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper mapper;
     private final LevelRepository levelRepository;
+    private final InterestRepository interestRepository;
+    private final UserInterestRepository userInterestRepository;
 
-    @Transactional
-    public void signup(UserDto dto, Role role){
+@Transactional
+public Long signup(UserDto dto, Role role){
+    User user = mapper.map(dto, User.class);
+    Level defaultLevel = levelRepository.findFirstByOrderByLevelIdAsc()
+        .orElseThrow(() -> new IllegalStateException("기본 레벨이 존재하지 않습니다."));
 
-//        if (userRepository.existsById(dto.getUserId()))
-//            throw new CommonException(ResponseCode.BAD_REQUEST);
+    String encodedPassword = passwordEncoder.encode(dto.getPassword());
+    user.setPassword(encodedPassword);
+    user.setRole(role);
+    user.setLevel(defaultLevel);
+    user.setExp(0);
+    user.setCreatedAt(LocalDate.now());
+    user.setDeletedAt(null);
 
-        User user = mapper.map(dto, User.class);
-        Level defaultLevel = levelRepository.findFirstByOrderByLevelIdAsc()
-            .orElseThrow(() -> new IllegalStateException("기본 레벨이 존재하지 않습니다."));
+    User savedUser = userRepository.save(user);
+    return savedUser.getUserId();
+}
 
-        String encodedPassword = passwordEncoder.encode(dto.getPassword());
-        user.setPassword(encodedPassword);
-        user.setRole(role);
-        user.setLevel(defaultLevel);
-        user.setExp(0);
-        user.setCreatedAt(LocalDate.now());
-        user.setDeletedAt(null);
-        log.info("user:{}", user);
-        userRepository.save(user);
-    }
 
     public User findByEmail(String email) {
 
@@ -115,15 +113,15 @@ public class UserService {
 
         List<UserDto> activeUsers = users.stream()
             .filter(user -> user.getDeletedAt() == null && !user.getRole().name().equals("ROLE_ADMIN"))
-            .collect(Collectors.toList());
+            .toList();
 
         List<UserDto> deletedUsers = users.stream()
             .filter(user -> user.getDeletedAt() != null)
-            .collect(Collectors.toList());
+            .toList();
 
         List<UserDto> adminUsers = users.stream()
             .filter(user -> user.getRole().name().equals("ROLE_ADMIN") && user.getDeletedAt() == null)
-            .collect(Collectors.toList());
+            .toList();
 
         Map<String, List<UserDto>> result = new HashMap<>();
         result.put("activeUsers", activeUsers);
@@ -131,5 +129,22 @@ public class UserService {
         result.put("adminUsers", adminUsers);
 
         return result;
+    }
+
+    public void receiveInterest(Long userId, Long roleId, List<Long> skillIds) {
+        User user = userRepository.findByUserId(userId)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Interest role =interestRepository.findById(roleId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 직무입니다."));
+
+        userInterestRepository.save(new UserInterest(user, role));
+
+        for (Long skillId : skillIds) {
+            Interest skill = interestRepository.findById(skillId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 기술 ID입니다: " + skillId));
+
+            userInterestRepository.save(new UserInterest(user, skill));
+        }
     }
 }
