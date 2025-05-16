@@ -483,3 +483,20 @@ body {
   color: #333;
   cursor: pointer;
 }
+
+.modal {
+  position: fixed;            /* 화면 기준 고정 */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);  /* 가운데 정렬 */
+  z-index: 9999;              /* 거의 최상위 */
+  background-color: white;
+  padding: 2rem;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  display: none;              /* 기본은 숨김 */
+}
+
+.modal.active {
+  display: block;
+}
