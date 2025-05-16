@@ -30,10 +30,10 @@ public class GoalApiController {
     }
 
     //  목표 상세 조회
-    @GetMapping("/{id}")
-    public GoalResponseDto getGoal(@PathVariable Long id) {
-        return goalService.getGoalById(id);
-    }
+//    @GetMapping("/{id}")
+//    public GoalResponseDto getGoal(@PathVariable Long id) {
+//        return goalService.getGoalById(id);
+//    }
 
     //  목표 수정
     @PutMapping("/{id}/edit")

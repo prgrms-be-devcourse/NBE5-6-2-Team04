@@ -102,18 +102,13 @@
 
   <!-- 메인 영역 -->
   <main class="main-content">
-<!--    <div class="logout">-->
-<!--      <a th:href="@{/logout}" style="text-decoration: none; color: inherit;">-->
-<!--        로그아웃-->
-<!--      </a>-->
-<!--    </div>-->
 
     <!--  Company List   -->
     <p class="section-title">Company List</p>
 
     <div class="company-list">
       <a th:each="company : ${dashboard.goalCompanies}"
-         th:href="@{/companies/{id}(id=${company.companyId})}"
+         th:href="@{/companies/{companyId}/select(companyId=${company.companyId})}"
          class="company-card"
          th:classappend="|
                          ${company.companyName.toLowerCase()}
@@ -134,7 +129,7 @@
             <button class="dropdown-toggle" type="button">⋮</button>
             <ul class="dropdown-menu">
               <li>수정</li>
-              <li>삭제</li>
+              <li th:onclick="'deleteCompany(' + ${company.companyId} + ')'">삭제</li>
             </ul>
           </div>
         </div>
@@ -149,7 +144,7 @@
       </a>
 
       <!-- TODO 생성 카드 -->
-      <a th:href="@{/todo/create}" class="company-card create">
+      <div class="company-card create" onclick="openModal('companyModal')">
         <p class="goal-todo-desc-top">
           <span class="material-icons">control_point</span>
           목표 기업 TODO 생성
@@ -158,8 +153,7 @@
         <p class="goal-todo-desc-bottom">
           목표 기업은 최대 3개까지 생성 가능합니다.
         </p>
-      </a>
-
+      </div>
     </div>
   </main>
 </div>
@@ -190,12 +184,6 @@
 </div>
 
 <script>
-<!--  fetch('/css/logo.html')-->
-<!--  .then(res => res.text())-->
-<!--  .then(html => {-->
-<!--    document.getElementById('logo-container').innerHTML = html;-->
-<!--  });-->
-
   // 드롭다운(수정, 삭제)
   document.addEventListener('DOMContentLoaded', () => {
     const toggles = document.querySelectorAll('.dropdown-toggle');
@@ -212,6 +200,13 @@
         // 현재 것만 토글
         const menu = toggle.nextElementSibling;
         menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+
+        const items = menu.querySelectorAll('li');
+        items.forEach(item => {
+          item.addEventListener('click', (e) => {
+            e.stopPropagation(); // 수정, 삭제 눌러도 상세 진입 안 됨
+          });
+        });
       });
     });
 
@@ -236,7 +231,7 @@
 
 </script>
 
-<!--목표 기어 생성 모달(post 보내기)-->
+<!--목표 기업 생성 모달(post 보내기)-->
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("create-form");
@@ -253,27 +248,51 @@
 
       fetch('/companies', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(data)
       })
-              .then(res => {
-                if (res.ok) {
-                  alert("등록 완료!");
-                  closeModal('companyModal');
-                  window.location.reload();
-                } else {
-                  alert("등록 실패");
-                }
-              })
-              .catch(err => {
-                console.error(err);
-                alert("에러 발생");
-              });
+      .then(res => {
+        if (res.ok) {
+          alert("등록 완료!");
+          closeModal('companyModal');
+          window.location.reload();
+        } else {
+          alert("등록 실패");
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("에러 발생");
+      });
     });
   });
 
   function closeModal(id) {
     document.getElementById(id).style.display = 'none';
+  }
+</script>
+
+// 삭제 기능
+<script>
+  function deleteCompany(companyId) {
+    console.log("삭제 요청 ID:", companyId);
+    if (confirm("정말 삭제하시겠습니까?")) {
+      fetch(`/companies/${companyId}/delete`, {
+        method: 'DELETE'
+      })
+      .then(res => {
+        if (res.ok) {
+          alert("삭제 완료!");
+          window.location.reload(); // 새로고침
+        } else {
+          alert("삭제 실패");
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("에러 발생");
+      });
+    }
   }
 </script>
 

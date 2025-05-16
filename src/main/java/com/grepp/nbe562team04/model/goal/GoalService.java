@@ -54,20 +54,20 @@ public class GoalService {
     }
 
     // 목표 상세 조회
-    @Transactional
-    public GoalResponseDto getGoalById(Long goalId) {
-        Goal goal = goalRepository.findById(goalId)
-                .orElseThrow(() -> new RuntimeException("해당 목표가 존재하지 않습니다."));
-
-        return GoalResponseDto.builder()
-                .goalId(goal.getGoalId())
-                .title(goal.getTitle())
-                .startDate(goal.getStartDate())
-                .endDate(goal.getEndDate())
-                .isDone(goal.getIsDone())
-                .createdAt(goal.getCreatedAt())
-                .build();
-    }
+//    @Transactional
+//    public GoalResponseDto getGoalById(Long goalId) {
+//        Goal goal = goalRepository.findById(goalId)
+//                .orElseThrow(() -> new RuntimeException("해당 목표가 존재하지 않습니다."));
+//
+//        return GoalResponseDto.builder()
+//                .goalId(goal.getGoalId())
+//                .title(goal.getTitle())
+//                .startDate(goal.getStartDate())
+//                .endDate(goal.getEndDate())
+//                .isDone(goal.getIsDone())
+//                .createdAt(goal.getCreatedAt())
+//                .build();
+//    }
 
     // 목표 수정
     @Transactional
