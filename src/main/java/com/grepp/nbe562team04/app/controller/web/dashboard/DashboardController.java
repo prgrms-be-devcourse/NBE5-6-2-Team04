@@ -44,13 +44,13 @@ public class DashboardController {
     }
 
     // 목표기업 상세 : 모달페이지
-    @GetMapping("/dashboard/company/{id}")
-    public String companyDetail(@PathVariable Long id, Model model) {
-        GoalCompanyDto companyDto = dashboardService.getCompanyDetailById(id);
-        model.addAttribute("company", companyDto);
-
-        return "dashboard/company-detail";
-    }
+//    @GetMapping("/dashboard/company/{id}")
+//    public String companyDetail(@PathVariable Long id, Model model) {
+//        GoalCompanyDto companyDto = dashboardService.getCompanyDetailById(id);
+//        model.addAttribute("company", companyDto);
+//
+//        return "dashboard/company-detail";
+//    }
 
     // 알림 토글
     @PostMapping("/dashboard/notification-toggle")
@@ -84,7 +84,22 @@ public class DashboardController {
         company.setUser(user);
 
         dashboardRepository.save(company);
+    }
 
-        return "redirect:/dashboard";
+    // 목표기업 단일 조회
+    @GetMapping("/companies/{id}/select")
+    public String companyDetail(@PathVariable Long id, Model model) {
+        GoalCompanyDto companyDto = dashboardService.getCompanyDetailById(id);
+
+
+        model.addAttribute("company", companyDto);
+
+        return "goal/goal";
+    }
+
+    // todo 페이지
+    @GetMapping("/todo")
+    public String showTodo(){
+        return "todo";
     }
 }
