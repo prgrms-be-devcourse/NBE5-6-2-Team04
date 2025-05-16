@@ -1,8 +1,11 @@
 package com.grepp.nbe562team04.model.goalcompany;
 
+import com.grepp.nbe562team04.model.goal.GoalRepository;
+import com.grepp.nbe562team04.model.goal.entity.Goal;
 import com.grepp.nbe562team04.model.goalcompany.dto.GoalCompanyRequestDto;
 import com.grepp.nbe562team04.model.goalcompany.dto.GoalCompanyResponseDto;
 import com.grepp.nbe562team04.model.goalcompany.entity.GoalCompany;
+import com.grepp.nbe562team04.model.todo.TodoRepository;
 import com.grepp.nbe562team04.model.user.entity.User;
 import com.grepp.nbe562team04.model.user.UserRepository;
 import java.time.temporal.ChronoUnit;
@@ -20,6 +23,9 @@ public class GoalCompanyService {
 
     private final GoalCompanyRepository goalCompanyRepository;
     private final UserRepository userRepository;
+    private final GoalRepository goalRepository;
+    private final TodoRepository todoRepository;
+
 
     public void createGoalCompany(GoalCompanyRequestDto dto, Long userId ) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
@@ -77,9 +83,19 @@ public class GoalCompanyService {
 
     // 삭제
     @Transactional
-    public void deleteGoalCompany(Long id) {
-        GoalCompany company = goalCompanyRepository.findById(id)
+    public void deleteGoalCompany(Long companyId) {
+        GoalCompany company = goalCompanyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("해당 기업이 존재하지 않습니다."));
+
+        List<Goal> goals = goalRepository.findByCompanyCompanyId(companyId);
+
+        for (Goal goal : goals) {
+            //  각 goal에 연결된 todo 삭제
+            todoRepository.deleteByGoalGoalId(goal.getGoalId());
+
+            // goal 삭제
+            goalRepository.delete(goal);
+        }
 
         goalCompanyRepository.delete(company);
     }

@@ -136,7 +136,8 @@
             <button class="dropdown-toggle" type="button">⋮</button>
             <ul class="dropdown-menu">
               <li>수정</li>
-              <li>삭제</li>
+              <li th:onclick="'deleteCompany(' + ${company.companyId} + ')'">삭제</li>
+
             </ul>
           </div>
         </div>
@@ -277,6 +278,30 @@
 
   function closeModal(id) {
     document.getElementById(id).style.display = 'none';
+  }
+</script>
+
+// 삭제 기능
+<script>
+  function deleteCompany(companyId) {
+    console.log("삭제 요청 ID:", companyId);
+    if (confirm("정말 삭제하시겠습니까?")) {
+      fetch(`/companies/${companyId}/delete`, {
+        method: 'DELETE'
+      })
+              .then(res => {
+                if (res.ok) {
+                  alert("삭제 완료!");
+                  window.location.reload(); // 새로고침
+                } else {
+                  alert("삭제 실패");
+                }
+              })
+              .catch(err => {
+                console.error(err);
+                alert("에러 발생");
+              });
+    }
   }
 </script>
 

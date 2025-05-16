@@ -27,10 +27,10 @@ public class GoalCompanyApiController {
     }
 
     // 조회(단순 화면 상에 출력) -> 추후 뷰 컨트롤러로 이동 필요
-    @GetMapping
-    public List<GoalCompanyResponseDto> getAllCompanies(){
-        return goalCompanyService.getAllGoalCompanies();
-    }
+//    @GetMapping
+//    public List<GoalCompanyResponseDto> getAllCompanies(){
+//        return goalCompanyService.getAllGoalCompanies();
+//    }
 
     // TODO: api 위치 변경 필요
 //    // 상세 조회
@@ -40,16 +40,16 @@ public class GoalCompanyApiController {
 //    }
 
     // 수정
-    @PutMapping("/{id}/edit")
+    @PutMapping("/{companyId}/update")
     public ResponseEntity<String> updateCompany(@PathVariable Long id, @RequestBody GoalCompanyRequestDto dto) {
         goalCompanyService.updateGoalCompany(id, dto);
         return ResponseEntity.ok("수정 완료");
     }
 
     // 삭제
-    @DeleteMapping("/{id}/delete")
-    public ResponseEntity<String> deleteCompany(@PathVariable Long id) {
-        goalCompanyService.deleteGoalCompany(id);
+    @DeleteMapping("/{companyId}/delete")
+    public ResponseEntity<String> deleteCompany(@PathVariable Long companyId) {
+        goalCompanyService.deleteGoalCompany(companyId);
         return ResponseEntity.ok("삭제 완료");
     }
 

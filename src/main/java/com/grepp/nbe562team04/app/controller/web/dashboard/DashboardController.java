@@ -96,7 +96,6 @@ public class DashboardController {
             todoMap.put(goal.getGoalId(), todos);
         }
 
-
         model.addAttribute("company", companyDto);   // 기업 정보
         model.addAttribute("goals", goalList);       // 목표 리스트
         model.addAttribute("todoMap", todoMap);
