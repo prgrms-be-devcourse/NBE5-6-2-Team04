@@ -217,4 +217,4 @@ src/main/resources/application.yml
 uploads/profile/*.png
 
 # 하지만 default.png는 예외로 추적 허용
-!uploads/profile/default.png
+!uploads/profile/default.pnguploads/profile/*.png
