@@ -37,16 +37,16 @@ public class GeminiController {
         // 유저의 응답만 보냄 즉 대화 맥락은 파악못함
         // 유저 메세지를 받고 그에 해당하는 대답이 담김
 
-        String reply = geminiService.getGeminiReply(userMessage);
+        String reply = geminiService.getGeminiReply(history);
 
 
-        ChatMessageDto aiChat = new ChatMessageDto("ai", reply, LocalDate.now());
+        ChatMessageDto aiChat = new ChatMessageDto("model", reply, LocalDate.now());
         chatHistoryService.saveMessage(session, aiChat);
 
 
         // 응답결과를 HTMl에 전달
         model.addAttribute("userMessage", userMessage); // (긍정,부정)전달
         model.addAttribute("reply", reply); // LLM의 답변 ex) 자소서 준비하세요
-        return "todo"; //redirect?
+        return "todo";
     }
 }
