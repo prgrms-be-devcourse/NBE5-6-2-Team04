@@ -87,23 +87,7 @@
       </form>
     </div>
 
-      주요알림
-    <div class="alert-box">
-      <h3>
-        🔔 주요 알림
-        <span class="count" th:text="${#lists.size(dashboard.goalCompanies)}">0</span>
-      </h3>
-      <ul th:if="${dashboard.notificationOn}">
-        <li th:each="company : ${dashboard.goalCompanies}">
-          <strong style="color:red" th:text="${company.companyName}">기업명</strong>
-          <span th:text="${company.statusLabel != null ? company.statusLabel : '상태없음'}">상태</span>
-          <span th:text="'D-' + ${company.DDay} + '일'">N일</span>전 입니다.
-        </li>
-      </ul>
-      <p th:unless="${dashboard.notificationOn}">
-        현재 알림이 꺼져 있어요 🔕
-      </p>
-    </div>
+
   </aside>
 
   <!-- 메인 영역 -->
@@ -118,22 +102,12 @@
     <p class="section-title" th:text="${company.companyName}">Goal List</p>
 
     <div class="company-list">
-      <a th:each="goal : ${goals}" class="company-card">
+      <div th:each="goal : ${goals}" class="company-card">
 
 
         <div class="card-header">
           <span class="status" th:text="${goal.isDone}? '완료' : '진행 중'">진행 상태</span>
           <p class="company-name" th:text="${goal.title}">회사명</p>
-
-
-          <!-- 수정/삭제 드롭다운  -->
-          <div class="dropdown">
-            <button class="dropdown-toggle" type="button">⋮</button>
-            <ul class="dropdown-menu">
-              <li>수정</li>
-              <li>삭제</li>
-            </ul>
-          </div>
         </div>
 
         <!-- 목표 카드 -->
@@ -143,14 +117,21 @@
               <span th:text="${todo.content}">투두 내용</span>
               <span th:if="${todo.isDone}" style="color: green;">(완료)</span>
               <span th:unless="${todo.isDone}" style="color: red;">(미완료)</span>
+              <div class="goal-actions">
+                <button type="button" class="update-todo-btn" th:attr="data-id=${todo.todoId}">수정</button>
+                <button type="button" class="delete-todo-btn" th:attr="data-id=${todo.todoId}">삭제</button>
+              </div>
             </li>
           </ul>
-
         </div>
-      </a>
+        <div class="todo-actions">
+          <button type="button" class="update-goal-btn" th:attr="data-id=${goal.goalId}">수정</button>
+          <button type="button" class="delete-goal-btn" th:attr="data-id=${goal.goalId}">삭제</button>
+        </div>
+      </div>
 
       <!-- 목표 생성 카드 -->
-      <div class="company-card create" onclick="openModal('companyModal')">
+      <div class="company-card create goal-create-btn" onclick="openModal('goalModal')">
         <p class="goal-todo-desc-top">
           <span class="material-icons">control_point</span>
           목표 생성
@@ -159,117 +140,167 @@
         <p class="goal-todo-desc-bottom">
           목표는 3개까지 무료로 생성이 가능합니다(4개 부터 유료^^)
         </p>
-      </a>
       </div>
+    </div>
   </main>
-</div>
 
-<!-- 목표 기업 생성 모달 -->
-<div id="companyModal" class="modal" style="display: none;">
+
+<!-- 목표  생성 모달 -->
+<div id="goalModal" class="modal" style="display: none;">
   <div class="modal-content">
-    <span class="close" onclick="closeModal('companyModal')">&times;</span>
+    <span class="close" onclick="closeModal('goalModal')">&times;</span>
     <h2>목표 생성</h2>
-    <form id="create-form">
+    <form id="goal-form" th:attr="data-company-id=${company.companyId}">
       <input type="text" name="title" placeholder="목표를 입력해주세요" required><br><br>
-
       <label>시작일</label><br>
       <input type="date" name="startDate"><br><br>
       <label>마감일</label><br>
       <input type="date" name="endDate"><br><br>
-
       <button type="submit">생성</button>
     </form>
   </div>
 </div>
 
-<!-- 목표 기업 생성 모달 -->
 <script>
-  function openModal(companyModal) {
-    document.getElementById(companyModal).style.display = "flex";
-  }
-
-  function closeModal(companyModal) {
-    document.getElementById(companyModal).style.display = "none";
-  }
-
-</script>
-
-<!--목표 생성 모달(post 보내기)-->
-<script th:inline="javascript">
   document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("create-form");
+    const form = document.getElementById("goal-form");
 
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      let companyId = [[${company.companyId}]]; // ??? todo 왜이러는건지...?????
-      const data = {
-        companyId: companyId,
-        title: form.title.value,
-        startDate: form.startDate.value,
-        endDate: form.endDate.value
+    // 생성
+    document.querySelector(".goal-create-btn").addEventListener("click", () => {
+      form.reset();
+      form.removeAttribute("data-id");
+      document.querySelector("#goalModal h2").textContent = "목표 추가";
+      document.querySelector("#goalModal button[type='submit']").textContent = "추가";
+      form.onsubmit = function (e) {
+        e.preventDefault();
+        createGoal();
       };
-      fetch(`/companies/${companyId}/goals`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      })
-              .then(res => {
-                if (res.ok) {
-                  alert("등록 완료!");
-                  closeModal('companyModal');
-                  window.location.reload();
-                } else {
-                  alert("등록 실패");
-                }
-              })
-              .catch(err => {
-                console.error(err);
-                alert("에러 발생");
-              });
+      openModal("goalModal");
+    });
+
+    // 수정
+    document.querySelectorAll(".update-goal-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const goalId = btn.dataset.id;
+        fillGoalForm(goalId);
+        form.setAttribute("data-id", goalId);
+        document.querySelector("#goalModal h2").textContent = "목표 수정";
+        document.querySelector("#goalModal button[type='submit']").textContent = "수정";
+        form.onsubmit = function (e) {
+          e.preventDefault();
+          updateGoal(e);
+        };
+        openModal("goalModal");
+      });
+    });
+
+    // 삭제
+    document.querySelectorAll(".delete-goal-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const goalId = btn.dataset.id;
+        deleteGoal(goalId);
+      });
     });
   });
 
-  function closeModal(id) {
-    document.getElementById(id).style.display = 'none';
+  function createGoal() {
+    const form = document.getElementById("goal-form");
+    const companyId = form.dataset.companyId; // 필요시 상위에서 설정
+    const data = {
+      companyId: companyId,
+      title: form.title.value,
+      startDate: form.startDate.value,
+      endDate: form.endDate.value
+    };
+
+    fetch(`/companies/${companyId}/goals`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(res => {
+      if (res.ok) {
+        alert("등록 완료!");
+        closeModal("goalModal");
+        location.reload();
+      } else {
+        alert("등록 실패");
+      }
+    }).catch(err => {
+      console.error(err);
+      alert("에러 발생");
+    });
+  }
+
+  function updateGoal(e) {
+    const form = document.getElementById("goal-form");
+    const goalId = form.dataset.id;
+
+    const data = {
+      title: form.title.value,
+      startDate: form.startDate.value,
+      endDate: form.endDate.value
+    };
+
+    fetch(`/goals/${goalId}/update`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(res => {
+      if (res.ok) {
+        alert("수정 완료!");
+        closeModal("goalModal");
+        location.reload();
+      } else {
+        alert("수정 실패");
+      }
+    }).catch(err => {
+      console.error(err);
+      alert("수정 중 오류 발생");
+    });
+  }
+
+  function deleteGoal(goalId) {
+    if (confirm("정말 삭제하시겠습니까?")) {
+      fetch(`/goals/${goalId}/delete`, {
+        method: 'DELETE'
+      }).then(res => {
+        if (res.ok) {
+          alert("삭제 완료!");
+          location.reload();
+        } else {
+          alert("삭제 실패");
+        }
+      }).catch(err => {
+        console.error(err);
+        alert("에러 발생");
+      });
+    }
+  }
+
+  function fillGoalForm(goalId) {
+    fetch(`/goals/${goalId}`)
+            .then(res => res.json())
+            .then(data => {
+              const form = document.getElementById("goal-form");
+              form.title.value = data.title;
+              form.startDate.value = data.startDate;
+              form.endDate.value = data.endDate;
+            })
+            .catch(err => {
+              console.error("목표 불러오기 실패", err);
+              alert("수정할 데이터를 불러오지 못했습니다.");
+            });
+  }
+
+  function openModal(goalModal) {
+    document.getElementById(goalModal).style.display = "flex";
+  }
+
+  function closeModal(goalModal) {
+    document.getElementById(goalModal).style.display = "none";
   }
 </script>
 
-<script>
-  // 왼쪽 상단 로고
-  // fetch('/css/logo.html')
-  // .then(res => res.text())
-  // .then(html => {
-  //   document.getElementById('logo-container').innerHTML = html;
-  // });
-
-  // 드롭다운(수정, 삭제)
-  document.addEventListener('DOMContentLoaded', () => {
-    const toggles = document.querySelectorAll('.dropdown-toggle');
-
-    toggles.forEach((toggle) => {
-      toggle.addEventListener('click', (e) => {
-        e.stopPropagation(); // 다른 곳 클릭 막기
-        // 모든 드롭다운 닫기
-        document.querySelectorAll('.dropdown-menu').forEach(menu => {
-          if (menu !== toggle.nextElementSibling) {
-            menu.style.display = 'none';
-          }
-        });
-        // 현재 것만 토글
-        const menu = toggle.nextElementSibling;
-        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
-      });
-    });
-
-    // 페이지 어디든 클릭하면 메뉴 닫힘
-    document.addEventListener('click', () => {
-      document.querySelectorAll('.dropdown-menu').forEach(menu => {
-        menu.style.display = 'none';
-      });
-    });
-  });
-</script>
 
 
 
