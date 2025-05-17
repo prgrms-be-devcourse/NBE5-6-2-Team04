@@ -3,16 +3,11 @@ package com.grepp.nbe562team04.app.controller.api.goalCompany;
 import com.grepp.nbe562team04.model.auth.domain.Principal;
 import com.grepp.nbe562team04.model.goalcompany.GoalCompanyService;
 import com.grepp.nbe562team04.model.goalcompany.dto.GoalCompanyRequestDto;
+import com.grepp.nbe562team04.model.goalcompany.dto.GoalCompanyResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -41,18 +36,18 @@ public class GoalCompanyApiController {
 //        return goalCompanyService.getAllGoalCompanies();
 //    }
 
-    // TODO: api 위치 변경 필요
-//    // 상세 조회
-//    @GetMapping("/{id}")
-//    public GoalCompanyResponseDto getCompanyById(@PathVariable Long id) {
-//        return goalCompanyService.getCompanyById(id);
-//    }
+
+    // 상세 조회
+    @GetMapping("/{companyId}")
+    public GoalCompanyResponseDto getCompanyById(@PathVariable Long companyId) {
+        return goalCompanyService.getCompanyById(companyId);
+    }
 
     // 수정
     @PutMapping("/{companyId}/update")
-    public ResponseEntity<String> updateCompany(@PathVariable Long id,
+    public ResponseEntity<String> updateCompany(@PathVariable Long companyId,
         @RequestBody GoalCompanyRequestDto dto) {
-        goalCompanyService.updateGoalCompany(id, dto);
+        goalCompanyService.updateGoalCompany(companyId, dto);
         return ResponseEntity.ok("수정 완료");
     }
 
