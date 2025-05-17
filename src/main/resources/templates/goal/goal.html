@@ -11,6 +11,7 @@
 <h1>목표 기업 상세 페이지입니다</h1>
 <p th:text="'기업명: ' + ${company.companyName}">기업명 로딩 실패</p>
 
+<h2>🎯 목표 + 할 일 목록</h2>
 <h2>목표 + 할 일 목록</h2>
 <ul th:each="goal : ${goals}">
   <li>
@@ -23,6 +24,7 @@
       상태: <span th:text="${goal.isDone} ? '완료' : '진행 중'"></span>
     </div>
 
+    <!-- ✅ 해당 목표(goal.goalId)에 대한 todo 리스트 출력 -->
     <!--해당 목표(goal.goalId)에 대한 todo 리스트 출력 -->
     <ul>
       <li th:each="todo : ${todoMap[goal.goalId]}">
@@ -35,7 +37,6 @@
 </ul>
 
 </body>
-</html>
 
 <!--<body>-->
 <!--&lt;!&ndash;<div id="logo-container"></div>&ndash;&gt;-->
