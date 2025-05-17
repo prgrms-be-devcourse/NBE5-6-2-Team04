@@ -234,6 +234,8 @@
     document.querySelector(".company-card.create").addEventListener("click", () => {
       form.reset();
       form.removeAttribute("data-id");
+      document.querySelector("#companyModal h2").textContent = "목표 기업 생성";
+      document.querySelector("#companyModal button[type='submit']").textContent = "생성";
       form.onsubmit = function (e) {
         e.preventDefault();
         createCompany();
@@ -247,6 +249,8 @@
         const companyId = btn.dataset.id;
         fillForm(companyId);
         form.setAttribute("data-id", companyId);
+        document.querySelector("#companyModal h2").textContent = "목표 기업 수정";
+        document.querySelector("#companyModal button[type='submit']").textContent = "수정";
         form.onsubmit = function (e) {
           e.preventDefault();
           updateCompany(e);
