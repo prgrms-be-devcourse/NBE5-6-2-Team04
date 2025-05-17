@@ -8,4 +8,6 @@ import java.util.List;
 public interface TodoRepository extends JpaRepository<Todo, Long> {
 
     List<Todo> findByGoalGoalId(Long goalId); // 특정 목표(goal)에 속한 투두 리스트
+
+    void deleteByGoalGoalId(Long goalId);
 }
