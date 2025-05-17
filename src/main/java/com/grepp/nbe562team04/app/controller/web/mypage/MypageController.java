@@ -1,10 +1,11 @@
 package com.grepp.nbe562team04.app.controller.web.mypage;
 
 import com.grepp.nbe562team04.model.achieve.AchievementService;
+import com.grepp.nbe562team04.model.achieve.dto.AchievementDto;
+import com.grepp.nbe562team04.model.achieve.entity.Achievement;
+import com.grepp.nbe562team04.model.user.entity.UsersAchieve;
 import com.grepp.nbe562team04.model.auth.domain.Principal;
-import com.grepp.nbe562team04.model.level.LevelRepository;
 import com.grepp.nbe562team04.model.level.LevelService;
-import com.grepp.nbe562team04.model.user.UserRepository;
 import com.grepp.nbe562team04.model.user.UserService;
 import com.grepp.nbe562team04.model.user.dto.UserDto;
 import com.grepp.nbe562team04.model.user.entity.User;
@@ -19,6 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 
 @Controller
@@ -38,10 +42,12 @@ public class MypageController {
                         Model model){
         String email = principal.getUsername();
         User user = userService.findByEmail(email);
+        List<UsersAchieve> usersAchieves = userService.findAchieveByUserId(user.getUserId());
 
         int progress = levelService.levelProgress(user);
         model.addAttribute("user", user);
         model.addAttribute("progressPercent", progress);
+        model.addAttribute("userAchieve", usersAchieves);
         return "mypage/mypage";
     }
 
@@ -80,7 +86,7 @@ public class MypageController {
         String achievedName = achievementService.giveTutorialAchievement(user.getUserId());
 
         if (achievedName != null) {
-            redirectAttributes.addAttribute("achievementName", achievedName);
+            redirectAttributes.addAttribute("achievementName", URLEncoder.encode(achievedName, StandardCharsets.UTF_8));
         }
         return "redirect:/users/mypage";
     }
@@ -91,5 +97,18 @@ public class MypageController {
         String email = principal.getUsername();
         userService.softDeleteUser(email);
         return ResponseEntity.ok("탈퇴 완료");
+    }
+
+//    @GetMapping("achievements/all")
+//    @ResponseBody
+//    public List<Achievement> getAllAchievements() {
+//        return achievementService.getAllAchievements(); // findAll() 등
+//    }
+
+    @GetMapping("achievements")
+    @ResponseBody
+    public List<AchievementDto> getUserAchievements(@AuthenticationPrincipal Principal principal) {
+        User user = userService.findByEmail(principal.getUsername());
+        return achievementService.getUserAchievements(user.getUserId());
     }
 }

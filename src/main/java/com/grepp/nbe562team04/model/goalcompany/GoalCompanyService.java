@@ -1,5 +1,6 @@
 package com.grepp.nbe562team04.model.goalcompany;
 
+import com.grepp.nbe562team04.model.achieve.AchievementService;
 import com.grepp.nbe562team04.model.goal.GoalRepository;
 import com.grepp.nbe562team04.model.goal.entity.Goal;
 import com.grepp.nbe562team04.model.goalcompany.dto.GoalCompanyRequestDto;
@@ -25,8 +26,9 @@ public class GoalCompanyService {
     private final UserRepository userRepository;
     private final GoalRepository goalRepository;
     private final TodoRepository todoRepository;
+    private final AchievementService achievementService;
 
-    public void createGoalCompany(GoalCompanyRequestDto dto, Long userId ) {
+    public String  createGoalCompany(GoalCompanyRequestDto dto, Long userId ) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         GoalCompany company = GoalCompany.builder()
@@ -39,6 +41,7 @@ public class GoalCompanyService {
                 .build();
 
         goalCompanyRepository.save(company);
+        return achievementService.giveGoalCompanyAchievement(userId);
     }
 
     // 기업 리스트 조회

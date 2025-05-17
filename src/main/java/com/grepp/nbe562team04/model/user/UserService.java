@@ -1,6 +1,7 @@
 package com.grepp.nbe562team04.model.user;
 
 import com.grepp.nbe562team04.model.achieve.AchievementService;
+import com.grepp.nbe562team04.model.user.entity.UsersAchieve;
 import com.grepp.nbe562team04.model.auth.code.Role;
 import com.grepp.nbe562team04.model.auth.domain.Principal;
 import com.grepp.nbe562team04.model.interest.InterestRepository;
@@ -23,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-
-import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +48,7 @@ public class UserService implements UserDetailsService {
     private final InterestRepository interestRepository;
     private final UserInterestRepository userInterestRepository;
     private final AchievementService achievementService;
+    private final UsersAchieveRepository usersAchieveRepository;
 
     @Transactional
     public Long signup(UserDto dto, Role role) {
@@ -79,6 +79,15 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    public List<UsersAchieve> findAchieveByUserId(Long userId){
+
+        return usersAchieveRepository.findTop3ByUser_UserIdOrderByAchievedAtDesc(userId);
+    }
+    public List<UsersAchieve> findAllAchieveByUserId(Long userId){
+
+        return usersAchieveRepository.findByUser_UserIdOrderByAchievedAtDesc(userId);
+    }
+
     @Transactional
     public void updateUser(String email, UserDto dto, MultipartFile file) throws IOException {
         User user = userRepository.findByEmail(email)
@@ -101,10 +110,6 @@ public class UserService implements UserDetailsService {
             user.setUserImage(filename);
         }
         userRepository.save(user);
-
-        if (achievementService.isTutorialCompleted(user)) {
-            achievementService.giveTutorialAchievement(user.getUserId());
-        }
     }
 
     @Transactional

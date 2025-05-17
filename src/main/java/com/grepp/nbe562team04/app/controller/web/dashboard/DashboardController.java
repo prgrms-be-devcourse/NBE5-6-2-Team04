@@ -53,8 +53,6 @@ public class DashboardController {
         return "dashboard/dashboard";
     }
 
-
-
     // 알림 토글
     @PostMapping("/dashboard/notification-toggle")
     public String toggleNotification(@AuthenticationPrincipal Principal principal) {
@@ -83,7 +81,6 @@ public class DashboardController {
             todoMap.put(goal.getGoalId(), todos);
         }
 
-
         model.addAttribute("dashboard", dto);
         model.addAttribute("company", companyDto);   // 기업 정보
         model.addAttribute("goals", goalList);       // 목표 리스트
@@ -98,11 +95,4 @@ public class DashboardController {
         return "todo";
     }
 
-    // 마이페이지
-    @GetMapping("/mypage")
-    public String myPage(@AuthenticationPrincipal Principal principal, Model model) {
-        User user = principal.getUser();
-        model.addAttribute("user", user);
-        return "mypage/mypage";
-    }
 }
