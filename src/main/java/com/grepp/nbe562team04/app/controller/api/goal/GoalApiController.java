@@ -11,13 +11,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/dashboard/goal")
+@RequestMapping("/companies")
 public class GoalApiController {
 
     private final GoalService goalService;
 
     //  목표 생성
-    @PostMapping
+    @PostMapping("/{companyId}/goals")
     public ResponseEntity<String> create(@RequestBody GoalRequestDto dto) {
         goalService.createGoal(dto);
         return ResponseEntity.ok("목표 생성 완료");

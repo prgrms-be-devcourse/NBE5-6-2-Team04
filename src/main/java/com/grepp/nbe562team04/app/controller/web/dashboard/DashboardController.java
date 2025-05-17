@@ -86,7 +86,13 @@ public class DashboardController {
 
     // 목표기업 단일 조회
     @GetMapping("/companies/{CompanyId}/select")
-    public String companyDetail(@PathVariable Long CompanyId, Model model) {
+    public String companyDetail(@AuthenticationPrincipal Principal principal,@PathVariable Long CompanyId, Model model) {
+        User detachedUser = principal.getUser();
+
+        User managedUser = userRepository.findById(detachedUser.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
+
+        DashboardDto dto = dashboardService.getDashboard(managedUser);
         GoalCompanyDto companyDto = dashboardService.getCompanyDetailById(CompanyId);
         List<GoalResponseDto> goalList = goalService.getGoalsByCompanyId(CompanyId);
 
@@ -96,6 +102,8 @@ public class DashboardController {
             todoMap.put(goal.getGoalId(), todos);
         }
 
+
+        model.addAttribute("dashboard", dto);
         model.addAttribute("company", companyDto);   // 기업 정보
         model.addAttribute("goals", goalList);       // 목표 리스트
         model.addAttribute("todoMap", todoMap);
