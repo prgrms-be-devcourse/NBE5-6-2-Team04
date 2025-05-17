@@ -1,7 +1,6 @@
 package com.grepp.nbe562team04.ai.controller;
 
 import com.grepp.nbe562team04.ai.dto.ChatMessageDto;
-import com.grepp.nbe562team04.ai.dto.GeminiRequestDto;
 import com.grepp.nbe562team04.ai.service.ChatHistoryService;
 import com.grepp.nbe562team04.ai.service.GeminiService;
 import jakarta.servlet.http.HttpSession;

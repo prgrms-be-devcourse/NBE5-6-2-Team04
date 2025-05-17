@@ -3,6 +3,7 @@ package com.grepp.nbe562team04.ai.service;
 import com.grepp.nbe562team04.ai.dto.ChatMessageDto;
 import com.grepp.nbe562team04.ai.dto.GeminiRequestDto;
 import com.grepp.nbe562team04.ai.dto.GeminiResponseDto;
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,13 +25,24 @@ public class GeminiService {
 
     // 전체 대화 히스토리를 기반으로 Gemini 응답 받기
     public String getGeminiReply(List<ChatMessageDto> history) {
+        List<GeminiRequestDto.Content> contents = new ArrayList<>();
+
+        GeminiRequestDto.Content prompt = new GeminiRequestDto.Content(
+            "user",
+            List.of(new GeminiRequestDto.Part("너는 나의 취업 조력자이자 멘토야. 답변은 간결하고 실용적이어야 해. 질문은 '긍정' 또는 '부정'으로 대답할 수 있도록 해줘."))
+        );
+        contents.add(prompt);
+
+
         // 1. ChatMessageDto 리스트 → GeminiRequestDto.Content 리스트로 변환
-        List<GeminiRequestDto.Content> contents = history.stream()
-            .map(chat -> new GeminiRequestDto.Content(
-                chat.getRole(),  // "user" or "ai"
-                List.of(new GeminiRequestDto.Part(chat.getMessage()))
-            ))
-            .collect(Collectors.toList());
+        contents.addAll(
+            history.stream()
+                .map(chat -> new GeminiRequestDto.Content(
+                    chat.getRole(),
+                    List.of(new GeminiRequestDto.Part(chat.getMessage()))
+                ))
+                .collect(Collectors.toList())
+        );
 
         // 2. 요청 객체 생성
         GeminiRequestDto request = new GeminiRequestDto(contents);

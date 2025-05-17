@@ -17,4 +17,6 @@ public class ChatMessageDto {
     private String role;
     private String message;
     private LocalDate timestamp;
+
+
 }
