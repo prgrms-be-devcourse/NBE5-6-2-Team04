@@ -52,6 +52,9 @@ public class GeminiService {
                 )
             )
         );
+// 2025-05-17(토) History 전송기능 구현
+
+
 
         // API 호출
         return webClient.post()
