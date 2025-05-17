@@ -7,236 +7,272 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 </head>
+
 <body>
 <h1>목표 기업 상세 페이지입니다</h1>
 <p th:text="'기업명: ' + ${company.companyName}">기업명 로딩 실패</p>
 
-<h2>🎯 목표 + 할 일 목록</h2>
-<h2>목표 + 할 일 목록</h2>
-<ul th:each="goal : ${goals}">
-  <li>
-    <strong th:text="${goal.title}">목표 제목</strong>
-    <div>
-      시작일: <span th:text="${goal.startDate}"></span> ~
-      종료일: <span th:text="${goal.endDate}"></span>
+<div id="logo-container"></div>
+<div class="dashboard">
+
+  <!-- 좌측 사이드바 -->
+  <aside class="sidebar">
+    <h1 class="logo">
+      <a th:href="@{/static}" style="text-decoration: none; color:inherit;">
+        DevQuest
+      </a>
+    </h1>
+    <div class="createdAt-comment">
+      <span class="day-count" th:text="${dashboard.dayCount} + '일째'">N 일째</span>
+      <span class="comment" th:text="${dashboard.comment}">슬로건</span>
     </div>
-    <div>
-      상태: <span th:text="${goal.isDone} ? '완료' : '진행 중'"></span>
+    <span class="nickname" th:text="${dashboard.nickname}">회원</span>
+    <span class="nickname-sir">님</span>
+
+    <!--  관심분야 태그  -->
+    <div class="tags">
+      <span class="tag"
+            th:if="${dashboard.jobType != null and !dashboard.jobType.isEmpty()}"
+            th:text="'#' + ${dashboard.jobType[0]}">#직무</span>
+      <span class="tag"
+            th:unless="${dashboard.jobType != null and !dashboard.jobType.isEmpty()}">#직무 없음</span>
+
+      <span class="tag" th:each="lang : ${dashboard.devLang}" th:text="'#' + ${lang}">#언어</span>
+      <span class="tag" th:each="fw : ${dashboard.framework}" th:text="'#' + ${fw}">#프레임워크</span>
     </div>
 
-    <!-- ✅ 해당 목표(goal.goalId)에 대한 todo 리스트 출력 -->
-    <!--해당 목표(goal.goalId)에 대한 todo 리스트 출력 -->
-    <ul>
-      <li th:each="todo : ${todoMap[goal.goalId]}">
-        <span th:text="${todo.content}">투두 내용</span>
-        <span th:if="${todo.isDone}" style="color: green;">(완료)</span>
-        <span th:unless="${todo.isDone}" style="color: red;">(미완료)</span>
-      </li>
-    </ul>
-  </li>
-</ul>
+    <!--  마이페이지  -->
+    <p class="mypage">
+      <a th:href="@{/templates/mypage}" style="text-decoration: none; color: inherit;">
+        <span class="material-icons">account_circle</span>마이페이지
+      </a>
+    </p>
+
+    <!-- 프로필 카드 -->
+    <div class="profile-card">
+      <div class="profile-card">
+        <div class="profile-info">
+          <img class="profile-img"
+               th:src="${dashboard.userImage != null && !dashboard.userImage.isEmpty()
+             ? '/images/profile/' + dashboard.userImage
+             : '/images/profile/default.png'}"
+               alt="프로필 이미지"/>
+
+          <div class="level-info">
+            <p class="level-label" th:text="${dashboard.levelName}">레벨명</p>
+            <p class="level-value" th:text="'Lv.' + ${dashboard.levelValue}">Lv.N</p>
+          </div>
+        </div>
+
+        <!--  xp 진행바  -->
+        <div class="xp-label" th:text="${dashboard.exp} + 'xp'">N xp</div>
+        <div class="xp-bar">
+          <div class="xp-progress"
+               th:style="'width:' + (${dashboard.exp} > 100 ? 100 : dashboard.exp) + '%'">
+            <span th:text="${dashboard.exp} + 'xp'"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      알림 토글
+    <div class="toggle-box">
+      <form th:action="@{/dashboard/notification-toggle}" method="post">
+        <!-- 서현님 csrf 토큰 추가 후 주석해제 -->
+        <!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
+        <input type="checkbox"
+               name="notification"
+               th:checked="${dashboard.notificationOn}" onchange="this.form.submit()">
+        <label>알림</label>
+      </form>
+    </div>
+
+      주요알림
+    <div class="alert-box">
+      <h3>
+        🔔 주요 알림
+        <span class="count" th:text="${#lists.size(dashboard.goalCompanies)}">0</span>
+      </h3>
+      <ul th:if="${dashboard.notificationOn}">
+        <li th:each="company : ${dashboard.goalCompanies}">
+          <strong style="color:red" th:text="${company.companyName}">기업명</strong>
+          <span th:text="${company.statusLabel != null ? company.statusLabel : '상태없음'}">상태</span>
+          <span th:text="'D-' + ${company.DDay} + '일'">N일</span>전 입니다.
+        </li>
+      </ul>
+      <p th:unless="${dashboard.notificationOn}">
+        현재 알림이 꺼져 있어요 🔕
+      </p>
+    </div>
+  </aside>
+
+  <!-- 메인 영역 -->
+  <main class="main-content">
+    <div class="logout">
+      <a th:href="@{/logout}" style="text-decoration: none; color: inherit;">
+        로그아웃
+      </a>
+    </div>
+
+    <!--  Goal List   -->
+    <p class="section-title" th:text="${company.companyName}">Goal List</p>
+
+    <div class="company-list">
+      <a th:each="goal : ${goals}" class="company-card">
+
+
+        <div class="card-header">
+          <span class="status" th:text="${goal.isDone}? '완료' : '진행 중'">진행 상태</span>
+          <p class="company-name" th:text="${goal.title}">회사명</p>
+
+
+          <!-- 수정/삭제 드롭다운  -->
+          <div class="dropdown">
+            <button class="dropdown-toggle" type="button">⋮</button>
+            <ul class="dropdown-menu">
+              <li>수정</li>
+              <li>삭제</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 목표 카드 -->
+        <div class="status-dday">
+          <ul>
+            <li th:each="todo : ${todoMap[goal.goalId]}">
+              <span th:text="${todo.content}">투두 내용</span>
+              <span th:if="${todo.isDone}" style="color: green;">(완료)</span>
+              <span th:unless="${todo.isDone}" style="color: red;">(미완료)</span>
+            </li>
+          </ul>
+
+        </div>
+      </a>
+
+      <!-- 목표 생성 카드 -->
+      <div class="company-card create" onclick="openModal('companyModal')">
+        <p class="goal-todo-desc-top">
+          <span class="material-icons">control_point</span>
+          목표 생성
+        </p>
+
+        <p class="goal-todo-desc-bottom">
+          목표는 3개까지 무료로 생성이 가능합니다(4개 부터 유료^^)
+        </p>
+      </a>
+      </div>
+  </main>
+</div>
+
+<!-- 목표 기업 생성 모달 -->
+<div id="companyModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('companyModal')">&times;</span>
+    <h2>목표 생성</h2>
+    <form id="create-form">
+      <input type="text" name="title" placeholder="목표를 입력해주세요" required><br><br>
+
+      <label>시작일</label><br>
+      <input type="date" name="startDate"><br><br>
+      <label>마감일</label><br>
+      <input type="date" name="endDate"><br><br>
+
+      <button type="submit">생성</button>
+    </form>
+  </div>
+</div>
+
+<!-- 목표 기업 생성 모달 -->
+<script>
+  function openModal(companyModal) {
+    document.getElementById(companyModal).style.display = "flex";
+  }
+
+  function closeModal(companyModal) {
+    document.getElementById(companyModal).style.display = "none";
+  }
+
+</script>
+
+<!--목표 생성 모달(post 보내기)-->
+<script th:inline="javascript">
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("create-form");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      let companyId = [[${company.companyId}]];
+      const data = {
+        companyId: companyId,
+        title: form.title.value,
+        startDate: form.startDate.value,
+        endDate: form.endDate.value
+      };
+      fetch(`/companies/${companyId}/goals`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+              .then(res => {
+                if (res.ok) {
+                  alert("등록 완료!");
+                  closeModal('companyModal');
+                  window.location.reload();
+                } else {
+                  alert("등록 실패");
+                }
+              })
+              .catch(err => {
+                console.error(err);
+                alert("에러 발생");
+              });
+    });
+  });
+
+  function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
+  }
+</script>
+
+<script>
+  // 왼쪽 상단 로고
+  // fetch('/css/logo.html')
+  // .then(res => res.text())
+  // .then(html => {
+  //   document.getElementById('logo-container').innerHTML = html;
+  // });
+
+  // 드롭다운(수정, 삭제)
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggles = document.querySelectorAll('.dropdown-toggle');
+
+    toggles.forEach((toggle) => {
+      toggle.addEventListener('click', (e) => {
+        e.stopPropagation(); // 다른 곳 클릭 막기
+        // 모든 드롭다운 닫기
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+          if (menu !== toggle.nextElementSibling) {
+            menu.style.display = 'none';
+          }
+        });
+        // 현재 것만 토글
+        const menu = toggle.nextElementSibling;
+        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+      });
+    });
+
+    // 페이지 어디든 클릭하면 메뉴 닫힘
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        menu.style.display = 'none';
+      });
+    });
+  });
+</script>
+
+
+
 
 </body>
-
-<!--<body>-->
-<!--&lt;!&ndash;<div id="logo-container"></div>&ndash;&gt;-->
-<!--<div class="dashboard">-->
-
-<!--  &lt;!&ndash; 좌측 사이드바 &ndash;&gt;-->
-<!--  <aside class="sidebar">-->
-<!--    <h1 class="logo">-->
-<!--      <a th:href="@{/static}" style="text-decoration: none; color:inherit;">-->
-<!--        DevQuest-->
-<!--      </a>-->
-<!--    </h1>-->
-<!--&lt;!&ndash;    <div class="createdAt-comment">&ndash;&gt;-->
-<!--&lt;!&ndash;      <span class="day-count" th:text="${dashboard.dayCount} + '일째'">N 일째</span>&ndash;&gt;-->
-<!--&lt;!&ndash;      <span class="comment" th:text="${dashboard.comment}">슬로건</span>&ndash;&gt;-->
-<!--&lt;!&ndash;    </div>&ndash;&gt;-->
-<!--&lt;!&ndash;    <span class="nickname" th:text="${dashboard.nickname}">회원</span>&ndash;&gt;-->
-<!--&lt;!&ndash;    <span class="nickname-sir">님</span>&ndash;&gt;-->
-
-<!--&lt;!&ndash;    &lt;!&ndash;  관심분야 태그  &ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;    <div class="tags">&ndash;&gt;-->
-<!--&lt;!&ndash;      <span class="tag"&ndash;&gt;-->
-<!--&lt;!&ndash;            th:if="${dashboard.jobType != null and !dashboard.jobType.isEmpty()}"&ndash;&gt;-->
-<!--&lt;!&ndash;            th:text="'#' + ${dashboard.jobType[0]}">#직무</span>&ndash;&gt;-->
-<!--&lt;!&ndash;      <span class="tag"&ndash;&gt;-->
-<!--&lt;!&ndash;            th:unless="${dashboard.jobType != null and !dashboard.jobType.isEmpty()}">#직무 없음</span>&ndash;&gt;-->
-
-<!--&lt;!&ndash;      <span class="tag" th:each="lang : ${dashboard.devLang}" th:text="'#' + ${lang}">#언어</span>&ndash;&gt;-->
-<!--&lt;!&ndash;      <span class="tag" th:each="fw : ${dashboard.framework}" th:text="'#' + ${fw}">#프레임워크</span>&ndash;&gt;-->
-<!--&lt;!&ndash;    </div>&ndash;&gt;-->
-
-<!--&lt;!&ndash;    &lt;!&ndash;  마이페이지  &ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;    <p class="mypage">&ndash;&gt;-->
-<!--&lt;!&ndash;      <a th:href="@{/templates/mypage}" style="text-decoration: none; color: inherit;">&ndash;&gt;-->
-<!--&lt;!&ndash;        <span class="material-icons">account_circle</span>마이페이지&ndash;&gt;-->
-<!--&lt;!&ndash;      </a>&ndash;&gt;-->
-<!--&lt;!&ndash;    </p>&ndash;&gt;-->
-
-<!--&lt;!&ndash;    &lt;!&ndash; 프로필 카드 &ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;    <div class="profile-card">&ndash;&gt;-->
-<!--&lt;!&ndash;      <div class="profile-card">&ndash;&gt;-->
-<!--&lt;!&ndash;        <div class="profile-info">&ndash;&gt;-->
-<!--&lt;!&ndash;          <img class="profile-img"&ndash;&gt;-->
-<!--&lt;!&ndash;               th:src="${dashboard.userImage != null && !dashboard.userImage.isEmpty()&ndash;&gt;-->
-<!--&lt;!&ndash;             ? '/images/profile/' + dashboard.userImage&ndash;&gt;-->
-<!--&lt;!&ndash;             : '/images/profile/default.png'}"&ndash;&gt;-->
-<!--&lt;!&ndash;               alt="프로필 이미지"/>&ndash;&gt;-->
-
-<!--&lt;!&ndash;          <div class="level-info">&ndash;&gt;-->
-<!--&lt;!&ndash;            <p class="level-label" th:text="${dashboard.levelName}">레벨명</p>&ndash;&gt;-->
-<!--&lt;!&ndash;            <p class="level-value" th:text="'Lv.' + ${dashboard.levelValue}">Lv.N</p>&ndash;&gt;-->
-<!--&lt;!&ndash;          </div>&ndash;&gt;-->
-<!--&lt;!&ndash;        </div>&ndash;&gt;-->
-
-<!--&lt;!&ndash;        &lt;!&ndash;  xp 진행바  &ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;        <div class="xp-label" th:text="${dashboard.exp} + 'xp'">N xp</div>&ndash;&gt;-->
-<!--&lt;!&ndash;        <div class="xp-bar">&ndash;&gt;-->
-<!--&lt;!&ndash;          <div class="xp-progress"&ndash;&gt;-->
-<!--&lt;!&ndash;               th:style="'width:' + (${dashboard.exp} > 100 ? 100 : dashboard.exp) + '%'">&ndash;&gt;-->
-<!--&lt;!&ndash;            <span th:text="${dashboard.exp} + 'xp'"></span>&ndash;&gt;-->
-<!--&lt;!&ndash;          </div>&ndash;&gt;-->
-<!--&lt;!&ndash;        </div>&ndash;&gt;-->
-<!--&lt;!&ndash;      </div>&ndash;&gt;-->
-<!--&lt;!&ndash;    </div>&ndash;&gt;-->
-
-<!--    &lt;!&ndash;  알림 토글  &ndash;&gt;-->
-<!--&lt;!&ndash;    <div class="toggle-box">&ndash;&gt;-->
-<!--&lt;!&ndash;      <form th:action="@{/dashboard/notification-toggle}" method="post">&ndash;&gt;-->
-<!--&lt;!&ndash;        &lt;!&ndash; 서현님 csrf 토큰 추가 후 주석해제 &ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;        &lt;!&ndash; <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;        <input type="checkbox"&ndash;&gt;-->
-<!--&lt;!&ndash;               name="notification"&ndash;&gt;-->
-<!--&lt;!&ndash;               th:checked="${dashboard.notificationOn}" onchange="this.form.submit()">&ndash;&gt;-->
-<!--&lt;!&ndash;        <label>알림</label>&ndash;&gt;-->
-<!--&lt;!&ndash;      </form>&ndash;&gt;-->
-<!--&lt;!&ndash;    </div>&ndash;&gt;-->
-
-<!--    &lt;!&ndash;  주요알림  &ndash;&gt;-->
-<!--&lt;!&ndash;    <div class="alert-box">&ndash;&gt;-->
-<!--&lt;!&ndash;      <h3>&ndash;&gt;-->
-<!--&lt;!&ndash;        🔔 주요 알림&ndash;&gt;-->
-<!--&lt;!&ndash;        <span class="count" th:text="${#lists.size(dashboard.goalCompanies)}">0</span>&ndash;&gt;-->
-<!--&lt;!&ndash;      </h3>&ndash;&gt;-->
-<!--&lt;!&ndash;      <ul th:if="${dashboard.notificationOn}">&ndash;&gt;-->
-<!--&lt;!&ndash;        <li th:each="company : ${dashboard.goalCompanies}">&ndash;&gt;-->
-<!--&lt;!&ndash;          <strong style="color:red" th:text="${company.companyName}">기업명</strong>&ndash;&gt;-->
-<!--&lt;!&ndash;          <span th:text="${company.statusLabel != null ? company.statusLabel : '상태없음'}">상태</span>&ndash;&gt;-->
-<!--&lt;!&ndash;          <span th:text="'D-' + ${company.DDay} + '일'">N일</span>전 입니다.&ndash;&gt;-->
-<!--&lt;!&ndash;        </li>&ndash;&gt;-->
-<!--&lt;!&ndash;      </ul>&ndash;&gt;-->
-<!--&lt;!&ndash;      <p th:unless="${dashboard.notificationOn}">&ndash;&gt;-->
-<!--&lt;!&ndash;        현재 알림이 꺼져 있어요 🔕&ndash;&gt;-->
-<!--&lt;!&ndash;      </p>&ndash;&gt;-->
-<!--&lt;!&ndash;    </div>&ndash;&gt;-->
-<!--  </aside>-->
-
-<!--  &lt;!&ndash; 메인 영역 &ndash;&gt;-->
-<!--  <main class="main-content">-->
-<!--    <div class="logout">-->
-<!--      <a th:href="@{/logout}" style="text-decoration: none; color: inherit;">-->
-<!--        로그아웃-->
-<!--      </a>-->
-<!--    </div>-->
-
-<!--    &lt;!&ndash;  Company List   &ndash;&gt;-->
-<!--    <p class="section-title">Company List</p>-->
-
-<!--    <div class="company-list">-->
-<!--      <a th:each="company : ${dashboard.goalCompanies}"-->
-<!--         th:href="@{/company/{id}(id=${company.companyId})}"-->
-<!--         class="company-card"-->
-<!--         th:classappend="|-->
-<!--                         ${company.companyName.toLowerCase()}-->
-<!--                         ${(company.companyName == '네이버') ? ' naver' : ''}-->
-<!--                         ${(company.companyName == '토스') ? ' toss' : ''}-->
-<!--                         ${(company.companyName == '당근') ? ' danggeun' : ''}-->
-<!--                         ${(company.companyName == '배달의민족') ? ' baemin' : ''}-->
-<!--                         ${(company.companyName == '카카오') ? ' kakao' : ''}-->
-<!--                       |">-->
-
-
-<!--        <div class="card-header">-->
-<!--          <span class="status" th:text="${company.statusLabel}">진행 상태</span>-->
-<!--          <span class="dday" th:text="'D-' + ${company.DDay}">D-day</span>-->
-
-<!--          &lt;!&ndash; 수정/삭제 드롭다운  &ndash;&gt;-->
-<!--          <div class="dropdown">-->
-<!--            <button class="dropdown-toggle" type="button">⋮</button>-->
-<!--            <ul class="dropdown-menu">-->
-<!--              <li>수정</li>-->
-<!--              <li>삭제</li>-->
-<!--            </ul>-->
-<!--          </div>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash; 목표 기업 카드 &ndash;&gt;-->
-<!--        <p class="company-name" th:text="${company.companyName}">회사명</p>-->
-<!--        <p class="content" th:text="${company.content}">내용</p>-->
-<!--        <div class="status-dday">-->
-<!--          <span class="status" th:text="${company.statusLabel}">진행 상태</span>-->
-<!--          <span class="endDate" th:text="'~' + ${company.endDate}">~마감일</span>-->
-<!--        </div>-->
-<!--      </a>-->
-
-<!--      &lt;!&ndash; TODO 생성 카드 &ndash;&gt;-->
-<!--      <div class="company-card create" onclick="openModal('companyModal')">-->
-<!--        <p class="goal-todo-desc-top">-->
-<!--          <span class="material-icons">control_point</span>-->
-<!--          목표 기업 TODO 생성-->
-<!--        </p>-->
-
-<!--        <p class="goal-todo-desc-bottom">-->
-<!--          목표 기업은 최대 3개까지 생성 가능합니다.-->
-<!--        </p>-->
-<!--      </a>-->
-
-<!--    </div>-->
-<!--  </main>-->
-<!--</div>-->
-
-
-
-<!--<script>-->
-<!--  // 왼쪽 상단 로고-->
-<!--  // fetch('/css/logo.html')-->
-<!--  // .then(res => res.text())-->
-<!--  // .then(html => {-->
-<!--  //   document.getElementById('logo-container').innerHTML = html;-->
-<!--  // });-->
-
-<!--  // 드롭다운(수정, 삭제)-->
-<!--  document.addEventListener('DOMContentLoaded', () => {-->
-<!--    const toggles = document.querySelectorAll('.dropdown-toggle');-->
-
-<!--    toggles.forEach((toggle) => {-->
-<!--      toggle.addEventListener('click', (e) => {-->
-<!--        e.stopPropagation(); // 다른 곳 클릭 막기-->
-<!--        // 모든 드롭다운 닫기-->
-<!--        document.querySelectorAll('.dropdown-menu').forEach(menu => {-->
-<!--          if (menu !== toggle.nextElementSibling) {-->
-<!--            menu.style.display = 'none';-->
-<!--          }-->
-<!--        });-->
-<!--        // 현재 것만 토글-->
-<!--        const menu = toggle.nextElementSibling;-->
-<!--        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';-->
-<!--      });-->
-<!--    });-->
-
-<!--    // 페이지 어디든 클릭하면 메뉴 닫힘-->
-<!--    document.addEventListener('click', () => {-->
-<!--      document.querySelectorAll('.dropdown-menu').forEach(menu => {-->
-<!--        menu.style.display = 'none';-->
-<!--      });-->
-<!--    });-->
-<!--  });-->
-<!--</script>-->
-
-
-
-
-<!--</body>-->
-<!--</html>-->
+</html>
