@@ -3,21 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <title>DevQuest Dashboard</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link rel="stylesheet" th:href="@{/css/header.css}">
   <link rel="stylesheet" th:href="@{/css/dashboard.css}">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 </head>
 <body>
-<!--<div id="logo-container"></div>-->
+<div th:replace="~{fragments/header :: header}"></div>
 <div class="dashboard">
 
   <!-- 좌측 사이드바 -->
   <aside class="sidebar">
-    <h1 class="logo">
-      <a th:href="@{/static}" style="text-decoration: none; color:inherit;">
-        DevQuest
-      </a>
-    </h1>
     <div class="createdAt-comment">
       <span class="day-count" th:text="${dashboard.dayCount} + '일째'">N 일째</span>
       <span class="comment" th:text="${dashboard.comment}">슬로건</span>
@@ -39,7 +36,7 @@
 
     <!--  마이페이지  -->
     <p class="mypage">
-      <a th:href="@{/users/mypage}" style="text-decoration: none; color: inherit;">
+      <a th:href="@{/mypage}">
         <span class="material-icons">account_circle</span>마이페이지
       </a>
     </p>
@@ -91,9 +88,10 @@
       </h3>
       <ul th:if="${dashboard.notificationOn}">
         <li th:each="company : ${dashboard.goalCompanies}">
-          <strong style="color:red" th:text="${company.companyName}">기업명</strong>
+          <span class="material-icons">access_alarms</span>
+          <strong th:text="${company.companyName} + ' - '">기업명</strong>
           <span th:text="${company.statusLabel != null ? company.statusLabel : '상태없음'}">상태</span>
-          <span th:text="'D-' + ${company.DDay} + '일'">N일</span>전 입니다.
+          <span th:text="${company.DDay == 0} ? '입니다. 🐣' : 'D-' + ${company.DDay} + ' 일 입니다.'">일 입니다. 🐣</span>
         </li>
       </ul>
       <p th:unless="${dashboard.notificationOn}">
@@ -104,11 +102,6 @@
 
   <!-- 메인 영역 -->
   <main class="main-content">
-    <div class="logout">
-      <a th:href="@{/logout}" style="text-decoration: none; color: inherit;">
-        로그아웃
-      </a>
-    </div>
 
     <!--  Company List   -->
     <p class="section-title">Company List</p>
@@ -136,7 +129,7 @@
             <button class="dropdown-toggle" type="button">⋮</button>
             <ul class="dropdown-menu">
               <li>수정</li>
-              <li>삭제</li>
+              <li th:onclick="'deleteCompany(' + ${company.companyId} + ')'">삭제</li>
             </ul>
           </div>
         </div>
@@ -160,7 +153,7 @@
         <p class="goal-todo-desc-bottom">
           목표 기업은 최대 3개까지 생성 가능합니다.
         </p>
-      </a>
+      </div>
     </div>
   </main>
 </div>
@@ -191,13 +184,6 @@
 </div>
 
 <script>
-  // 왼쪽 상단 로고
-  // fetch('/css/logo.html')
-  // .then(res => res.text())
-  // .then(html => {
-  //   document.getElementById('logo-container').innerHTML = html;
-  // });
-
   // 드롭다운(수정, 삭제)
   document.addEventListener('DOMContentLoaded', () => {
     const toggles = document.querySelectorAll('.dropdown-toggle');
@@ -214,6 +200,13 @@
         // 현재 것만 토글
         const menu = toggle.nextElementSibling;
         menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+
+        const items = menu.querySelectorAll('li');
+        items.forEach(item => {
+          item.addEventListener('click', (e) => {
+            e.stopPropagation(); // 수정, 삭제 눌러도 상세 진입 안 됨
+          });
+        });
       });
     });
 
@@ -238,7 +231,7 @@
 
 </script>
 
-<!--목표 기어 생성 모달(post 보내기)-->
+<!--목표 기업 생성 모달(post 보내기)-->
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("create-form");
@@ -255,27 +248,51 @@
 
       fetch('/companies', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(data)
       })
-              .then(res => {
-                if (res.ok) {
-                  alert("등록 완료!");
-                  closeModal('companyModal');
-                  window.location.reload();
-                } else {
-                  alert("등록 실패");
-                }
-              })
-              .catch(err => {
-                console.error(err);
-                alert("에러 발생");
-              });
+      .then(res => {
+        if (res.ok) {
+          alert("등록 완료!");
+          closeModal('companyModal');
+          window.location.reload();
+        } else {
+          alert("등록 실패");
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("에러 발생");
+      });
     });
   });
 
   function closeModal(id) {
     document.getElementById(id).style.display = 'none';
+  }
+</script>
+
+// 삭제 기능
+<script>
+  function deleteCompany(companyId) {
+    console.log("삭제 요청 ID:", companyId);
+    if (confirm("정말 삭제하시겠습니까?")) {
+      fetch(`/companies/${companyId}/delete`, {
+        method: 'DELETE'
+      })
+      .then(res => {
+        if (res.ok) {
+          alert("삭제 완료!");
+          window.location.reload(); // 새로고침
+        } else {
+          alert("삭제 실패");
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("에러 발생");
+      });
+    }
   }
 </script>
 

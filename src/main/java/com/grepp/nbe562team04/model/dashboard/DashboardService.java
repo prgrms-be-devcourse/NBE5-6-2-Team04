@@ -13,7 +13,7 @@ import com.grepp.nbe562team04.model.user.entity.UserInterest;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +43,8 @@ public class DashboardService {
         dto.setCreatedAt(user.getCreatedAt());
         dto.setUserImage(user.getUserImage());
 
-        long dayCount = ChronoUnit.DAYS.between(user.getCreatedAt().atStartOfDay().toLocalDate(), LocalDate.now()) + 1;
+        long dayCount = ChronoUnit.DAYS.between(user.getCreatedAt().atStartOfDay().toLocalDate(),
+            LocalDate.now()) + 1;
         dto.setDayCount(dayCount);
 
         // 관심 분야 필터링
@@ -81,6 +82,7 @@ public class DashboardService {
         List<GoalCompany> goalCompanies = dashboardRepository.findGoalCompaniesByUser(user);
         List<GoalCompanyDto> companyDtos = goalCompanies.stream()
             .map(this::convertToDto)
+            .filter(Objects::nonNull)
             .toList();
 
         dto.setGoalCompanies(companyDtos);
@@ -103,8 +105,13 @@ public class DashboardService {
     }
 
 
-
     private GoalCompanyDto convertToDto(GoalCompany company) {
+        long dDay = ChronoUnit.DAYS.between(LocalDate.now(), company.getEndDate());
+
+        if (dDay < 0) {
+            return null;
+        }
+
         GoalCompanyDto dto = new GoalCompanyDto();
         dto.setCompanyId(company.getCompanyId());
         dto.setCompanyName(company.getCompanyName());
@@ -116,7 +123,7 @@ public class DashboardService {
         }
         dto.setStatusLabel(company.getStatus().getLabel());
         dto.setEndDate(company.getEndDate());
-        dto.setDDay(ChronoUnit.DAYS.between(LocalDate.now(), company.getEndDate()));
+        dto.setDDay(dDay);
 
         return dto;
     }
