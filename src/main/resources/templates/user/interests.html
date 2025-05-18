@@ -5,6 +5,15 @@
   <title>DevQuest 관심분야 선택</title>
   <link rel="stylesheet" href="/css/common.css">
   <style>
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      color: #3F2296;
+      position: absolute;
+      top: 30px;
+      left: 40px;
+    }
+
     body {
       margin: 0;
       padding: 0;
@@ -86,9 +95,11 @@
   </style>
 </head>
 <body>
-<div id="logo-container"></div>
+<div class="logo">
+  <span>DevQuest</span>
+</div>
 
-<form id="interestForm" method="post" action="/user/interests">
+  <form th:action="@{/user/interests}" method="post" id="interestForm">
   <input type="hidden" name="role" id="selectedRoleInput">
   <input type="hidden" name="skills" id="selectedSkillsInput">
 
@@ -130,12 +141,6 @@
 </form>
 
 <script>
-  fetch('/css/logo.html')
-  .then(res => res.text())
-  .then(html => {
-    document.getElementById('logo-container').innerHTML = html;
-  });
-
   window.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('role-options');
     const buttons = container.querySelectorAll('.option');
