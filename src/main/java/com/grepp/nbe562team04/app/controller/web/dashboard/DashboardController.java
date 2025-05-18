@@ -55,8 +55,6 @@ public class DashboardController {
         return "dashboard/dashboard";
     }
 
-
-
     // 알림 토글
     @PostMapping("/dashboard/notification-toggle")
     public String toggleNotification(@AuthenticationPrincipal Principal principal) {
@@ -67,32 +65,6 @@ public class DashboardController {
         return "redirect:/dashboard";
     }
 
-    // 목표기업 단일 조회
-    @GetMapping("/companies/{CompanyId}/select")
-    public String companyDetail(@AuthenticationPrincipal Principal principal,@PathVariable Long CompanyId, Model model) {
-        User detachedUser = principal.getUser();
-
-        User managedUser = userRepository.findById(detachedUser.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
-
-        DashboardDto dto = dashboardService.getDashboard(managedUser);
-        GoalCompanyDto companyDto = dashboardService.getCompanyDetailById(CompanyId);
-        List<GoalResponseDto> goalList = goalService.getGoalsByCompanyId(CompanyId);
-
-        Map<Long, List<TodoResponseDto>> todoMap = new HashMap<>();
-        for (GoalResponseDto goal : goalList) {
-            List<TodoResponseDto> todos = todoService.getByGoal(goal.getGoalId());
-            todoMap.put(goal.getGoalId(), todos);
-        }
-
-
-        model.addAttribute("dashboard", dto);
-        model.addAttribute("company", companyDto);   // 기업 정보
-        model.addAttribute("goals", goalList);       // 목표 리스트
-        model.addAttribute("todoMap", todoMap);
-
-        return "goal/goal";
-    }
 
     // todo 페이지
     @GetMapping("/todo")
@@ -100,11 +72,4 @@ public class DashboardController {
         return "todo";
     }
 
-    // 마이페이지
-    @GetMapping("/mypage")
-    public String myPage(@AuthenticationPrincipal Principal principal, Model model) {
-        User user = principal.getUser();
-        model.addAttribute("user", user);
-        return "mypage/mypage";
-    }
 }

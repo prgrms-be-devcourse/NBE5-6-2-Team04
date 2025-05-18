@@ -17,5 +17,7 @@ public class GoalResponseDto {
     private LocalDate endDate;
     private Boolean isDone;
     private LocalDate createdAt;
+    private String status;
+    private int progress;
     //진행 률 추가 필요
 }

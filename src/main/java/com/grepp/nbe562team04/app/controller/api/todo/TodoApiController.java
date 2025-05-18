@@ -8,16 +8,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/todos")
+@RequestMapping("/todos")
 public class TodoApiController {
 
     private final TodoService todoService;
 
     //  투두 생성
-    @PostMapping
+    @PostMapping("/{goalId}/create")
     public ResponseEntity<String> createTodo(@RequestBody TodoRequestDto dto) {
         todoService.create(dto);
         return ResponseEntity.ok("투두 생성 완료!");
@@ -30,18 +31,32 @@ public class TodoApiController {
         return ResponseEntity.ok(todoList);
     }
 
+    // 단일 투두 조회
+    @GetMapping("/{todoId}/select")
+    public ResponseEntity<TodoResponseDto> getTodo(@PathVariable Long todoId) {
+        TodoResponseDto todo = todoService.getById(todoId);
+        return ResponseEntity.ok(todo);
+    }
+
     //  투두 수정
-    @PutMapping("/{todoId}")
+    @PutMapping("/{todoId}/update")
     public ResponseEntity<String> updateTodo(@PathVariable Long todoId, @RequestBody TodoRequestDto dto) {
         todoService.update(todoId, dto);
         return ResponseEntity.ok("투두 수정 완료!");
     }
 
     //  투두 삭제
-    @DeleteMapping("/{todoId}")
+    @DeleteMapping("/{todoId}/delete")
     public ResponseEntity<String> deleteTodo(@PathVariable Long todoId) {
         todoService.delete(todoId);
         return ResponseEntity.ok("투두 삭제 완료!");
+    }
+
+    @PutMapping("/{todoId}/toggle")
+    public ResponseEntity<String> toggleTodoStatus(@PathVariable Long todoId, @RequestBody Map<String, Object> request) {
+        Boolean isDone = (Boolean) request.get("isDone");
+        todoService.toggleStatus(todoId, isDone);
+        return ResponseEntity.ok("상태 업데이트 완료");
     }
 
 

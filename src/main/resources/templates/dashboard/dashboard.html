@@ -36,12 +36,12 @@
       <span class="tag" th:each="fw : ${dashboard.framework}" th:text="'#' + ${fw}">#프레임워크</span>
     </div>
 
-    <!--  마이페이지  -->
-    <p class="mypage">
-      <a th:href="@{/mypage}">
-        <span class="material-icons">account_circle</span>마이페이지
-      </a>
-    </p>
+        <!--  마이페이지  -->
+        <p class="mypage">
+            <a th:href="@{/users/mypage}">
+                <span class="material-icons">account_circle</span>마이페이지
+            </a>
+        </p>
 
     <!-- 프로필 카드 -->
     <div class="profile-card">
@@ -190,6 +190,7 @@
     </form>
   </div>
 </div>
+<div th:replace="~{fragments/achievement-modal :: achievementModal}"></div>
 
 <script src="/js/header.js" defer>
   // 드롭다운(수정, 삭제)
@@ -281,23 +282,36 @@
       endDate: form.endDate.value
     };
 
-    fetch('/companies', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(data)
-    }).then(res => {
-      if (res.ok) {
-        alert("등록 완료!");
-        closeModal('companyModal');
-        window.location.reload();
-      } else {
-        alert("등록 실패");
-      }
-    }).catch(err => {
-      console.error(err);
-      alert("에러 발생");
-    });
-  }
+        fetch('/companies', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`서버 오류: ${res.status}`);
+                }
+                return res.json();
+            })
+            .then(result => {
+                closeModal("companyModal");
+
+                const baseUrl = `${window.location.origin}${window.location.pathname}`;
+
+                if (result.achievementName) {
+                    const encodedName = encodeURIComponent(result.achievementName);
+                    const redirectUrl = `${baseUrl}?achievementName=${encodedName}`;
+                    window.location.href = redirectUrl;
+                } else {
+                    alert("등록 완료!");
+                    window.location.reload();
+                }
+            })
+            .catch(error => {
+                console.error("🚨 에러 발생:", error);
+                alert("에러 발생");
+            });
+    }
 
   // 목표 기업 삭제 함수
   function deleteCompany(companyId) {
@@ -381,7 +395,7 @@
     document.getElementById(companyModal).style.display = "none";
   }
 </script>
-
-
 </body>
+<script defer src="/js/achievement/congratulation.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </html>
