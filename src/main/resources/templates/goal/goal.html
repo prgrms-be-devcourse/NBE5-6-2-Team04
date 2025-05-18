@@ -114,9 +114,13 @@
         <div class="status-dday">
           <ul>
             <li th:each="todo : ${todoMap[goal.goalId]}">
+
+              <input type="checkbox"
+                     th:checked="${todo.isDone}"
+                     th:attr="data-id=${todo.todoId}"
+                     class="todo-checkbox">
               <span th:text="${todo.content}">투두 내용</span>
-              <span th:if="${todo.isDone}" style="color: green;">(완료)</span>
-              <span th:unless="${todo.isDone}" style="color: red;">(미완료)</span>
+
               <div class="goal-actions">
                 <button type="button" class="update-todo-btn" th:attr="data-id=${todo.todoId}">수정</button>
                 <button type="button" class="delete-todo-btn" th:attr="data-id=${todo.todoId}">삭제</button>
@@ -127,6 +131,7 @@
         <div class="todo-actions">
           <button type="button" class="update-goal-btn" th:attr="data-id=${goal.goalId}">수정</button>
           <button type="button" class="delete-goal-btn" th:attr="data-id=${goal.goalId}">삭제</button>
+          <button type="button" class="add-todo-btn" th:attr="data-goal-id=${goal.goalId}">투두 추가</button>
         </div>
       </div>
 
@@ -161,11 +166,26 @@
   </div>
 </div>
 
+  <!-- todo  생성 모달 -->
+  <div id="todoModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('todoModal')">&times;</span>
+      <h2>todo 생성</h2>
+      <form id="todo-form">
+        <input type="text" name="title" placeholder="할 일을 입력해주세요" required><br><br>
+        <input type="hidden" name="goalId">
+        <button type="submit">추가</button>
+      </form>
+    </div>
+  </div>
+
+
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("goal-form");
+    const todoForm = document.getElementById("todo-form");
 
-    // goal 생성
+    // goal 생성 이벤트
     document.querySelector(".goal-create-btn").addEventListener("click", () => {
       form.reset();
       form.removeAttribute("data-id");
@@ -178,7 +198,7 @@
       openModal("goalModal");
     });
 
-    // goal 수정
+    // goal 수정 이벤트
     document.querySelectorAll(".update-goal-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         const goalId = btn.dataset.id;
@@ -194,13 +214,84 @@
       });
     });
 
-    // goal 삭제
+    // goal 삭제 이벤트
     document.querySelectorAll(".delete-goal-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         const goalId = btn.dataset.id;
         deleteGoal(goalId);
       });
     });
+
+    // 목표 별 Todo 생성 이벤트
+
+
+    document.querySelectorAll(".add-todo-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const goalId = btn.dataset.goalId;
+        const form = document.getElementById("todo-form");
+        form.reset();
+        form.goalId.value = goalId;
+
+        document.querySelector("#todoModal h2").textContent = "todo 생성";
+        document.querySelector("#todoModal button[type='submit']").textContent = "추가";
+
+
+        form.onsubmit = function (e) {
+          e.preventDefault();
+          createTodo();
+        };
+
+        openModal("todoModal");
+      });
+    });
+
+
+    // 목표별 todo 수정 이벤트
+    document.querySelectorAll(".update-todo-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const todoId = btn.dataset.id;
+        fetch(`/todos/${todoId}/select`)
+                .then(res => res.json())
+                .then(data => {
+                  const form = document.getElementById("todo-form");
+                  form.reset();
+                  form.goalId.value = data.goalId; // 필요 시 포함
+                  form.title.value = data.content;
+
+                  document.querySelector("#todoModal h2").textContent = "todo 수정";
+                  document.querySelector("#todoModal button[type='submit']").textContent = "수정";
+
+                  openModal("todoModal");
+
+                  form.onsubmit = function (e) {
+                    e.preventDefault();
+                    updateTodo(todoId);
+                  };
+                })
+                .catch(err => {
+                  console.error("투두 불러오기 실패", err);
+                  alert("수정할 데이터를 불러오지 못했습니다.");
+                });
+      });
+    });
+
+    // 목표별 todo 삭제 이벤트
+    document.querySelectorAll(".delete-todo-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const todoId = btn.dataset.id;
+        deleteTodo(todoId);
+      });
+    });
+
+    // todo 완요 toggle 이벤트
+    document.querySelectorAll(".todo-checkbox").forEach(checkbox => {
+      checkbox.addEventListener("change", () => {
+        const todoId = checkbox.dataset.id;
+        const isDone = checkbox.checked;
+        toggleTodoStatus(todoId, isDone); // → 함수 분리!
+      });
+    });
+
   });
 
   // goal 생성 함수
@@ -296,6 +387,114 @@
             });
   }
 
+  // todo 생성 함수
+  function createTodo() {
+
+
+    const form = document.getElementById("todo-form");
+    const goalId = form.goalId.value;
+    const content = form.title.value;
+
+    const data = {
+      goalId: goalId,
+      content: content
+    };
+
+    fetch(`/todos/${goalId}/create`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+            .then(res => {
+              if (res.ok) {
+                alert("투두 추가 완료!");
+                closeModal("todoModal");
+                location.reload();
+              } else {
+                alert("추가 실패");
+              }
+            })
+            .catch(err => {
+              console.error("에러 발생", err);
+              alert("에러 발생");
+            });
+  }
+
+  // todo 수정 함수
+  function updateTodo(todoId) {
+    const form = document.getElementById("todo-form");
+    const content = form.title.value;
+
+    const data = {
+      content: content
+    };
+
+    fetch(`/todos/${todoId}/update`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+            .then(res => {
+              if (res.ok) {
+                alert("수정 완료!");
+                closeModal("todoModal");
+                location.reload();
+              } else {
+                alert("수정 실패");
+              }
+            })
+            .catch(err => {
+              console.error("수정 중 오류 발생", err);
+              alert("에러 발생");
+            });
+  }
+
+
+  // todo 삭제 함수
+  function deleteTodo(todoId) {
+    if (confirm("정말 삭제하시겠습니까?")) {
+      fetch(`/todos/${todoId}/delete`, {
+        method: 'DELETE'
+      })
+              .then(res => {
+                if (res.ok) {
+                  alert("삭제 완료!");
+                  location.reload();
+                } else {
+                  alert("삭제 실패");
+                }
+              })
+              .catch(err => {
+                console.error("삭제 중 오류 발생", err);
+                alert("에러 발생");
+              });
+    }
+  }
+
+  // todo 완료 toggle 함수
+  function toggleTodoStatus(todoId, isDone) {
+    const data = {
+      isDone: isDone
+    };
+
+    fetch(`/todos/${todoId}/toggle`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+            .then(res => {
+              if (!res.ok) throw new Error("업데이트 실패");
+              location.reload();
+            })
+            .catch(err => {
+              console.error("체크박스 상태 변경 실패", err);
+              alert("상태 변경 중 오류 발생");
+            });
+  }
+
+
   // goal modal 열기 함수
   function openModal(goalModal) {
     document.getElementById(goalModal).style.display = "flex";
@@ -305,6 +504,21 @@
   function closeModal(goalModal) {
     document.getElementById(goalModal).style.display = "none";
   }
+
+  function openTodoModal(goalId) {
+    const form = document.getElementById("todo-form");
+    form.reset();
+    form.goalId.value = goalId;
+    openModal("todoModal");
+  }
+
+  function closeTodoModal() {
+    const form = document.getElementById("todo-form");
+    form.reset();
+
+    closeModal("todoModal");
+  }
+
 </script>
 
 
