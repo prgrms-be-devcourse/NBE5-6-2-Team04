@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>DevQuest Dashboard</title>
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <link rel="stylesheet" th:href="@{/css/common.css}">
   <link rel="stylesheet" th:href="@{/css/header.css}">
   <link rel="stylesheet" th:href="@{/css/dashboard.css}">
@@ -190,7 +192,7 @@
 </div>
 <div th:replace="~{fragments/achievement-modal :: achievementModal}"></div>
 
-<script>
+<script src="/js/header.js" defer>
   // 드롭다운(수정, 삭제)
   document.addEventListener('DOMContentLoaded', () => {
     const toggles = document.querySelectorAll('.dropdown-toggle');

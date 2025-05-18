@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,12 +39,13 @@ public class DashboardController {
 
     // 대시보드
     @GetMapping("/dashboard")
-    public String dashboard(@AuthenticationPrincipal Principal principal, Model model) {
+    public String dashboard(@AuthenticationPrincipal Principal principal, Model model, CsrfToken csrfToken) {
         User user = userRepository.findById(principal.getUser().getUserId())
             .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
 
         DashboardDto dto = dashboardService.getDashboard(user);
         model.addAttribute("dashboard", dto);
+        model.addAttribute("_csrf", csrfToken);
         return "dashboard/dashboard";
     }
 

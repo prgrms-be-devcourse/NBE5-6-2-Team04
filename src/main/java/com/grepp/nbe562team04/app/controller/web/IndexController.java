@@ -11,4 +11,9 @@ public class IndexController {
         return "index";
     }
 
+    @GetMapping("/serviceInfo")
+    public String serviceInfo() {
+        return "serviceInfo";
+    }
+
 }

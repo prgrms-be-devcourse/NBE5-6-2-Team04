@@ -6,6 +6,15 @@
   <title>DevQuest 로그인</title>
   <link rel="stylesheet" href="/css/common.css">
   <style>
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      color: #3F2296;
+      position: absolute;
+      top: 30px;
+      left: 40px;
+    }
+
     body {
       margin: 0;
       padding: 0;
@@ -99,11 +108,14 @@
   </style>
 </head>
 <body>
-<div id="logo-container"></div>
+<div class="logo">
+  <a href="/">DevQuest</a>
+</div>
+
 <div class="container">
   <h1>회원가입</h1>
 
-  <form action="/user/signup" method="post">
+  <form action="/signup" method="post">
     <div class="input-box">
       <input id="nickname" name="nickname" type="text" placeholder="닉네임을 입력해주세요" required>
       <input id="email" name="email" type="email" placeholder="이메일을 입력해주세요" required>
@@ -113,17 +125,7 @@
     <button class="submit" type="submit">시작하기 →</button>
   </form>
 
-  <div class="login-link">계정이 있으신가요? <a href="/user/signin">로그인</a></div>
+  <div class="login-link">계정이 있으신가요? <a href="/signin">로그인</a></div>
 </div>
-
-<script>
-  // 왼쪽 상단 로고
-  fetch('/css/logo.html')
-  .then(res => res.text())
-  .then(html => {
-    document.getElementById('logo-container').innerHTML = html;
-  });
-
-</script>
 </body>
 </html>

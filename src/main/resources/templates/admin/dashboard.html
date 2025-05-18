@@ -1,11 +1,38 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns="http://www.w3.org/1999/html">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>DevQuest 관리자 페이지</title>
-  <link rel="stylesheet" href="/css/common.css" />
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <link rel="stylesheet" href="/css/common.css"/>
   <style>
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      color: #3F2296;
+      position: absolute;
+      top: 30px;
+      left: 40px;
+    }
+
+    .logout-btn {
+      position: absolute;
+      top: 30px;
+      right: 40px;
+      font-size: 14px;
+      color: #888888;
+      cursor: pointer;
+      user-select: none;
+      font-weight: 400;
+      transition: color 0.3s;
+    }
+
+    .logout-btn:hover {
+      color: #555555;
+    }
+
     body {
       margin: 0;
       padding: 0;
@@ -113,7 +140,10 @@
   </style>
 </head>
 <body>
-<div id="logo-container"></div>
+<div class="logo">
+  <a href="/admin/dashboard">DevQuest</a>
+</div>
+<span class="logout-btn" onclick="logout()">로그아웃</span>
 
 <div class="container">
   <h1>관리자님 안녕하세요</h1>
@@ -127,7 +157,7 @@
   </div>
 
 
-  <hr />
+  <hr/>
 
   <div class="table-scroll-area">
     <table class="member-table">
@@ -154,7 +184,7 @@
         </td>
         <td>
           <form th:action="@{/admin/removeUser}" method="post">
-            <input type="hidden" name="email" th:value="${user.email}" />
+            <input type="hidden" name="email" th:value="${user.email}"/>
             <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
           </form>
         </td>
@@ -176,7 +206,7 @@
         </td>
         <td>
           <form th:action="@{/admin/removeUser}" method="post">
-            <input type="hidden" name="email" th:value="${user.email}" />
+            <input type="hidden" name="email" th:value="${user.email}"/>
             <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
           </form>
         </td>
@@ -197,8 +227,9 @@
           <span th:unless="${user.role.name() == 'ROLE_ADMIN'}"></span>
         </td>
         <td>
-          <span style="color: #888;">탈퇴</span><br />
-          <span class="email-small" th:text="${#temporals.format(user.deletedAt, 'yyyy-MM-dd')}"></span>
+          <span style="color: #888;">탈퇴</span><br/>
+          <span class="email-small"
+                th:text="${#temporals.format(user.deletedAt, 'yyyy-MM-dd')}"></span>
         </td>
       </tr>
       </tbody>
@@ -206,23 +237,19 @@
   </div>
 </div>
 
-<script>
-  fetch('/css/logo.html')
-  .then((res) => res.text())
-  .then((html) => {
-    document.getElementById('logo-container').innerHTML = html;
-  });
-
+<script src="/js/header.js" defer>
   function showTab(tabId) {
     document.getElementById('active-users').style.display = tabId === 'active-users' ? '' : 'none';
-    document.getElementById('deleted-users').style.display = tabId === 'deleted-users' ? '' : 'none';
+    document.getElementById('deleted-users').style.display = tabId === 'deleted-users' ? ''
+        : 'none';
     document.getElementById('admin-users').style.display = tabId === 'admin-users' ? '' : 'none';  // 추가
 
     document.querySelectorAll('.tab-btn').forEach((btn) => btn.classList.remove('active'));
     const activeBtn = document.querySelector(`.tab-btn[onclick*="${tabId}"]`);
-    if (activeBtn) activeBtn.classList.add('active');
+    if (activeBtn) {
+      activeBtn.classList.add('active');
+    }
   }
-
 </script>
 </body>
 </html>

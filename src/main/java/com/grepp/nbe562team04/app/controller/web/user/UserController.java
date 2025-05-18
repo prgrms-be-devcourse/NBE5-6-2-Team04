@@ -14,18 +14,19 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("user")
 public class UserController {
 
     private final UserService userService;
@@ -34,8 +35,15 @@ public class UserController {
     // 로그인 폼
     @GetMapping("signin")
     public String signin(Model model) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
+            return "redirect:/dashboard";
+        }
+
         model.addAttribute("signinRequest", new SigninRequest());
-        return "user/signin"; }
+        return "user/signin";
+    }
 
 
     // 회원가입 폼
@@ -59,7 +67,7 @@ public class UserController {
 
 
     // 관심분야 전체 조회
-    @GetMapping("interests")
+    @GetMapping("user/interests")
     public String interestList(Model model) {
         Map<String, List<InterestDto>> interestGroup = interestService.findInterestGroupByType();
 
@@ -70,7 +78,7 @@ public class UserController {
     }
 
     // 관심분야 등록
-    @PostMapping("interests")
+    @PostMapping("user/interests")
     public String receiveInterests(
         HttpSession session,
         @RequestParam("role") Long roleId,
