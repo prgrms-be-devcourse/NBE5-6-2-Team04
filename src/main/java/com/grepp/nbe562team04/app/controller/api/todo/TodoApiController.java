@@ -11,13 +11,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/todos")
+@RequestMapping("/todos")
 public class TodoApiController {
 
     private final TodoService todoService;
 
     //  투두 생성
-    @PostMapping
+    @PostMapping("/{goalId}/create")
     public ResponseEntity<String> createTodo(@RequestBody TodoRequestDto dto) {
         todoService.create(dto);
         return ResponseEntity.ok("투두 생성 완료!");

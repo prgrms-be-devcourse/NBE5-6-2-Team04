@@ -162,11 +162,26 @@
   </div>
 </div>
 
+  <!-- todo  생성 모달 -->
+  <div id="todoModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('todoModal')">&times;</span>
+      <h2>todo 생성</h2>
+      <form id="todo-form">
+        <input type="text" name="title" placeholder="할 일을 입력해주세요" required><br><br>
+        <input type="hidden" name="goalId">
+        <button type="submit">추가</button>
+      </form>
+    </div>
+  </div>
+
+
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("goal-form");
+    const todoForm = document.getElementById("todo-form");
 
-    // goal 생성
+    // goal 생성 이벤트
     document.querySelector(".goal-create-btn").addEventListener("click", () => {
       form.reset();
       form.removeAttribute("data-id");
@@ -179,7 +194,7 @@
       openModal("goalModal");
     });
 
-    // goal 수정
+    // goal 수정 이벤트
     document.querySelectorAll(".update-goal-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         const goalId = btn.dataset.id;
@@ -195,13 +210,28 @@
       });
     });
 
-    // goal 삭제
+    // goal 삭제 이벤트
     document.querySelectorAll(".delete-goal-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         const goalId = btn.dataset.id;
         deleteGoal(goalId);
       });
     });
+
+    // 목표 별 Todo 생성 이벤트
+
+      todoForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        createTodo();
+      });
+
+      document.querySelectorAll(".add-todo-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const goalId = btn.dataset.goalId;
+          openTodoModal(goalId);
+        });
+      });
+
   });
 
   // goal 생성 함수
@@ -297,6 +327,39 @@
             });
   }
 
+  function createTodo() {
+
+
+    const form = document.getElementById("todo-form");
+    const goalId = form.goalId.value;
+    const content = form.title.value;
+
+    const data = {
+      goalId: goalId,
+      content: content
+    };
+
+    fetch(`/todos/${goalId}/create`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+            .then(res => {
+              if (res.ok) {
+                alert("투두 추가 완료!");
+                closeModal("todoModal");
+                location.reload();
+              } else {
+                alert("추가 실패");
+              }
+            })
+            .catch(err => {
+              console.error("에러 발생", err);
+              alert("에러 발생");
+            });
+  }
+
+
   // goal modal 열기 함수
   function openModal(goalModal) {
     document.getElementById(goalModal).style.display = "flex";
@@ -306,6 +369,21 @@
   function closeModal(goalModal) {
     document.getElementById(goalModal).style.display = "none";
   }
+
+  function openTodoModal(goalId) {
+    const form = document.getElementById("todo-form");
+    form.reset();
+    form.goalId.value = goalId;
+    openModal("todoModal");
+  }
+
+  function closeTodoModal() {
+    const form = document.getElementById("todo-form");
+    form.reset();
+
+    closeModal("todoModal");
+  }
+
 </script>
 
 
