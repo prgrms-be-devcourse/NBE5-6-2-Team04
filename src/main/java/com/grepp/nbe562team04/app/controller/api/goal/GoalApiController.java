@@ -11,41 +11,41 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/companies")
+@RequestMapping("/goals")
 public class GoalApiController {
 
     private final GoalService goalService;
 
     //  목표 생성
-    @PostMapping("/{companyId}/goals")
+    @PostMapping("/{companyId}/create")
     public ResponseEntity<String> create(@RequestBody GoalRequestDto dto) {
         goalService.createGoal(dto);
         return ResponseEntity.ok("목표 생성 완료");
     }
 
     //  기업별 목표 목록 조회
-    @GetMapping("/company/{companyId}")
-    public List<GoalResponseDto> getGoalsByCompanyId(@PathVariable Long companyId) {
-        return goalService.getGoalsByCompanyId(companyId);
-    }
-
-    //  목표 상세 조회
-//    @GetMapping("/{id}")
-//    public GoalResponseDto getGoal(@PathVariable Long id) {
-//        return goalService.getGoalById(id);
+//    @GetMapping("/{companyId}")
+//    public List<GoalResponseDto> getGoalsByCompanyId(@PathVariable Long companyId) {
+//        return goalService.getGoalsByCompanyId(companyId);
 //    }
 
+    //  목표 상세 조회
+    @GetMapping("/{goalId}")
+    public GoalResponseDto getGoal(@PathVariable Long goalId) {
+        return goalService.getGoalById(goalId);
+    }
+
     //  목표 수정
-    @PutMapping("/{id}/edit")
-    public ResponseEntity<String> update(@PathVariable Long id, @RequestBody GoalRequestDto dto) {
-        goalService.updateGoal(id, dto);
+    @PutMapping("/{goalId}/update")
+    public ResponseEntity<String> update(@PathVariable Long goalId, @RequestBody GoalRequestDto dto) {
+        goalService.updateGoal(goalId, dto);
         return ResponseEntity.ok("목표 수정 완료");
     }
 
     //  목표 삭제
-    @DeleteMapping("/{id}/delete")
-    public ResponseEntity<String> delete(@PathVariable Long id) {
-        goalService.deleteGoal(id);
+    @DeleteMapping("/{goalId}/delete")
+    public ResponseEntity<String> delete(@PathVariable Long goalId) {
+        goalService.deleteGoal(goalId);
         return ResponseEntity.ok("목표 삭제 완료");
     }
 }
