@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -64,13 +63,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, UserService userService) throws Exception {
-//        http.csrf(AbstractHttpConfigurer::disable);
         http.userDetailsService(userService)
             .authorizeHttpRequests(authz -> authz
+                .requestMatchers("/css/**", "/js/**", "/img/**").permitAll() // 정적 리소스 허용
+                .requestMatchers("/", "/serviceInfo", "/signin", "/signup", "/admin/signup").anonymous()// 회원가입, 로그인 접근 권한
                 .requestMatchers("/admin/dashboard").hasRole("ADMIN") // 관리자페이지 접근 권한
                 .requestMatchers("/user/**", "/dashboard").hasRole("USER") // 사용자페이지 접근 권한
-                .requestMatchers("/", "/signin", "/signup").anonymous() // 회원가입, 로그인 접근 권한
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/signin")
@@ -80,6 +79,7 @@ public class SecurityConfig {
                 )
             .rememberMe(rememberMe -> rememberMe
                 .key(rememberMeKey).rememberMeParameter("remember-me")
+                .userDetailsService(userService)
             )
             .exceptionHandling(exception -> exception
                 .accessDeniedHandler(accessDeniedHandler())
@@ -97,10 +97,5 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService(UserService userService) {
-        return userService;
     }
 }
