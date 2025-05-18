@@ -50,21 +50,10 @@ public class GoalCompanyService {
         return achievementName; // null 또는 업적 이름
     }
 
-    // 기업 리스트 조회
-    public List<GoalCompanyResponseDto> getAllGoalCompanies() {
-        return goalCompanyRepository.findByUserUserId(2L).stream()
-                .map(company -> GoalCompanyResponseDto.builder()
-                        .companyName(company.getCompanyName())
-                        .content(company.getContent())
-                        .status(company.getStatus().name())
-                        .endDate(company.getEndDate())
-                        .build())
-                .toList();
-    }
 
-    // 해당 기업 상세 조회
-    public GoalCompanyResponseDto getCompanyById(Long id) {
-        GoalCompany company = goalCompanyRepository.findById(id)
+    // 목표 기업 단건 조회
+    public GoalCompanyResponseDto getCompanyById(Long companyId) {
+        GoalCompany company = goalCompanyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("해당 기업이 존재하지 않습니다."));
 
         GoalCompanyResponseDto dto = GoalCompanyResponseDto.builder()
@@ -77,10 +66,10 @@ public class GoalCompanyService {
         return dto;
     }
 
-    // 수정
+    // 목표 기업 수정
     @Transactional
-    public void updateGoalCompany(Long id, GoalCompanyRequestDto dto) {
-        GoalCompany company = goalCompanyRepository.findById(id)
+    public void updateGoalCompany(Long companyId, GoalCompanyRequestDto dto) {
+        GoalCompany company = goalCompanyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("해당 기업이 존재하지 않습니다."));
 
         company.setCompanyName(dto.getCompanyName());
@@ -89,22 +78,18 @@ public class GoalCompanyService {
         company.setEndDate(dto.getEndDate());
     }
 
-    // 삭제
+    // 목표 기업 삭제
     @Transactional
     public void deleteGoalCompany(Long companyId) {
         GoalCompany company = goalCompanyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("해당 기업이 존재하지 않습니다."));
 
+        // goal 에 값이 들어 있으면 goalCompany가 삭제되지 않아 goal을 먼저 삭제하고 goalCompany를 삭제하는 로직 추가
         List<Goal> goals = goalRepository.findByCompanyCompanyId(companyId);
-
         for (Goal goal : goals) {
-            //  각 goal에 연결된 todo 삭제
-            todoRepository.deleteByGoalGoalId(goal.getGoalId());
-
-            // goal 삭제
-            goalRepository.delete(goal);
+            todoRepository.deleteByGoalGoalId(goal.getGoalId()); //  각 goal에 연결된 todo 삭제
+            goalRepository.delete(goal); // goal 삭제
         }
-
         goalCompanyRepository.delete(company);
     }
 

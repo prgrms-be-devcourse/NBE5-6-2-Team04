@@ -42,28 +42,17 @@ public class GoalController {
         GoalCompanyDto companyDto = dashboardService.getCompanyDetailById(CompanyId);
         List<GoalResponseDto> goalList = goalService.getGoalsByCompanyId(CompanyId);
 
-        Map<Long, List<TodoResponseDto>> todoMap = new HashMap<>();
-        Map<Long, Integer> progressMap = new HashMap<>();
+
+        Map<Long, List<TodoResponseDto>> todoMap = new HashMap<>(); // 목표별 투두 리스트 맵으로 저장
 
         for (GoalResponseDto goal : goalList) {
             List<TodoResponseDto> todos = todoService.getByGoal(goal.getGoalId());
             todoMap.put(goal.getGoalId(), todos);
-
-            long total = todos.size();
-            long done = todos.stream()
-                    .filter(todo -> Boolean.TRUE.equals(todo.getIsDone())) // 이렇게!
-                    .count();
-            int percent = total == 0 ? 0 : (int) ((done * 100.0) / total);
-            progressMap.put(goal.getGoalId(), percent);
         }
-
-
-        model.addAttribute("progressMap", progressMap);
-
 
         model.addAttribute("dashboard", dto);
         model.addAttribute("company", companyDto);   // 기업 정보
-        model.addAttribute("goals", goalList);       // 목표 리스트
+        model.addAttribute("goals", goalList);       // 목표 리스트(진행률 포함)
         model.addAttribute("todoMap", todoMap);
 
         return "goal/goal";

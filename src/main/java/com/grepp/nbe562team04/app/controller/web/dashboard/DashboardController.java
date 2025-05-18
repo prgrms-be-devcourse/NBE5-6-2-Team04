@@ -27,19 +27,13 @@ public class DashboardController {
 
     private final DashboardService dashboardService;
     private final UserRepository userRepository;
-    private final DashboardRepository dashboardRepository;
-    private final GoalService goalService;
-    private final TodoService todoService;
 
 
-    public DashboardController(DashboardService dashboardService, UserRepository userRepository,
-                               DashboardRepository dashboardRepository,  GoalService goalService, TodoService todoService) {
+
+    public DashboardController(DashboardService dashboardService, UserRepository userRepository) {
 
         this.dashboardService = dashboardService;
         this.userRepository = userRepository;
-        this.dashboardRepository = dashboardRepository;
-        this.goalService = goalService;
-        this.todoService = todoService;
     }
 
     // 대시보드

@@ -76,27 +76,26 @@
       </div>
     </div>
 
-    <div class="goal-list">
-      <div th:each="goal : ${goals}" class="goal-item">
-        <div class="goal-info">
-          <span class="goal-status" th:text="${goal.status}">상태</span>
-          <span class="goal-title" th:text="${goal.title}">제목</span>
+    <div class="goal-item" th:each="goal : ${goals}">
+      <div class="goal-info">
+        <span class="goal-status" th:text="${goal.status}">상태</span>
+        <span class="goal-title" th:text="${goal.title}">제목</span>
 
-          <div class="goal-progress-text"
-               th:if="${progressMap != null and goal.goalId != null and progressMap[goal.goalId] != null}"
-               th:text="'진행률: ' + ${progressMap[goal.goalId]} + '%'">
-            진행률 표시
-          </div>
+        <div class="goal-progress-text"
+             th:if="${goal.progress != null}"
+             th:text="'진행률: ' + ${goal.progress} + '%'">
+          진행률 표시
         </div>
-
         <div class="progress-bar"
-             th:if="${progressMap != null and goal.goalId != null and progressMap[goal.goalId] != null}">
+             th:if="${goal.progress != null}">
           <div class="progress-fill"
-               th:style="'width:' + ${progressMap[goal.goalId]} + '%'">
+               th:style="'width:' + ${goal.progress} + '%'">
           </div>
         </div>
       </div>
     </div>
+
+
 
 
 
@@ -385,7 +384,7 @@
 
   //goal 불러오기 함수
   function fillGoalForm(goalId) {
-    fetch(`/goals/${goalId}`)
+    fetch(`/goals/${goalId}/select`)
             .then(res => res.json())
             .then(data => {
               const form = document.getElementById("goal-form");
