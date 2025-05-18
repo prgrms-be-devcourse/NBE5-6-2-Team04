@@ -165,7 +165,7 @@
   document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("goal-form");
 
-    // 생성
+    // goal 생성
     document.querySelector(".goal-create-btn").addEventListener("click", () => {
       form.reset();
       form.removeAttribute("data-id");
@@ -178,7 +178,7 @@
       openModal("goalModal");
     });
 
-    // 수정
+    // goal 수정
     document.querySelectorAll(".update-goal-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         const goalId = btn.dataset.id;
@@ -194,7 +194,7 @@
       });
     });
 
-    // 삭제
+    // goal 삭제
     document.querySelectorAll(".delete-goal-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         const goalId = btn.dataset.id;
@@ -203,6 +203,7 @@
     });
   });
 
+  // goal 생성 함수
   function createGoal() {
     const form = document.getElementById("goal-form");
     const companyId = form.dataset.companyId; // 필요시 상위에서 설정
@@ -213,7 +214,7 @@
       endDate: form.endDate.value
     };
 
-    fetch(`/companies/${companyId}/goals`, {
+    fetch(`/goals/${companyId}/create`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -231,6 +232,7 @@
     });
   }
 
+  // goal 수정 함수
   function updateGoal(e) {
     const form = document.getElementById("goal-form");
     const goalId = form.dataset.id;
@@ -259,6 +261,7 @@
     });
   }
 
+  // goal 삭제 함수
   function deleteGoal(goalId) {
     if (confirm("정말 삭제하시겠습니까?")) {
       fetch(`/goals/${goalId}/delete`, {
@@ -277,6 +280,7 @@
     }
   }
 
+  //goal 불러오기 함수
   function fillGoalForm(goalId) {
     fetch(`/goals/${goalId}`)
             .then(res => res.json())
@@ -292,10 +296,12 @@
             });
   }
 
+  // goal modal 열기 함수
   function openModal(goalModal) {
     document.getElementById(goalModal).style.display = "flex";
   }
 
+  // goal modal 닫기 함수
   function closeModal(goalModal) {
     document.getElementById(goalModal).style.display = "none";
   }
