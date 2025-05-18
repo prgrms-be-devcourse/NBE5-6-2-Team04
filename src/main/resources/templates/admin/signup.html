@@ -6,6 +6,15 @@
   <title>DevQuest 관리자 회원가입</title>
   <link rel="stylesheet" href="/css/common.css">
   <style>
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      color: #3F2296;
+      position: absolute;
+      top: 30px;
+      left: 40px;
+    }
+
     body {
       margin: 0;
       padding: 0;
@@ -99,6 +108,10 @@
   </style>
 </head>
 <body>
+<div class="logo">
+  <a href="/">DevQuest</a>
+</div>
+
 <div id="logo-container"></div>
 <div class="container">
   <h1>관리자 회원가입</h1>
@@ -116,14 +129,5 @@
   <div class="login-link">계정이 있으신가요? <a href="/user/signin">로그인</a></div>
 </div>
 
-<script>
-  // 왼쪽 상단 로고
-  fetch('/css/logo.html')
-  .then(res => res.text())
-  .then(html => {
-    document.getElementById('logo-container').innerHTML = html;
-  });
-
-</script>
 </body>
 </html>

@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +41,8 @@ public class MypageController {
     public String index(@AuthenticationPrincipal Principal principal ,
                         @RequestParam(required = false) String achievement,
                         @RequestParam(required = false) String name,
-                        Model model){
+                        Model model,
+        CsrfToken csrfToken){
         String email = principal.getUsername();
         User user = userService.findByEmail(email);
         List<UsersAchieve> usersAchieves = userService.findAchieveByUserId(user.getUserId());
@@ -48,6 +51,7 @@ public class MypageController {
         model.addAttribute("user", user);
         model.addAttribute("progressPercent", progress);
         model.addAttribute("userAchieve", usersAchieves);
+        model.addAttribute("_csrf", csrfToken);
         return "mypage/mypage";
     }
 
