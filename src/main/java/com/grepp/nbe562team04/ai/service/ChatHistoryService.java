@@ -26,8 +26,7 @@ public class ChatHistoryService {
 
         System.out.println("대화 시작");
         System.out.println("====================================================");
-        for (int i = 0; i < history.size(); i++) {
-            ChatMessageDto msg = history.get(i);
+        for (ChatMessageDto msg : history) {
             System.out.println("[" + msg.getRole() + "] " + msg.getMessage());
         }
     }
