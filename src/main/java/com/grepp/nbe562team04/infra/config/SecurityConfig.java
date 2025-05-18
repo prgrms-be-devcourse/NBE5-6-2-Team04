@@ -49,16 +49,19 @@ public class SecurityConfig {
         return (request, response, accessDeniedException) -> {
             Authentication auth = (Authentication) request.getUserPrincipal();
 
-            boolean isAdmin = auth.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .anyMatch(role -> role.equals("ROLE_ADMIN"));
+            if (auth != null) {
+                boolean isAdmin = auth.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .anyMatch(role -> role.equals("ROLE_ADMIN"));
 
-            if (isAdmin) {
-                response.sendRedirect("/admin/dashboard");
+                if (isAdmin) {
+                    response.sendRedirect("/admin/dashboard");
+                } else {
+                    response.sendRedirect("/dashboard");
+                }
             } else {
-                response.sendRedirect("/dashboard");
+                response.sendRedirect("/signin");
             }
-
         };
     }
 
@@ -66,8 +69,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, UserService userService) throws Exception {
         http.userDetailsService(userService)
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/css/**", "/js/**", "/img/**").permitAll() // 정적 리소스 허용
-                .requestMatchers("/", "/serviceInfo", "/signin", "/signup", "/admin/signup").anonymous()// 회원가입, 로그인 접근 권한
+                .requestMatchers("/css/**", "/js/**", "/img/**", "/api/user/exists/*", "/user/interests").permitAll() // 모두에게 허용
+                .requestMatchers("/", "/serviceInfo", "/signin", "/signup", "/admin/signup").anonymous() // 회원가입, 로그인 접근 권한
                 .requestMatchers("/admin/dashboard").hasRole("ADMIN") // 관리자페이지 접근 권한
                 .requestMatchers("/user/**", "/dashboard").hasRole("USER") // 사용자페이지 접근 권한
                 .anyRequest().authenticated()
