@@ -135,22 +135,24 @@
             cursor: pointer;
         }
 
-        .modal {
+        .ccmModal {
             display: none;
             position: fixed;
             z-index: 10;
-            left: 0; top: 0;
-            width: 100%; height: 100%;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
         }
 
-        .modal-content {
+        .ccmModal-content {
             background-color: white;
             margin: 10% auto;
             padding: 20px;
-            width: 400px;
+            width: 600px;
             border-radius: 10px;
-            max-height: 400px;
+            max-height: 600px;
             overflow-y: auto;
         }
 
@@ -160,9 +162,55 @@
             cursor: pointer;
         }
 
+        .achievement-icons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+            gap: 4px; /* 각 업적 간 간격 */
+        }
+
+        .achievement-preview {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .achievement-preview .icon {
+            margin-right: 6px;
+            font-size: 16px;
+        }
+
+        #achievementList {
+            padding: 10px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* 가운데 정렬 핵심 */
+            text-align: left;
+        }
+
         .achievement-item {
-            padding: 10px;
-            border-bottom: 1px solid #ccc;
+            width: 90%; /* 또는 고정폭 예: 500px */
+            max-width: 500px;
+            margin-bottom: 20px;
+            font-size: 15px;
+            line-height: 1.6;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .achievement-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .achievement-item strong {
+            color: #3b2ba8; /* 제목 강조 */
+        }
+
+        .more-button-wrapper {
+            margin-top: 16px; /* 버튼과 업적 목록 사이 간격 확보 */
         }
     </style>
 </head>
@@ -179,9 +227,7 @@
 
 <div class="container">
     <div class="nickname" th:text="${user.nickname} + ' 님의 마이페이지'"></div>
-    <img class="profile-img"
-         th:src="${user.userImage} != null ? '/images/profile/' + ${user.userImage} : '/images/profile/default.png'"
-         alt="프로필 이미지">
+    <img alt="프로필 이미지" class="profile-img" th:src="@{'/images/profile/' + ${user.userImage}}">
     <div class="level-title" th:text="${user.level.levelName}"></div>
     <div class="level" th:text="'Lv.' + ${user.level.levelId}"></div>
 
@@ -197,31 +243,38 @@
 
     <div class="achievements">
         <b>나의 업적</b>
-        <div class="achievement-icons">🏅 🏅 🏅 </div><button onclick="openModal()">더보기</button>
+        <div class="achievement-icons">
+            <div class="achievement-preview" th:each="ua, stat : ${userAchieve}" th:if="${stat.index < 3}">
+                <span class="icon">🏅</span>
+                <span th:text="${ua.achievement.name}">업적 이름</span>
+            </div>
+        </div>
+        <div class="more-button-wrapper">
+            <button onclick="openModal()">더보기</button>
+        </div>
     </div>
 
-    <div id="achievementModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h3>획득한 업적</h3>
-            <div class="achievement-list" id="achievementList">
-
+    <div class="ccmModal" id="achievementListModal">
+        <div class="ccmModal-content">
+            <span class="close" onclick="closeListModal()">×</span>
+            <h3>🏅 획득 업적 목록</h3>
+            <div id="achievementList">
             </div>
         </div>
     </div>
     <div class="edit" onclick="location.href='/users/update'">수정하기</div>
 </div>
 
-<!--<p>현재 경험치: <span th:text="${user.exp}"></span></p>-->
-<!--<p>현재 레벨 기준 XP: <span th:text="${user.level.xp}"></span></p>-->
-<!--<p>다음 레벨 XP: <span th:text="${nextLevelXp}"></span></p>-->
-<!--<p>진행률: <span th:text="${progressPercent} + '%'"></span></p>-->
-
-<div class="logout">
-    <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="탈퇴 아이콘">
+<div class="logout" onclick="deleteAccount()">
+    <img alt="탈퇴 아이콘" src="https://cdn-icons-png.flaticon.com/512/847/847969.png">
     <div>계정 탈퇴</div>
 </div>
+
+<div th:replace="~{fragments/achievement-modal :: achievementModal}"></div>
 </body>
-<script src="/js/header.js" defer></script>
-<script src="/js/mypageModal.js" defer></script>
+<script defer src="/js/header.js"></script>
+<script defer src="/js/withdraw.js"></script>
+<script defer src="/js/achievement/mypageAchieve.js"></script>
+<script defer src="/js/achievement/congratulation.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </html>
