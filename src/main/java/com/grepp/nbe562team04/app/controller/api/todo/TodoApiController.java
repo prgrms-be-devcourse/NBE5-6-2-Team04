@@ -30,15 +30,22 @@ public class TodoApiController {
         return ResponseEntity.ok(todoList);
     }
 
+    // 단일 투두 조회
+    @GetMapping("/{todoId}/select")
+    public ResponseEntity<TodoResponseDto> getTodo(@PathVariable Long todoId) {
+        TodoResponseDto todo = todoService.getById(todoId);
+        return ResponseEntity.ok(todo);
+    }
+
     //  투두 수정
-    @PutMapping("/{todoId}")
+    @PutMapping("/{todoId}/update")
     public ResponseEntity<String> updateTodo(@PathVariable Long todoId, @RequestBody TodoRequestDto dto) {
         todoService.update(todoId, dto);
         return ResponseEntity.ok("투두 수정 완료!");
     }
 
     //  투두 삭제
-    @DeleteMapping("/{todoId}")
+    @DeleteMapping("/{todoId}/delete")
     public ResponseEntity<String> deleteTodo(@PathVariable Long todoId) {
         todoService.delete(todoId);
         return ResponseEntity.ok("투두 삭제 완료!");

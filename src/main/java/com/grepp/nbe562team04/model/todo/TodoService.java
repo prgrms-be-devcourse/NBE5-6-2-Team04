@@ -73,4 +73,16 @@ public class TodoService {
         todoRepository.deleteById(todoId);
     }
 
+    public TodoResponseDto getById(Long todoId) {
+        Todo todo = todoRepository.findById(todoId)
+                .orElseThrow(() -> new RuntimeException("투두를 찾을 수 없습니다."));
+        return TodoResponseDto.builder()
+                .todoId(todo.getTodoId())
+                .content(todo.getContent())
+                .startDate(todo.getStartDate())
+                .endDate(todo.getEndDate())
+                .isDone(todo.getIsDone())
+                .goalId(todo.getGoal().getGoalId())
+                .build();
+    }
 }
