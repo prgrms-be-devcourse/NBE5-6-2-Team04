@@ -48,7 +48,10 @@ public class UserController {
 
     // 회원가입 폼
     @GetMapping("signup")
-    public String signup() { return "user/signup";}
+    public String signup(Model model) {
+        model.addAttribute("signupForm", new SignupRequest());
+        return "user/signup";
+    }
 
     // 회원가입 > 관심분야 선택
     @PostMapping("signup")
@@ -86,6 +89,7 @@ public class UserController {
     ) {
         SignupRequest signupForm = (SignupRequest) session.getAttribute("signupForm");
         if (signupForm == null) {
+
             return "redirect:/user/signup";
         }
 
@@ -97,7 +101,7 @@ public class UserController {
         userService.receiveInterest(userId, roleId, skillIds);
 
         session.removeAttribute("signupForm");
-        return "redirect:/user/signin";
+        return "user/signupSuccess";
     }
 
 }

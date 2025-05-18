@@ -176,4 +176,8 @@ public class UserService implements UserDetailsService {
             userInterestRepository.save(new UserInterest(user, skill));
         }
     }
+
+    public Boolean isDuplicatedEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
 }
