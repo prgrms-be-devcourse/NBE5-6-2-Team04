@@ -6,6 +6,15 @@
   <title>DevQuest 로그인</title>
   <link rel="stylesheet" href="/css/common.css">
   <style>
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      color: #3F2296;
+      position: absolute;
+      top: 30px;
+      left: 40px;
+    }
+
     body {
       margin: 0;
       padding: 0;
@@ -95,7 +104,10 @@
   </style>
 </head>
 <body>
-<div id="logo-container"></div>
+<div class="logo">
+  <a href="/">DevQuest</a>
+</div>
+
 <div class="container">
   <h1>로그인</h1>
   <form th:action="@{/user/signin}" th:object="${signinRequest}" method="post">
@@ -114,18 +126,9 @@
     <button type="submit" class="submit">로그인 →</button>
   </form>
   <div class="links">
-    <a href="/user/signup">회원가입</a>
+    <a href="/signup">회원가입</a>
     <a href="#">ID/PW 찾기</a>
   </div>
 </div>
-
-<script>
-  // 왼쪽 상단 로고
-  fetch('/css/logo.html')
-  .then(res => res.text())
-  .then(html => {
-    document.getElementById('logo-container').innerHTML = html;
-  });
-</script>
 </body>
 </html>
