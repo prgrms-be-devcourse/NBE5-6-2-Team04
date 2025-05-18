@@ -146,7 +146,7 @@
 <span class="logout-btn" onclick="logout()">로그아웃</span>
 
 <div class="container">
-  <h1>관리자님 안녕하세요</h1>
+  <h1 class="nickname" th:text="${admin.nickname} + ' 관리자님, 안녕하세요'"></h1>
 
   <h3 class="member-title">회원 목록</h3>
 
