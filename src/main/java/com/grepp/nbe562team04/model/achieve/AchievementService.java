@@ -27,13 +27,11 @@ public class AchievementService {
 
     @Transactional
     public String giveTutorialAchievement(Long userId) {
-        log.info("🧪 업적 확인 시작 for userId={}", userId); // 호출 횟수 확인용
         Long achieveId = 1L;
 
         boolean already = usersAchieveRepository.existsByUser_UserIdAndAchievement_AchieveId(userId, achieveId);
         if (already) {
-            log.info("🎯 이미 업적을 가지고 있음. 리턴 null");
-            return null; // 이미 획득한 경우 null 반환
+            return null;
         }
 
         UsersAchieve ua = new UsersAchieve();
@@ -48,15 +46,10 @@ public class AchievementService {
 
     @Transactional
     public String giveGoalCompanyAchievement(Long userId) {
-        log.info("🧪 업적 확인 시작 for userId={}", userId); // 호출 횟수 확인용
-
         Long achieveId = 2L;
 
         boolean already = usersAchieveRepository.existsByUser_UserIdAndAchievement_AchieveId(userId, achieveId);
-        if (already) {
-            log.info("🎯 이미 업적을 가지고 있음. 리턴 null");
-            return null;
-        }
+        if (already) return null;
 
         UsersAchieve ua = new UsersAchieve();
         ua.setUser(userRepository.getReferenceById(userId));
@@ -69,12 +62,33 @@ public class AchievementService {
         return achievement.getName();
     }
 
+    @Transactional
+    public String giveThreeGoalCompaniesAchievement(Long userId) {
+        Long achieveId = 10L;
 
-    public boolean isTutorialCompleted(User user) {
-        return StringUtils.hasText(user.getEmail()) &&
-                StringUtils.hasText(user.getNickname()) &&
-                StringUtils.hasText(user.getComment()) &&
-                StringUtils.hasText(user.getUserImage());
+        boolean already = usersAchieveRepository.existsByUser_UserIdAndAchievement_AchieveId(userId, achieveId);
+        if (already) {
+            log.info("🎯 [목표 기업 3개] 이미 업적을 가지고 있음. 리턴 null");
+            return null;
+        }
+
+        User user = userRepository.findById(userId).orElseThrow();
+        int companyCount = user.getGoalCompanies().size(); // <- 연관관계 기반으로 판단
+
+        if (companyCount < 3) {
+            log.info("📌 목표 기업이 {}개로 부족합니다. 업적 지급되지 않음.", companyCount);
+            return null;
+        }
+
+        Achievement achievement = achieveRepository.findById(achieveId).orElseThrow();
+        UsersAchieve ua = new UsersAchieve();
+        ua.setUser(user);
+        ua.setAchievement(achievement);
+        ua.setAchievedAt(LocalDateTime.now());
+
+        usersAchieveRepository.save(ua);
+        log.info("🎉 목표 기업 3개 업적 지급 완료: {}", achievement.getName());
+        return achievement.getName();
     }
 
     public List<AchievementDto> getUserAchievements(Long userId) {

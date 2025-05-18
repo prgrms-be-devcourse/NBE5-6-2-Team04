@@ -88,6 +88,7 @@ public class MypageController {
         if (achievedName != null) {
             redirectAttributes.addAttribute("achievementName", URLEncoder.encode(achievedName, StandardCharsets.UTF_8));
         }
+
         return "redirect:/users/mypage";
     }
 

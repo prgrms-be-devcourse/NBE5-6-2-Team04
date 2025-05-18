@@ -1,6 +1,7 @@
 package com.grepp.nbe562team04.model.user.entity;
 
 import com.grepp.nbe562team04.model.auth.code.Role;
+import com.grepp.nbe562team04.model.goalcompany.entity.GoalCompany;
 import com.grepp.nbe562team04.model.interest.entity.Interest;
 import com.grepp.nbe562team04.model.level.entity.Level;
 import jakarta.persistence.CascadeType;
@@ -54,4 +55,6 @@ public class User {
     private LocalDate createdAt;
     @Column(name = "deleted_at")
     private LocalDate deletedAt;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GoalCompany> goalCompanies;
 }

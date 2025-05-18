@@ -24,10 +24,16 @@ public class GoalCompanyApiController {
         @AuthenticationPrincipal Principal principal) { // json -> dto 자동 변환
         Long userId = principal.getUser().getUserId();
         String achievementName = goalCompanyService.createGoalCompany(dto, userId);// 로그인된 유저 ID 꺼내기
-        return ResponseEntity.ok(Map.of(
-                "message", "등록 완료",
-                "achievementName", achievementName // null or "목표를 정해브렀어~"
-        ));
+        if (achievementName != null) {
+            return ResponseEntity.ok(Map.of(
+                    "message", "등록 완료",
+                    "achievementName", achievementName
+            ));
+        } else {
+            return ResponseEntity.ok(Map.of(
+                    "message", "등록 완료"
+            ));
+        }
     }
 
     // 조회(단순 화면 상에 출력) -> 추후 뷰 컨트롤러로 이동 필요
