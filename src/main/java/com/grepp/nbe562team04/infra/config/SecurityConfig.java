@@ -7,8 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -63,12 +61,12 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable);
+//        http.csrf(AbstractHttpConfigurer::disable);
         http
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/admin/dashboard").hasRole("ADMIN") // 관리자페이지 접근 권한
                 .requestMatchers("/user/**", "/dashboard").hasRole("USER") // 사용자페이지 접근 권한
-                .requestMatchers("/signin", "/signup").anonymous() // 회원가입, 로그인 접근 권한
+                .requestMatchers("/", "/signin", "/signup").anonymous() // 회원가입, 로그인 접근 권한
                 .anyRequest().permitAll()
             )
             .formLogin(form -> form
@@ -83,7 +81,13 @@ public class SecurityConfig {
             .exceptionHandling(exception -> exception
                 .accessDeniedHandler(accessDeniedHandler())
             )
-            .logout(LogoutConfigurer::permitAll);
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/signin")
+                .invalidateHttpSession(true) // 세션무효화
+                .deleteCookies("JSESSIONID")  // 쿠키 삭제
+                .permitAll()
+            );
         return http.build();
     }
 

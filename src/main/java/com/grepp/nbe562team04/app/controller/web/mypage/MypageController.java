@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,13 +30,14 @@ public class MypageController {
     private final UserService userService;
 
     @GetMapping("mypage")
-    public String index(@AuthenticationPrincipal UserDetails userDetails , Model model){
+    public String index(@AuthenticationPrincipal UserDetails userDetails , Model model, CsrfToken csrfToken){
         String email = userDetails.getUsername();
         User user = userService.findByEmail(email);
 
         int progress = levelProgress(user);
         model.addAttribute("user", user);
         model.addAttribute("progressPercent", progress);
+        model.addAttribute("_csrf", csrfToken);
         return "mypage/mypage";
     }
 
