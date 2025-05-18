@@ -7,9 +7,9 @@ import com.grepp.nbe562team04.model.user.dto.UserDto;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,7 +23,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("admin")
-//@PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
     private final UserService userService;
@@ -45,12 +44,13 @@ public class AdminController {
 
     // 관리자페이지 및 회원정보 조회
     @GetMapping("dashboard")
-    public String dashboard(Model model) {
+    public String dashboard(Model model, CsrfToken csrfToken) {
         Map<String, List<UserDto>> userGroups = userService.findUsersGroupedByStatus();
 
         model.addAttribute("activeUsers", userGroups.get("activeUsers"));
         model.addAttribute("deletedUsers", userGroups.get("deletedUsers"));
         model.addAttribute("adminUsers", userGroups.get("adminUsers"));
+        model.addAttribute("_csrf", csrfToken);
 
         return "admin/dashboard";
     }
