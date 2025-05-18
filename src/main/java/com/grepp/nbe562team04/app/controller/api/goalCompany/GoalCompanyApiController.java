@@ -17,13 +17,12 @@ import java.util.Map;
 public class GoalCompanyApiController {
 
     private final GoalCompanyService goalCompanyService; // 생성자 주입
-
     // 생성
     @PostMapping
     public ResponseEntity<?> createCompany(@RequestBody GoalCompanyRequestDto dto,
-        @AuthenticationPrincipal Principal principal) { // json -> dto 자동 변환
+        @AuthenticationPrincipal Principal principal) {
         Long userId = principal.getUser().getUserId();
-        String achievementName = goalCompanyService.createGoalCompany(dto, userId);// 로그인된 유저 ID 꺼내기
+        String achievementName = goalCompanyService.createGoalCompany(dto, userId);
         if (achievementName != null) {
             return ResponseEntity.ok(Map.of(
                     "message", "등록 완료",

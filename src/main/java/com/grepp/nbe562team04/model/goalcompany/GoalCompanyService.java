@@ -41,13 +41,11 @@ public class GoalCompanyService {
                 .build();
 
         goalCompanyRepository.save(company);
-        // 업적 2 → 첫 생성자
         String achievementName = achievementService.giveGoalCompanyAchievement(userId);
         if (achievementName != null) return achievementName;
 
-        // 업적 6 → 3개 생성 완료자
         achievementName = achievementService.giveThreeGoalCompaniesAchievement(userId);
-        return achievementName; // null 또는 업적 이름
+        return achievementName;
     }
 
     // 기업 리스트 조회

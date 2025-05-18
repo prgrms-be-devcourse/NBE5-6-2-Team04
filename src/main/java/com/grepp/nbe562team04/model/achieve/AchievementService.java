@@ -33,7 +33,6 @@ public class AchievementService {
         if (already) {
             return null;
         }
-
         UsersAchieve ua = new UsersAchieve();
         ua.setUser(userRepository.getReferenceById(userId));
         Achievement achievement = achieveRepository.getReferenceById(achieveId);
@@ -68,15 +67,13 @@ public class AchievementService {
 
         boolean already = usersAchieveRepository.existsByUser_UserIdAndAchievement_AchieveId(userId, achieveId);
         if (already) {
-            log.info("🎯 [목표 기업 3개] 이미 업적을 가지고 있음. 리턴 null");
             return null;
         }
 
         User user = userRepository.findById(userId).orElseThrow();
-        int companyCount = user.getGoalCompanies().size(); // <- 연관관계 기반으로 판단
+        int companyCount = user.getGoalCompanies().size();
 
         if (companyCount < 3) {
-            log.info("📌 목표 기업이 {}개로 부족합니다. 업적 지급되지 않음.", companyCount);
             return null;
         }
 
@@ -87,7 +84,6 @@ public class AchievementService {
         ua.setAchievedAt(LocalDateTime.now());
 
         usersAchieveRepository.save(ua);
-        log.info("🎉 목표 기업 3개 업적 지급 완료: {}", achievement.getName());
         return achievement.getName();
     }
 
