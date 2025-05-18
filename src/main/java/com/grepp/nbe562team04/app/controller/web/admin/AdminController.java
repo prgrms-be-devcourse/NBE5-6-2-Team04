@@ -7,7 +7,6 @@ import com.grepp.nbe562team04.model.user.dto.UserDto;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.web.csrf.CsrfToken;
@@ -24,7 +23,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("admin")
-//@PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
     private final UserService userService;
