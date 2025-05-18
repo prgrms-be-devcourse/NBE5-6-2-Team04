@@ -114,9 +114,11 @@
         <div class="status-dday">
           <ul>
             <li th:each="todo : ${todoMap[goal.goalId]}">
+              <input type="checkbox"
+                     th:checked="${todo.isDone}"
+                     th:attr="data-id=${todo.todoId}"
+                     class="todo-checkbox">
               <span th:text="${todo.content}">투두 내용</span>
-              <span th:if="${todo.isDone}" style="color: green;">(완료)</span>
-              <span th:unless="${todo.isDone}" style="color: red;">(미완료)</span>
               <div class="goal-actions">
                 <button type="button" class="update-todo-btn" th:attr="data-id=${todo.todoId}">수정</button>
                 <button type="button" class="delete-todo-btn" th:attr="data-id=${todo.todoId}">삭제</button>
