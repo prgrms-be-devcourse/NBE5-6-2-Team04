@@ -114,11 +114,13 @@
         <div class="status-dday">
           <ul>
             <li th:each="todo : ${todoMap[goal.goalId]}">
+
               <input type="checkbox"
                      th:checked="${todo.isDone}"
                      th:attr="data-id=${todo.todoId}"
                      class="todo-checkbox">
               <span th:text="${todo.content}">투두 내용</span>
+
               <div class="goal-actions">
                 <button type="button" class="update-todo-btn" th:attr="data-id=${todo.todoId}">수정</button>
                 <button type="button" class="delete-todo-btn" th:attr="data-id=${todo.todoId}">삭제</button>
@@ -278,6 +280,15 @@
       btn.addEventListener("click", () => {
         const todoId = btn.dataset.id;
         deleteTodo(todoId);
+      });
+    });
+
+    // todo 완요 toggle 이벤트
+    document.querySelectorAll(".todo-checkbox").forEach(checkbox => {
+      checkbox.addEventListener("change", () => {
+        const todoId = checkbox.dataset.id;
+        const isDone = checkbox.checked;
+        toggleTodoStatus(todoId, isDone); // → 함수 분리!
       });
     });
 
@@ -458,6 +469,29 @@
                 alert("에러 발생");
               });
     }
+  }
+
+  // todo 완료 toggle 함수
+  function toggleTodoStatus(todoId, isDone) {
+    const data = {
+      isDone: isDone
+    };
+
+    fetch(`/todos/${todoId}/toggle`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+            .then(res => {
+              if (!res.ok) throw new Error("업데이트 실패");
+              location.reload();
+            })
+            .catch(err => {
+              console.error("체크박스 상태 변경 실패", err);
+              alert("상태 변경 중 오류 발생");
+            });
   }
 
 

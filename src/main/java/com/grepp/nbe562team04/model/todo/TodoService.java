@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,10 +26,18 @@ public class TodoService {
         Goal goal = goalRepository.findById(dto.getGoalId())
                 .orElseThrow(() -> new RuntimeException("해당 목표가 존재하지 않습니다."));
 
+//        Todo todo = Todo.builder()
+//                .goal(goal)
+//                .content(dto.getContent())
+//                .startDate(dto.getStartDate())
+//                .endDate(dto.getEndDate())
+//                .isDone(dto.getIsDone() != null ? dto.getIsDone() : false)
+//                .build();
+
         Todo todo = Todo.builder()
                 .goal(goal)
                 .content(dto.getContent())
-                .startDate(dto.getStartDate())
+                .startDate(dto.getStartDate() != null ? dto.getStartDate() : LocalDate.now())  // 여기!
                 .endDate(dto.getEndDate())
                 .isDone(dto.getIsDone() != null ? dto.getIsDone() : false)
                 .build();
@@ -73,6 +82,7 @@ public class TodoService {
         todoRepository.deleteById(todoId);
     }
 
+    // 투두 조회
     public TodoResponseDto getById(Long todoId) {
         Todo todo = todoRepository.findById(todoId)
                 .orElseThrow(() -> new RuntimeException("투두를 찾을 수 없습니다."));
@@ -84,5 +94,19 @@ public class TodoService {
                 .isDone(todo.getIsDone())
                 .goalId(todo.getGoal().getGoalId())
                 .build();
+    }
+
+
+    @Transactional
+    public void toggleStatus(Long todoId, Boolean isDone) {
+        Todo todo = todoRepository.findById(todoId)
+                .orElseThrow(() -> new RuntimeException("해당 투두 없음"));
+        todo.setIsDone(isDone);
+        if (isDone) {
+            todo.setEndDate(LocalDate.now());
+        } else {
+            todo.setEndDate(null);
+        }
+        todoRepository.save(todo);
     }
 }

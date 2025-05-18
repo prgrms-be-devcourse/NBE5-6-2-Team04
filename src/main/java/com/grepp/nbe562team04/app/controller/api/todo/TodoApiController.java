@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -49,6 +50,13 @@ public class TodoApiController {
     public ResponseEntity<String> deleteTodo(@PathVariable Long todoId) {
         todoService.delete(todoId);
         return ResponseEntity.ok("투두 삭제 완료!");
+    }
+
+    @PutMapping("/{todoId}/toggle")
+    public ResponseEntity<String> toggleTodoStatus(@PathVariable Long todoId, @RequestBody Map<String, Object> request) {
+        Boolean isDone = (Boolean) request.get("isDone");
+        todoService.toggleStatus(todoId, isDone);
+        return ResponseEntity.ok("상태 업데이트 완료");
     }
 
 
