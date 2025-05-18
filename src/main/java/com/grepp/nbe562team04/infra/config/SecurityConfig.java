@@ -9,9 +9,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Slf4j
@@ -41,21 +44,44 @@ public class SecurityConfig {
     }
 
     @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return (request, response, accessDeniedException) -> {
+            Authentication auth = (Authentication) request.getUserPrincipal();
+
+            boolean isAdmin = auth.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(role -> role.equals("ROLE_ADMIN"));
+
+            if (isAdmin) {
+                response.sendRedirect("/admin/dashboard");
+            } else {
+                response.sendRedirect("/dashboard");
+            }
+
+        };
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
         http
             .authorizeHttpRequests(authz -> authz
+                .requestMatchers("/admin/dashboard").hasRole("ADMIN") // 관리자페이지 접근 권한
+                .requestMatchers("/user/**", "/dashboard").hasRole("USER") // 사용자페이지 접근 권한
+                .requestMatchers("/signin", "/signup").anonymous() // 회원가입, 로그인 접근 권한
                 .anyRequest().permitAll()
             )
             .formLogin(form -> form
-                .loginPage("/user/signin")
+                .loginPage("/signin")
                 .usernameParameter("email")
                 .loginProcessingUrl("/user/signin")
-                .defaultSuccessUrl("/dashboard", true)
                 .successHandler(successHandler())
-                .permitAll())
+                )
             .rememberMe(rememberMe -> rememberMe
                 .key(rememberMeKey).rememberMeParameter("remember-me")
+            )
+            .exceptionHandling(exception -> exception
+                .accessDeniedHandler(accessDeniedHandler())
             )
             .logout(LogoutConfigurer::permitAll);
         return http.build();
