@@ -39,7 +39,6 @@ public class SecurityConfig {
                 response.sendRedirect("/admin/dashboard");
                 return;
             }
-
             response.sendRedirect("/dashboard");
         };
     }
@@ -66,13 +65,17 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, UserService userService) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, UserService userService)
+        throws Exception {
         http.userDetailsService(userService)
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/css/**", "/js/**", "/img/**", "/api/user/exists/*", "/user/interests").permitAll() // 모두에게 허용
-                .requestMatchers("/", "/serviceInfo", "/signin", "/signup", "/admin/signup").anonymous() // 회원가입, 로그인 접근 권한
+                .requestMatchers("/css/**", "/js/**", "/img/**", "/api/user/exists/*",
+                    "/user/interests").permitAll() // 모두에게 허용
+                .requestMatchers("/", "/serviceInfo", "/signin", "/signup", "/admin/signup")
+                .anonymous() // 회원가입, 로그인 접근 권한
                 .requestMatchers("/admin/dashboard").hasRole("ADMIN") // 관리자페이지 접근 권한
-                .requestMatchers("/user/**", "/dashboard/**", "/api/dashboard/**", "/todos/**", "/companies/**", "/goals/**").hasRole("USER") // 사용자페이지 접근 권한
+                .requestMatchers("/user/**",  "/dashboard/**", "/api/dashboard/**", 
+                    "/todos/**", "/companies/**", "/goals/**", "/images/profile/**").hasRole("USER") // 사용자페이지 접근 권한
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -80,7 +83,7 @@ public class SecurityConfig {
                 .usernameParameter("email")
                 .loginProcessingUrl("/user/signin")
                 .successHandler(successHandler())
-                )
+            )
             .rememberMe(rememberMe -> rememberMe
                 .key(rememberMeKey).rememberMeParameter("remember-me")
                 .userDetailsService(userService)
@@ -102,4 +105,11 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
+
+    @Bean
+    public UserDetailsService userDetailsService(UserService userService) {
+        return userService;
+    }
+
+
 }
