@@ -103,12 +103,12 @@ INSERT INTO interest (type, interest_name, roadmap_url) VALUES
 INSERT INTO goal_company (company_id, company_name, content, status, end_date, user_id)
 VALUES (1, '네이버', '알림테스트용', 'DOCUMENT', DATE_ADD(NOW(), INTERVAL 3 DAY), 1);
 INSERT INTO goal_company (company_id, company_name, content, status, end_date, user_id)
-VALUES (3, '토스', '알림테스트용', 'INTERVIEW_1', DATE_ADD(NOW(), INTERVAL 2 DAY), 1);
+VALUES (2, '토스', '알림테스트용', 'INTERVIEW_1', DATE_ADD(NOW(), INTERVAL 2 DAY), 1);
 
 INSERT INTO goal (company_id, title, start_date, end_date, created_at, is_done)
 VALUES
     (1, '기술 면접 준비', '2025-06-01', '2025-06-30', NOW(), false),
-    (1, '포트폴리오 작성', '2025-05-15', '2025-06-15', NOW(), true);
+    (1, '포트폴리오 작성', '2025-05-15', '2025-06-15', NOW(), false);
 
 -- goal_id = 1번 (기술 면접 준비)
 INSERT INTO todos (goal_id, content, start_date, end_date, is_done)

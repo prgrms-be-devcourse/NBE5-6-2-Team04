@@ -20,6 +20,7 @@ public class GoalApiController {
     @PostMapping("/{companyId}/create")
     public ResponseEntity<String> createGoal(@RequestBody GoalRequestDto dto) {
         goalService.createGoal(dto);
+
         return ResponseEntity.ok("목표 생성 완료");
     }
 
