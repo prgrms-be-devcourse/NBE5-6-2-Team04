@@ -7,6 +7,8 @@ import com.grepp.nbe562team04.model.goalcompany.entity.GoalCompany;
 import com.grepp.nbe562team04.model.goalcompany.GoalCompanyRepository;
 import com.grepp.nbe562team04.model.todo.TodoRepository;
 import com.grepp.nbe562team04.model.todo.entity.Todo;
+import com.grepp.nbe562team04.model.user.UserRepository;
+import com.grepp.nbe562team04.model.user.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ public class GoalService {
     private final GoalRepository goalRepository;
     private final GoalCompanyRepository goalCompanyRepository;
     private final TodoRepository todoRepository;
+    private final UserRepository userRepository;
 
     // 목표 생성
     @Transactional
@@ -34,7 +37,7 @@ public class GoalService {
                 .title(dto.getTitle())
                 .startDate(dto.getStartDate())
                 .endDate(dto.getEndDate())
-                .isDone(dto.getIsDone())
+                .isDone(false) // 명시적으로 false 표시
                 .createdAt(LocalDate.now())
                 .build();
 
@@ -111,4 +114,29 @@ public class GoalService {
     }
 
 
+    @Transactional
+    public void completeGoal(Long goalId, User user) {
+
+        Goal goal = goalRepository.findById(goalId)
+                .orElseThrow(() -> new RuntimeException("해당 목표가 존재하지 않습니다."));
+
+        if (goal.getIsDone()) {
+            throw new IllegalStateException("이미 완료된 목표입니다.");
+        }
+
+        List<Todo> todos = todoRepository.findByGoalGoalId(goalId);
+
+
+        boolean allDone = todos.stream().allMatch(Todo::getIsDone);
+        if (!allDone) {
+            throw new IllegalStateException("아직 완료되지 않은 할 일이 있습니다.");
+        }
+
+        goal.setIsDone(true);
+        goalRepository.save(goal);
+
+
+        user.addXp(10);
+        userRepository.save(user);
+    }
 }

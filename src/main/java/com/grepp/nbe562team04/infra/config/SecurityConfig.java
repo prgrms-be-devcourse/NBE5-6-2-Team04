@@ -1,6 +1,5 @@
 package com.grepp.nbe562team04.infra.config;
 
-
 import com.grepp.nbe562team04.model.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,8 +31,8 @@ public class SecurityConfig {
         return (request, response, authentication) -> {
 
             boolean isAdmin = authentication.getAuthorities()
-                    .stream()
-                    .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+                .stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
 
             if (isAdmin) {
                 response.sendRedirect("/admin/dashboard");
@@ -50,8 +49,8 @@ public class SecurityConfig {
 
             if (auth != null) {
                 boolean isAdmin = auth.getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .anyMatch(role -> role.equals("ROLE_ADMIN"));
+                    .map(GrantedAuthority::getAuthority)
+                    .anyMatch(role -> role.equals("ROLE_ADMIN"));
 
                 if (isAdmin) {
                     response.sendRedirect("/admin/dashboard");
@@ -66,7 +65,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, UserService userService)
-            throws Exception {
+        throws Exception {
         http.userDetailsService(userService)
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/css/**", "/js/**", "/img/**", "/api/user/exists/*",
