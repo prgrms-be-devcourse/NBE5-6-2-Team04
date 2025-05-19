@@ -1,6 +1,5 @@
-package com.grepp.nbe562team04.model.achieve.dto;
+package com.grepp.nbe562team04.model.achievement.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

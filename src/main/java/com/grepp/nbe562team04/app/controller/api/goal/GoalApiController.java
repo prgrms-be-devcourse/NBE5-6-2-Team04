@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,10 +21,20 @@ public class GoalApiController {
 
     //  목표 생성
     @PostMapping("/{companyId}/create")
-    public ResponseEntity<String> createGoal(@RequestBody GoalRequestDto dto) {
-        goalService.createGoal(dto);
+    public ResponseEntity<?> createGoal(@RequestBody GoalRequestDto dto, @AuthenticationPrincipal Principal principal) {
+        Long userId = principal.getUser().getUserId();
+        String achievementName = goalService.createGoal(dto, userId);// 로그인된 유저 ID 꺼내기
 
-        return ResponseEntity.ok("목표 생성 완료");
+        if (achievementName != null) {
+            return ResponseEntity.ok(Map.of(
+                    "message", "등록 완료",
+                    "achievementName", achievementName
+            ));
+        } else {
+            return ResponseEntity.ok(Map.of(
+                    "message", "등록 완료"
+            ));
+        }
     }
 
     //  목표 단건 조회

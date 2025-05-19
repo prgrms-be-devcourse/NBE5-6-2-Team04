@@ -1,4 +1,4 @@
-package com.grepp.nbe562team04.model.achieve.rule;
+package com.grepp.nbe562team04.model.achievement.rule;
 
 import com.grepp.nbe562team04.model.user.entity.User;
 

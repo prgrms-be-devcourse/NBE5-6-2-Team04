@@ -1,4 +1,4 @@
-package com.grepp.nbe562team04.model.achieve.entity;
+package com.grepp.nbe562team04.model.achievement.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

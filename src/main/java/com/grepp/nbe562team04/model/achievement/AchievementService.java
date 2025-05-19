@@ -1,7 +1,7 @@
-package com.grepp.nbe562team04.model.achieve;
+package com.grepp.nbe562team04.model.achievement;
 
-import com.grepp.nbe562team04.model.achieve.dto.AchievementDto;
-import com.grepp.nbe562team04.model.achieve.entity.Achievement;
+import com.grepp.nbe562team04.model.achievement.dto.AchievementDto;
+import com.grepp.nbe562team04.model.achievement.entity.Achievement;
 import com.grepp.nbe562team04.model.user.entity.UsersAchieve;
 import com.grepp.nbe562team04.model.user.UserRepository;
 import com.grepp.nbe562team04.model.user.UsersAchieveRepository;
@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,7 +32,6 @@ public class AchievementService {
         if (already) {
             return null;
         }
-
         UsersAchieve ua = new UsersAchieve();
         ua.setUser(userRepository.getReferenceById(userId));
         Achievement achievement = achieveRepository.getReferenceById(achieveId);
@@ -64,19 +62,17 @@ public class AchievementService {
 
     @Transactional
     public String giveThreeGoalCompaniesAchievement(Long userId) {
-        Long achieveId = 10L;
+        Long achieveId = 5L;
 
         boolean already = usersAchieveRepository.existsByUser_UserIdAndAchievement_AchieveId(userId, achieveId);
         if (already) {
-            log.info("🎯 [목표 기업 3개] 이미 업적을 가지고 있음. 리턴 null");
             return null;
         }
 
         User user = userRepository.findById(userId).orElseThrow();
-        int companyCount = user.getGoalCompanies().size(); // <- 연관관계 기반으로 판단
+        int companyCount = user.getGoalCompanies().size();
 
         if (companyCount < 3) {
-            log.info("📌 목표 기업이 {}개로 부족합니다. 업적 지급되지 않음.", companyCount);
             return null;
         }
 
@@ -87,9 +83,30 @@ public class AchievementService {
         ua.setAchievedAt(LocalDateTime.now());
 
         usersAchieveRepository.save(ua);
-        log.info("🎉 목표 기업 3개 업적 지급 완료: {}", achievement.getName());
         return achievement.getName();
     }
+
+    @Transactional
+    public String giveFirstGoalCreateAchievement(Long userId) {
+        Long achieveId = 4L; // 업적10의 ID
+
+        boolean already = usersAchieveRepository.existsByUser_UserIdAndAchievement_AchieveId(userId, achieveId);
+        if (already) {
+            return null;
+        }
+
+        User user = userRepository.findById(userId).orElseThrow();
+        Achievement achievement = achieveRepository.findById(achieveId).orElseThrow();
+
+        UsersAchieve ua = new UsersAchieve();
+        ua.setUser(user);
+        ua.setAchievement(achievement);
+        ua.setAchievedAt(LocalDateTime.now());
+
+        usersAchieveRepository.save(ua);
+        return achievement.getName();
+    }
+
 
     public List<AchievementDto> getUserAchievements(Long userId) {
         List<UsersAchieve> usersAchievements = usersAchieveRepository.findWithAchievementByUserId(userId);
