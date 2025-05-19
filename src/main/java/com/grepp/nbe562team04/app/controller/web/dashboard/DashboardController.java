@@ -66,16 +66,6 @@ public class DashboardController {
         return "redirect:/dashboard";
     }
 
-    // 알림 토글
-//    @PostMapping("/dashboard/notification-toggle")
-//    public String toggleNotification(@AuthenticationPrincipal Principal principal) {
-//        User user = userRepository.findById(principal.getUser().getUserId())
-//            .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
-//        user.setNotificationOn(!user.isNotificationOn());
-//        userRepository.save(user);
-//        return "redirect:/dashboard";
-//    }
-
 
     // todo 페이지
     @GetMapping("/todo")

@@ -38,7 +38,7 @@
 
         <!--  마이페이지  -->
         <p class="mypage">
-            <a th:href="@{/users/mypage}">
+            <a th:href="@{/user/mypage}">
                 <span class="material-icons">account_circle</span>마이페이지
             </a>
         </p>
@@ -230,6 +230,17 @@
 
 
 <script>
+
+  const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+  function getCsrfHeaders() {
+    return {
+      [csrfHeader]: csrfToken
+    };
+  }
+
+
   document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("create-form");
 
@@ -282,9 +293,11 @@
       endDate: form.endDate.value
     };
 
-        fetch('/companies', {
+    fetch('/companies/create', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json',
+              ...getCsrfHeaders()
+                    },
             body: JSON.stringify(data)
         })
             .then(res => {
@@ -318,7 +331,10 @@
     console.log("삭제 요청 ID:", companyId);
     if (confirm("정말 삭제하시겠습니까?")) {
       fetch(`/companies/${companyId}/delete`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          ...getCsrfHeaders()
+        }
       })
               .then(res => {
                 if (res.ok) {
@@ -368,7 +384,8 @@
     fetch(`/companies/${companyId}/update`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...getCsrfHeaders()
       },
       body: JSON.stringify(data)
     })

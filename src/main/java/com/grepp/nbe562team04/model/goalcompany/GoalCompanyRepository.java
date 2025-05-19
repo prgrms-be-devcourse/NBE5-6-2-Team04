@@ -10,8 +10,8 @@ import java.util.List;
 
 @Repository
 public interface GoalCompanyRepository extends JpaRepository<GoalCompany, Long> {
-//    기본적인 CRUD 다 제공됨
-//    findById(id)	    SELECT * FROM table WHERE id = ?
+//    기본적인 CRUD
+//    findById(id)	    SELECT * FROM table WHERE id = ? // 테이블 명은 만들어둔 entity 값을 보고 판단, id는 엔티티에서의 기본키를 의미
 //    findAll()	        SELECT * FROM table
 //    save(entity)	    INSERT 또는 UPDATE
 //    deleteById(id)	DELETE FROM table WHERE id = ?
