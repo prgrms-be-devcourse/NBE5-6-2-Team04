@@ -27,6 +27,7 @@ public class DashboardDto {
     private String levelName;
     private int levelValue;
     private int exp;
+    private int progressPercent;
 
     @Getter
     private String jobType;

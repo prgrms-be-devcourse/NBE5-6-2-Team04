@@ -120,14 +120,14 @@
   align-items: flex-end;
 }
 
-.level-label {
+.level-title {
   text-align: left;
   color: #018c77;
   font-size: 1.3rem;
   justify-content: right;
 }
 
-.level-value {
+.level {
   text-align: left;
   font-size: 3rem;
   font-weight: bold;
