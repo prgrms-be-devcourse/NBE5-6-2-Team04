@@ -1,6 +1,6 @@
 function deleteAccount() {
     if (confirm("정말 탈퇴하시겠습니까?")) {
-        fetch('/users/delete', {
+        fetch('/user/delete', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
