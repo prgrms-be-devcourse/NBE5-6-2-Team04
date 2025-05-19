@@ -35,6 +35,6 @@ public class Goal {
     @Column(name = "created_at")
     private LocalDate createdAt;
 
-    @Column(name = "is_done")
-    private Boolean isDone;
+    @Column(name = "is_done", nullable = false)
+    private Boolean isDone = false;
 }
