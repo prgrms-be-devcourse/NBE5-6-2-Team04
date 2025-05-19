@@ -1,7 +1,70 @@
-.goal-list {
-    padding: 10px;
+.dashboard {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
 }
 
+/* ===== Sidebar ===== */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* 필요 시 left 정렬 유지 */
+    padding: 5rem 0.3rem 3rem 3rem;
+    width: 300px;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: 700;
+    color: #3F2296;
+    position: absolute;
+    top: 25px;
+    left: 40px;
+}
+
+.company-name {
+    font-size: 40px;
+    font-weight: bold;
+    color: #1a7f37;
+}
+
+.nickname{
+    color: #000000;
+    font-weight: bold;
+    font-size: 2.5rem;
+    margin-bottom: 0.3rem;
+}
+
+.comment {
+    color: #595959;
+    font-weight: normal;
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+}
+
+/* 관심분야 태그 */
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0.3rem;
+    margin-bottom: 1rem;
+}
+
+.tags .tag {
+    background: #dcdcdc;
+    color: #000000;
+    font-weight: 500;
+    border-radius: 5px;
+    padding: 2px 8px;
+    font-size: 0.8rem;
+    height: 1.6rem;
+    line-height: 1.6rem;
+    white-space: nowrap;
+/ / 줄 바뀌지 않도록
+}
+
+/* goal 짅행률 */
 .goal-item {
     margin-bottom: 20px;
 }
@@ -9,6 +72,22 @@
 .goal-title {
     font-weight: bold;
     margin-bottom: 4px;
+}
+
+.goal-progress-text {
+    margin-top: 4px;
+    font-size: 14px;
+    color: #555;
+}
+
+.goal-todo-desc-top {
+    font-size: 1.3rem;
+    margin-top: 0.5rem;
+}
+
+.goal-todo-desc-bottom {
+    font-size: 1rem;
+    margin-top: 0.5rem;
 }
 
 .goal-progress-text {
@@ -30,4 +109,219 @@
     height: 100%;
     background-color: #4caf50;
     transition: width 0.5s ease-in-out;
+}
+
+/* ===== goals ===== */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin-right: 20px;
+    padding: 1.5rem;
+    box-sizing: border-box;
+}
+
+.menu {
+    font-size: 14px;
+    color: #666;
+    display: flex;
+    height: 7vh;
+    margin-top: -5px;
+    margin-right: 17px;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+
+.goal {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.goal-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-weight: bold;
+    background: white;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.goal-card {
+    flex: 0 1 calc(50% - 1rem);
+    min-height: 300px;
+    box-sizing: border-box;
+    background: white;
+    border-radius: 16px;
+    padding: 1.2rem 1.5rem;
+    width: 280px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-decoration: none;
+    color: inherit;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.company-card {
+    flex: 0 1 calc(50% - 1rem);
+    min-height: 300px;
+    box-sizing: border-box;
+    background: white;
+    border-radius: 16px;
+    padding: 1.2rem 1.5rem;
+    width: 280px;
+    /*box-shadow: 0 2px 4px rgba(0,0,0,0.05);*/
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-decoration: none;
+    color: inherit;
+}
+
+.company-card.create {
+    background-color: #f9f9f9;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.05rem;
+    color: #444;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.company-card:hover {
+    transform: scale(1.01);
+    transition: 0.2s ease-in-out;
+}
+
+.company-card.create:hover {
+    background-color: #f0f0f0;
+    text-decoration:underline;
+}
+
+.company-card.create p:first-child {
+    font-weight: bold;
+}
+
+.company-card.create .goal-todo-desc-top {
+    font-size: 1.3rem;
+    margin-top: 0.5rem;
+}
+
+.company-card.create .goal-todo-desc-bottom {
+    font-size: 1rem;
+    margin-top: 0.5rem;
+}
+
+.todo-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.todo-content {
+    display: flex;
+    align-items: center;
+    margin-left: 0.5rem;
+}
+
+.goal-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: auto;
+}
+
+.modify-todo-btn,
+.delete-todo-btn {
+    padding: 3px 7px;
+    font-size: 11px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    background-color: transparent;
+}
+
+.modify-todo-btn {
+    color: #1c3ed5;
+}
+
+/* 삭제 버튼 */
+.delete-todo-btn {
+    color: #f8231f;
+    margin-left: 2px;
+}
+
+.todo-modify-btn,
+.todo-delete-btn,
+.todo-add-btn {
+    padding: 5px 10px;
+    font-size: 11px;
+    font-weight: bolder;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.2;
+    background-color: white;
+    border: 3px solid transparent; /* 초기화 */
+    transition: background-color 0.2s ease;
+}
+
+/* 수정 버튼 */
+.todo-modify-btn {
+    color: #5d7be1;
+    border-color: #5d7be1;
+}
+
+.todo-modify-btn:hover {
+    color: white;
+    background-color: rgba(78, 104, 197, 0.5);
+}
+
+/* 삭제 버튼 */
+.todo-delete-btn {
+    color: #ff6262;
+    border-color: #ff6262;
+    margin-left: 2px;
+}
+
+.todo-delete-btn:hover {
+    color: white;
+    background-color: rgba(255, 98, 98, 0.5);
+}
+
+/* 추가 버튼 */
+.todo-add-btn {
+    color: #218325;
+    border-color: #218325;
+    margin-left: 2px;
+}
+
+.todo-add-btn:hover {
+    color: white;
+    background-color: rgba(49, 140, 51, 0.5);
 }
