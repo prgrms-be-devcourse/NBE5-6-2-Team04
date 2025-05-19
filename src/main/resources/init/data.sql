@@ -12,7 +12,7 @@ INSERT INTO level (level_name, xp) VALUES
                                        ('신화 개발자', 90);
 INSERT INTO achievement (name, description) VALUES
                                                 ('튜토리얼을 끝냈어요!', '첫 시작을 축하합니다! 프로필을 완성했어요.'),
-                                                ('목표를 정해브렀어~', '진로를 향해 한 걸음 내디뎠어요.'),
+                                                ('회사를 정해브렀어~', '진로를 향해 한 걸음 내디뎠어요.'),
                                                 ('\'J\'로 가는 길.', '첫 번째 할 일을 완료했어요! 멋져요.'),
                                                 ('초보 개발자 두두등장', '첫 성장의 발판! 이제 시작이에요.'),
                                                 ('성장 중입니다', '당신은 더 이상 초보가 아니에요.'),
@@ -25,7 +25,8 @@ INSERT INTO achievement (name, description) VALUES
                                                 ('꾸준함의 상징', '진정한 노력가는 당신!'),
                                                 ('몰아치기 장인', '놀라워요! 오늘 정말 열일했네요.'),
                                                 ('알림 개시자', '알림 기능을 켰어요! 준비 완료~'),
-                                                ('🧘 고요한 하루', '알림 기능을 껐어요. 휴식도 중요하죠.');
+                                                ('🧘 고요한 하루', '알림 기능을 껐어요. 휴식도 중요하죠.'),
+                                                ('목표를 포착했다!', '첫 목표를 정했어요.');
 # ALTER TABLE user MODIFY deleted_at DATE NULL DEFAULT NULL;
 # ALTER TABLE user ADD COLUMN interest_id BIGINT;
 #

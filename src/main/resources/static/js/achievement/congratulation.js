@@ -13,18 +13,15 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function showAchievementModal(achievementName) {
-    console.log(document.getElementById("achievementCongratsModal"));
     document.getElementById("congratsMessage").innerText = `"${achievementName}" 업적을 달성했어요!`;
     // 모달 보이기
     document.getElementById("achievementCongratsModal").style.display = "block";
-    // 🎊 메인 중앙 빵빠레 1회 강하게 터뜨리기
     confetti({
         particleCount: 150,
         spread: 90,
         origin: { y: 0.6 }
     });
 
-    // 🎊 좌우 측면에서 연속적으로 터지는 빵빠레
     const duration = 2500;
     const animationEnd = Date.now() + duration;
 

@@ -88,7 +88,7 @@ public class AchievementService {
 
     @Transactional
     public String giveFirstGoalCreateAchievement(Long userId) {
-        Long achieveId = 10L; // 업적10의 ID
+        Long achieveId = 16L; // 업적10의 ID
 
         boolean already = usersAchieveRepository.existsByUser_UserIdAndAchievement_AchieveId(userId, achieveId);
         if (already) {
