@@ -18,6 +18,6 @@ public class GoalResponseDto {
     private Boolean isDone;
     private LocalDate createdAt;
     private String status;
-    private int progress;
-    //진행 률 추가 필요
+    private int progress;       // 목표별 투두 진행률
+
 }

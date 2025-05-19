@@ -18,20 +18,15 @@ public class GoalApiController {
 
     //  목표 생성
     @PostMapping("/{companyId}/create")
-    public ResponseEntity<String> create(@RequestBody GoalRequestDto dto) {
+    public ResponseEntity<String> createGoal(@RequestBody GoalRequestDto dto) {
         goalService.createGoal(dto);
+
         return ResponseEntity.ok("목표 생성 완료");
     }
 
-    //  기업별 목표 목록 조회
-//    @GetMapping("/{companyId}")
-//    public List<GoalResponseDto> getGoalsByCompanyId(@PathVariable Long companyId) {
-//        return goalService.getGoalsByCompanyId(companyId);
-//    }
-
-    //  목표 상세 조회
-    @GetMapping("/{goalId}")
-    public GoalResponseDto getGoal(@PathVariable Long goalId) {
+    //  목표 단건 조회
+    @GetMapping("/{goalId}/select")
+    public GoalResponseDto selectGoal(@PathVariable Long goalId) {
         return goalService.getGoalById(goalId);
     }
 

@@ -5,6 +5,8 @@ import com.grepp.nbe562team04.model.goal.dto.GoalResponseDto;
 import com.grepp.nbe562team04.model.goal.entity.Goal;
 import com.grepp.nbe562team04.model.goalcompany.entity.GoalCompany;
 import com.grepp.nbe562team04.model.goalcompany.GoalCompanyRepository;
+import com.grepp.nbe562team04.model.todo.TodoRepository;
+import com.grepp.nbe562team04.model.todo.entity.Todo;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ public class GoalService {
 
     private final GoalRepository goalRepository;
     private final GoalCompanyRepository goalCompanyRepository;
+    private final TodoRepository todoRepository;
 
     // 목표 생성
     @Transactional
@@ -42,32 +45,28 @@ public class GoalService {
     @Transactional
     public List<GoalResponseDto> getGoalsByCompanyId(Long companyId) {
         return goalRepository.findByCompanyCompanyId(companyId).stream()
-                .map(goal -> GoalResponseDto.builder()
-                        .goalId(goal.getGoalId())
-                        .title(goal.getTitle())
-                        .startDate(goal.getStartDate())
-                        .endDate(goal.getEndDate())
-                        .isDone(goal.getIsDone())
-                        .createdAt(goal.getCreatedAt())
-                        .build())
+                .map(goal -> {
+                    List<Todo> todos = todoRepository.findByGoalGoalId(goal.getGoalId());
+                    long total = todos.size();
+                    long done = todos.stream().filter(Todo::getIsDone).count();
+                    int progress = total == 0 ? 0 : (int) ((done * 100.0) / total);
+
+                    return GoalResponseDto.builder()
+                            .goalId(goal.getGoalId())
+                            .title(goal.getTitle())
+                            .startDate(goal.getStartDate())
+                            .endDate(goal.getEndDate())
+                            .isDone(goal.getIsDone())
+                            .createdAt(goal.getCreatedAt())
+                            .progress(progress)
+                            .build();
+                })
                 .collect(Collectors.toList());
     }
 
-    // 목표 상세 조회
-    @Transactional
-    public GoalResponseDto getGoalById(Long goalId) {
-        Goal goal = goalRepository.findById(goalId)
-                .orElseThrow(() -> new RuntimeException("해당 목표가 존재하지 않습니다."));
 
-        return GoalResponseDto.builder()
-                .goalId(goal.getGoalId())
-                .title(goal.getTitle())
-                .startDate(goal.getStartDate())
-                .endDate(goal.getEndDate())
-                .isDone(goal.getIsDone())
-                .createdAt(goal.getCreatedAt())
-                .build();
-    }
+
+
 
     // 목표 수정
     @Transactional
@@ -89,5 +88,27 @@ public class GoalService {
 
         goalRepository.delete(goal);
     }
+
+    // 목표 상세 조회
+    public GoalResponseDto getGoalById(Long goalId) {
+        Goal goal = goalRepository.findById(goalId)
+                .orElseThrow(() -> new RuntimeException("목표 없음"));
+
+        List<Todo> todos = todoRepository.findByGoalGoalId(goalId);
+        long total = todos.size();
+        long done = todos.stream().filter(Todo::getIsDone).count();
+        int percent = total == 0 ? 0 : (int) ((done * 100.0) / total);
+
+        return GoalResponseDto.builder()
+                .goalId(goal.getGoalId())
+                .title(goal.getTitle())
+                .startDate(goal.getStartDate())
+                .endDate(goal.getEndDate())
+                .isDone(goal.getIsDone())
+                .createdAt(goal.getCreatedAt())
+                .progress(percent)
+                .build();
+    }
+
 
 }

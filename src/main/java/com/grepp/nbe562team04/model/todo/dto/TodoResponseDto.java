@@ -13,5 +13,5 @@ public class TodoResponseDto {
     private LocalDate startDate;
     private LocalDate endDate;
     private Boolean isDone;
-    private Long goalId;   // 프론트에서 필요할 수 있음
+    private Long goalId;
 }

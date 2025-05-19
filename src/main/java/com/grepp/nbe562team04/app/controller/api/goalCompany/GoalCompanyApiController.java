@@ -17,12 +17,12 @@ import java.util.Map;
 public class GoalCompanyApiController {
 
     private final GoalCompanyService goalCompanyService; // 생성자 주입
-    // 생성
-    @PostMapping
-    public ResponseEntity<?> createCompany(@RequestBody GoalCompanyRequestDto dto,
-        @AuthenticationPrincipal Principal principal) {
+
+    // 목표 기업 생성
+    @PostMapping("/create")
+    public ResponseEntity<?> createCompany(@RequestBody GoalCompanyRequestDto dto, @AuthenticationPrincipal Principal principal) { // json -> dto 자동 변환
         Long userId = principal.getUser().getUserId();
-        String achievementName = goalCompanyService.createGoalCompany(dto, userId);
+        String achievementName = goalCompanyService.createGoalCompany(dto, userId);// 로그인된 유저 ID 꺼내기
         if (achievementName != null) {
             return ResponseEntity.ok(Map.of(
                     "message", "등록 완료",
@@ -35,28 +35,20 @@ public class GoalCompanyApiController {
         }
     }
 
-    // 조회(단순 화면 상에 출력) -> 추후 뷰 컨트롤러로 이동 필요
-//    @GetMapping
-//    public List<GoalCompanyResponseDto> getAllCompanies(){
-//        return goalCompanyService.getAllGoalCompanies();
-//    }
-
-
-    // 상세 조회
+    // 목표 기업 단건 조회(단순 dto 조회용)
     @GetMapping("/{companyId}")
-    public GoalCompanyResponseDto getCompanyById(@PathVariable Long companyId) {
+    public GoalCompanyResponseDto selectCompany(@PathVariable Long companyId) {
         return goalCompanyService.getCompanyById(companyId);
     }
 
-    // 수정
+    // 목표 기업 수정
     @PutMapping("/{companyId}/update")
-    public ResponseEntity<String> updateCompany(@PathVariable Long companyId,
-        @RequestBody GoalCompanyRequestDto dto) {
+    public ResponseEntity<String> updateCompany(@PathVariable Long companyId, @RequestBody GoalCompanyRequestDto dto) {
         goalCompanyService.updateGoalCompany(companyId, dto);
         return ResponseEntity.ok("수정 완료");
     }
 
-    // 삭제
+    // 목표 기업 수정
     @DeleteMapping("/{companyId}/delete")
     public ResponseEntity<String> deleteCompany(@PathVariable Long companyId) {
         goalCompanyService.deleteGoalCompany(companyId);
