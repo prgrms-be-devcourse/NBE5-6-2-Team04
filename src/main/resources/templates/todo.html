@@ -233,15 +233,17 @@
     <span class="tag">#백엔드 #Java</span>
 
     <div class="ai-box">
-      <p id="aiFeedBack" th:text="${reply != null} ? ${reply} : '안녕 우리 금쪽이? 나는 오은영 선생님이야 호호'">
+      <p th:text="${reply != null ? reply : '안녕 우리 금쪽이? 나는 오은영 선생님이야 호호'}">
 
         안녕 우리 금쪽이 만나서 반가워
-      </p>    <div class = "button-row">
+      </p>
+      <div class = "button-row">
       <form action="/ai/feedback" method="post">
         <input type="hidden" value="긍적적인대답 혹은 네" name="userMessage">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <button type="submit">긍정</button>
       </form>
+
       <form action="/ai/feedback" method="post">
         <input type="hidden" value="부정적인대답 혹은 아니요" name="userMessage">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
