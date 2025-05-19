@@ -29,7 +29,7 @@ import java.util.List;
 
 @Controller
 @Slf4j
-@RequestMapping("users")
+@RequestMapping("user")
 @RequiredArgsConstructor
 public class MypageController {
 
@@ -92,7 +92,7 @@ public class MypageController {
             redirectAttributes.addAttribute("achievementName", URLEncoder.encode(achievedName, StandardCharsets.UTF_8));
         }
 
-        return "redirect:/users/mypage";
+        return "redirect:/user/mypage";
     }
 
     @PostMapping("delete")

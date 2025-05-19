@@ -2,13 +2,16 @@ package com.grepp.nbe562team04.app.controller.web.admin;
 
 import com.grepp.nbe562team04.app.controller.web.user.payload.SignupRequest;
 import com.grepp.nbe562team04.model.auth.code.Role;
+import com.grepp.nbe562team04.model.auth.domain.Principal;
 import com.grepp.nbe562team04.model.user.UserService;
 import com.grepp.nbe562team04.model.user.dto.UserDto;
+import com.grepp.nbe562team04.model.user.entity.User;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,7 +31,8 @@ public class AdminController {
     private final UserService userService;
 
     @GetMapping("signup")
-    public String signup(){
+    public String signup(Model model){
+        model.addAttribute("signupForm", new SignupRequest());
         return "admin/signup";
     }
 
@@ -44,9 +48,15 @@ public class AdminController {
 
     // 관리자페이지 및 회원정보 조회
     @GetMapping("dashboard")
-    public String dashboard(Model model, CsrfToken csrfToken) {
+    public String dashboard(
+        @AuthenticationPrincipal Principal principal,
+        Model model,
+        CsrfToken csrfToken) {
+
+        User admin = userService.findByEmail(principal.getUsername());
         Map<String, List<UserDto>> userGroups = userService.findUsersGroupedByStatus();
 
+        model.addAttribute("admin", admin);
         model.addAttribute("activeUsers", userGroups.get("activeUsers"));
         model.addAttribute("deletedUsers", userGroups.get("deletedUsers"));
         model.addAttribute("adminUsers", userGroups.get("adminUsers"));

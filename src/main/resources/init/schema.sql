@@ -3,8 +3,8 @@
 DROP TABLE IF EXISTS user_interest;
 DROP TABLE IF EXISTS todos;
 DROP TABLE IF EXISTS goal;
-DROP TABLE IF EXISTS achievement;
 DROP TABLE IF EXISTS users_achieve;
+DROP TABLE IF EXISTS achievement;
 DROP TABLE IF EXISTS user_image;
 DROP TABLE IF EXISTS project_recommendation;
 DROP TABLE IF EXISTS ai_feedback;
