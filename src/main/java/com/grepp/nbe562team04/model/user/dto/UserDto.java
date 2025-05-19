@@ -41,4 +41,6 @@ public class UserDto {
         this.createdAt = user.getCreatedAt();
         this.deletedAt = user.getDeletedAt();
     }
+
+
 }
