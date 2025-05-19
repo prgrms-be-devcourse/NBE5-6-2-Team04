@@ -260,6 +260,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  width: 100%;
 }
 
 .alert-box ul li {
@@ -272,6 +273,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
+
+  white-space: normal; /* 줄바꿈 허용 */
+  word-break: break-word; /* 긴 단어 줄바꿈 */
+  box-sizing: border-box; /* padding 포함한 너비 계산 */
 }
 
 
