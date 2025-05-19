@@ -121,3 +121,7 @@ INSERT INTO todos (goal_id, content, start_date, end_date, is_done)
 VALUES
     (2, '프로젝트 README 작성', '2025-05-15 10:00:00', '2025-05-18 17:00:00', true),
     (2, '배포 테스트', '2025-06-10 09:00:00', '2025-06-12 17:00:00', false);
+
+
+
+
