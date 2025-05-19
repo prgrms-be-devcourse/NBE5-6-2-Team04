@@ -1,5 +1,6 @@
 package com.grepp.nbe562team04.model.dashboard.dto;
 
+import com.grepp.nbe562team04.model.interest.dto.InterestDto;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.Getter;
@@ -17,9 +18,9 @@ public class DashboardDto {
     private String userImage;
 
     // 관심 분야
-    private List<String> jobType;
-    private List<String> devLang;
-    private List<String> framework;
+    private List<InterestDto> roles;
+    private List<InterestDto> devLangs;
+    private List<InterestDto> frameworks;
     private List<InterestDto> interests;
 
     // 레벨 정보

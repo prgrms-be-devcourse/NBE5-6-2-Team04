@@ -24,24 +24,36 @@
     <span class="nickname" th:text="${dashboard.nickname}">회원</span>
     <span class="nickname-sir">님</span>
 
-    <!--  관심분야 태그  -->
+    <!-- 관심분야 태그 -->
     <div class="tags">
-      <span class="tag"
-            th:if="${dashboard.jobType != null and !dashboard.jobType.isEmpty()}"
-            th:text="'#' + ${dashboard.jobType[0]}">#직무</span>
-      <span class="tag"
-            th:unless="${dashboard.jobType != null and !dashboard.jobType.isEmpty()}">#직무 없음</span>
+      <!-- 직무 -->
+      <a class="tag" th:each="i : ${dashboard.roles}"
+         th:href="${i.roadmapUrl}"
+         th:text="'#' + ${i.interestName}"
+         target="_blank">#직무</a>
+      <a class="tag"
+         th:if="${#lists.isEmpty(dashboard.roles)}"
+         target="_blank">#직무 없음</a>
 
-      <span class="tag" th:each="lang : ${dashboard.devLang}" th:text="'#' + ${lang}">#언어</span>
-      <span class="tag" th:each="fw : ${dashboard.framework}" th:text="'#' + ${fw}">#프레임워크</span>
+      <!-- 언어 -->
+      <a class="tag" th:each="i : ${dashboard.devLangs}"
+         th:href="${i.roadmapUrl}"
+         th:text="'#' + ${i.interestName}"
+         target="_blank">#언어</a>
+
+      <!-- 프레임워크 -->
+      <a class="tag" th:each="i : ${dashboard.frameworks}"
+         th:href="${i.roadmapUrl}"
+         th:text="'#' + ${i.interestName}"
+         target="_blank">#프레임워크</a>
     </div>
 
-        <!--  마이페이지  -->
-        <p class="mypage">
-            <a th:href="@{/user/mypage}">
-                <span class="material-icons">account_circle</span>마이페이지
-            </a>
-        </p>
+    <!--  마이페이지  -->
+    <p class="mypage">
+      <a th:href="@{/user/mypage}">
+        <span class="material-icons">account_circle</span>마이페이지
+      </a>
+    </p>
 
     <!-- 프로필 카드 -->
     <div class="profile-card">
@@ -73,8 +85,7 @@
     <!--  알림 토글  -->
     <div class="toggle-box">
       <form th:action="@{/dashboard/notification-toggle}" method="post">
-        <!-- 서현님 csrf 토큰 추가 후 주석해제 -->
-        <!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <input type="checkbox"
                name="notification"
                th:checked="${dashboard.notificationOn}" onchange="this.form.submit()">
@@ -111,8 +122,8 @@
     <div class="company-list">
       <div th:each="company : ${dashboard.goalCompanies}"
 
-         class="company-card"
-         th:classappend="|
+           class="company-card"
+           th:classappend="|
                          ${company.companyName.toLowerCase()}
                          ${(company.companyName == '네이버') ? ' naver' : ''}
                          ${(company.companyName == '토스') ? ' toss' : ''}
@@ -130,8 +141,8 @@
           <div class="dropdown">
             <button class="dropdown-toggle" type="button">⋮</button>
             <ul class="dropdown-menu">
-<!--              <li class="update-btn" th:attr="data-id=${company.companyId}">수정</li>-->
-<!--              <li class="delete-btn" th:attr="data-id=${company.companyId}">삭제</li>-->
+              <!--              <li class="update-btn" th:attr="data-id=${company.companyId}">수정</li>-->
+              <!--              <li class="delete-btn" th:attr="data-id=${company.companyId}">삭제</li>-->
             </ul>
           </div>
         </div>
@@ -240,7 +251,6 @@
     };
   }
 
-
   document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("create-form");
 
@@ -282,7 +292,6 @@
     });
   });
 
-
   // 목표 기업 생성 함수
   function createCompany() {
     const form = document.getElementById("create-form"); // 전역에서 한번만 받아도 무방함
@@ -294,37 +303,38 @@
     };
 
     fetch('/companies/create', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json',
-              ...getCsrfHeaders()
-                    },
-            body: JSON.stringify(data)
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error(`서버 오류: ${res.status}`);
-                }
-                return res.json();
-            })
-            .then(result => {
-                closeModal("companyModal");
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getCsrfHeaders()
+      },
+      body: JSON.stringify(data)
+    })
+    .then(res => {
+      if (!res.ok) {
+        throw new Error(`서버 오류: ${res.status}`);
+      }
+      return res.json();
+    })
+    .then(result => {
+      closeModal("companyModal");
 
-                const baseUrl = `${window.location.origin}${window.location.pathname}`;
+      const baseUrl = `${window.location.origin}${window.location.pathname}`;
 
-                if (result.achievementName) {
-                    const encodedName = encodeURIComponent(result.achievementName);
-                    const redirectUrl = `${baseUrl}?achievementName=${encodedName}`;
-                    window.location.href = redirectUrl;
-                } else {
-                    alert("등록 완료!");
-                    window.location.reload();
-                }
-            })
-            .catch(error => {
-                console.error("🚨 에러 발생:", error);
-                alert("에러 발생");
-            });
-    }
+      if (result.achievementName) {
+        const encodedName = encodeURIComponent(result.achievementName);
+        const redirectUrl = `${baseUrl}?achievementName=${encodedName}`;
+        window.location.href = redirectUrl;
+      } else {
+        alert("등록 완료!");
+        window.location.reload();
+      }
+    })
+    .catch(error => {
+      console.error("🚨 에러 발생:", error);
+      alert("에러 발생");
+    });
+  }
 
   // 목표 기업 삭제 함수
   function deleteCompany(companyId) {
@@ -336,35 +346,35 @@
           ...getCsrfHeaders()
         }
       })
-              .then(res => {
-                if (res.ok) {
-                  alert("삭제 완료!");
-                  window.location.reload(); // 새로고침
-                } else {
-                  alert("삭제 실패");
-                }
-              })
-              .catch(err => {
-                console.error(err);
-                alert("에러 발생");
-              });
+      .then(res => {
+        if (res.ok) {
+          alert("삭제 완료!");
+          window.location.reload(); // 새로고침
+        } else {
+          alert("삭제 실패");
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("에러 발생");
+      });
     }
   }
 
   function fillForm(companyId) {
     fetch(`/companies/${companyId}`)
-            .then(res => res.json())
-            .then(data => {
-              const form = document.getElementById("create-form");
-              form.companyName.value = data.companyName;
-              form.content.value = data.content;
-              form.status.value = data.status;
-              form.endDate.value = data.endDate;
-            })
-            .catch(err => {
-              console.error("회사 정보 불러오기 실패", err);
-              alert("수정할 데이터를 불러오지 못했습니다.");
-            });
+    .then(res => res.json())
+    .then(data => {
+      const form = document.getElementById("create-form");
+      form.companyName.value = data.companyName;
+      form.content.value = data.content;
+      form.status.value = data.status;
+      form.endDate.value = data.endDate;
+    })
+    .catch(err => {
+      console.error("회사 정보 불러오기 실패", err);
+      alert("수정할 데이터를 불러오지 못했습니다.");
+    });
   }
 
   //목표 기업 수정 함수
@@ -389,19 +399,21 @@
       },
       body: JSON.stringify(data)
     })
-            .then(res => {
-              if (!res.ok) throw new Error('수정 실패');
-              return res.text();
-            })
-            .then(msg => {
-              alert("수정 완료!");
-              closeModal("companyModal");
-              location.reload();
-            })
-            .catch(err => {
-              console.error(err);
-              alert("수정 중 오류 발생");
-            });
+    .then(res => {
+      if (!res.ok) {
+        throw new Error('수정 실패');
+      }
+      return res.text();
+    })
+    .then(msg => {
+      alert("수정 완료!");
+      closeModal("companyModal");
+      location.reload();
+    })
+    .catch(err => {
+      console.error(err);
+      alert("수정 중 오류 발생");
+    });
   }
 
   function openModal(companyModal) {
@@ -414,5 +426,6 @@
 </script>
 </body>
 <script defer src="/js/achievement/congratulation.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+<script
+    src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </html>
