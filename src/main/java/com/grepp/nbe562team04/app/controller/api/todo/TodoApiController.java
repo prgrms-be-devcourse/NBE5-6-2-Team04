@@ -25,7 +25,7 @@ public class TodoApiController {
     }
 
     //  특정 목표에 속한 투두 목록 조회
-    @GetMapping("/goal/{goalId}")
+    @GetMapping("/{goalId}")
     public ResponseEntity<List<TodoResponseDto>> getTodosByGoal(@PathVariable Long goalId) {
         List<TodoResponseDto> todoList = todoService.getByGoal(goalId);
         return ResponseEntity.ok(todoList);

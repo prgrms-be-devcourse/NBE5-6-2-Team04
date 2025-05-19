@@ -37,7 +37,7 @@ public class TodoService {
         Todo todo = Todo.builder()
                 .goal(goal)
                 .content(dto.getContent())
-                .startDate(dto.getStartDate() != null ? dto.getStartDate() : LocalDate.now())  // 여기!
+                .startDate(dto.getStartDate() != null ? dto.getStartDate() : LocalDate.now())
                 .endDate(dto.getEndDate())
                 .isDone(dto.getIsDone() != null ? dto.getIsDone() : false)
                 .build();

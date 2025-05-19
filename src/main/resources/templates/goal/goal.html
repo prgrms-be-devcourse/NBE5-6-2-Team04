@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>DevQuest Dashboard</title>
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <link rel="stylesheet" th:href="@{/css/dashboard.css}">
   <link rel="stylesheet" th:href="@{/css/goal.css}">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -76,27 +78,26 @@
       </div>
     </div>
 
-    <div class="goal-list">
-      <div th:each="goal : ${goals}" class="goal-item">
-        <div class="goal-info">
-          <span class="goal-status" th:text="${goal.status}">상태</span>
-          <span class="goal-title" th:text="${goal.title}">제목</span>
+    <div class="goal-item" th:each="goal : ${goals}">
+      <div class="goal-info">
+        <span class="goal-status" th:text="${goal.status}">상태</span>
+        <span class="goal-title" th:text="${goal.title}">제목</span>
 
-          <div class="goal-progress-text"
-               th:if="${progressMap != null and goal.goalId != null and progressMap[goal.goalId] != null}"
-               th:text="'진행률: ' + ${progressMap[goal.goalId]} + '%'">
-            진행률 표시
-          </div>
+        <div class="goal-progress-text"
+             th:if="${goal.progress != null}"
+             th:text="'진행률: ' + ${goal.progress} + '%'">
+          진행률 표시
         </div>
-
         <div class="progress-bar"
-             th:if="${progressMap != null and goal.goalId != null and progressMap[goal.goalId] != null}">
+             th:if="${goal.progress != null}">
           <div class="progress-fill"
-               th:style="'width:' + ${progressMap[goal.goalId]} + '%'">
+               th:style="'width:' + ${goal.progress} + '%'">
           </div>
         </div>
       </div>
     </div>
+
+
 
 
 
@@ -193,6 +194,17 @@
 
 
 <script>
+
+  const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+  function getCsrfHeaders() {
+    return {
+      [csrfHeader]: csrfToken
+    };
+  }
+
+
   document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("goal-form");
     const todoForm = document.getElementById("todo-form");
@@ -319,7 +331,8 @@
 
     fetch(`/goals/${companyId}/create`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json',
+        ...getCsrfHeaders()},
       body: JSON.stringify(data)
     }).then(res => {
       if (res.ok) {
@@ -348,7 +361,8 @@
 
     fetch(`/goals/${goalId}/update`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' ,
+        ...getCsrfHeaders()},
       body: JSON.stringify(data)
     }).then(res => {
       if (res.ok) {
@@ -368,7 +382,9 @@
   function deleteGoal(goalId) {
     if (confirm("정말 삭제하시겠습니까?")) {
       fetch(`/goals/${goalId}/delete`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          ...getCsrfHeaders()}
       }).then(res => {
         if (res.ok) {
           alert("삭제 완료!");
@@ -385,7 +401,7 @@
 
   //goal 불러오기 함수
   function fillGoalForm(goalId) {
-    fetch(`/goals/${goalId}`)
+    fetch(`/goals/${goalId}/select`)
             .then(res => res.json())
             .then(data => {
               const form = document.getElementById("goal-form");
@@ -414,7 +430,8 @@
 
     fetch(`/todos/${goalId}/create`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json',
+        ...getCsrfHeaders()},
       body: JSON.stringify(data)
     })
             .then(res => {
@@ -443,7 +460,8 @@
 
     fetch(`/todos/${todoId}/update`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json',
+        ...getCsrfHeaders()},
       body: JSON.stringify(data)
     })
             .then(res => {
@@ -466,7 +484,9 @@
   function deleteTodo(todoId) {
     if (confirm("정말 삭제하시겠습니까?")) {
       fetch(`/todos/${todoId}/delete`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          ...getCsrfHeaders()}
       })
               .then(res => {
                 if (res.ok) {
@@ -492,7 +512,8 @@
     fetch(`/todos/${todoId}/toggle`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...getCsrfHeaders()
       },
       body: JSON.stringify(data)
     })
