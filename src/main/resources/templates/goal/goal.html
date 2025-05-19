@@ -2,35 +2,25 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DevQuest Dashboard</title>
   <meta name="_csrf" th:content="${_csrf.token}"/>
   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-  <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+  <link rel="stylesheet" th:href="@{/css/common.css}">
   <link rel="stylesheet" th:href="@{/css/goal.css}">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
 </head>
-
 <body>
-<h1>목표 기업 상세 페이지입니다</h1>
-<p th:text="'기업명: ' + ${company.companyName}">기업명 로딩 실패</p>
-
-<div id="logo-container"></div>
 <div class="dashboard">
 
-  <!-- 좌측 사이드바 -->
+  <!--========= 좌측 사이드바 ===========-->
   <aside class="sidebar">
-    <h1 class="logo">
-      <a th:href="@{/static}" style="text-decoration: none; color:inherit;">
-        DevQuest
-      </a>
-    </h1>
-    <div class="createdAt-comment">
-      <span class="day-count" th:text="${dashboard.dayCount} + '일째'">N 일째</span>
-      <span class="comment" th:text="${dashboard.comment}">슬로건</span>
+    <div class="logo">
+      <span>DevQuest</span>
     </div>
-    <span class="nickname" th:text="${dashboard.nickname}">회원</span>
-    <span class="nickname-sir">님</span>
+    <h1 class="company-name" th:text="${company.companyName} + ' 개발자'">기업명 로딩 실패</h1>
+    <span class="comment" th:text="${dashboard.comment}">한마디</span>
+    <span class="nickname" th:text="${dashboard.nickname} + ' 님'">회원</span>
 
     <!--  관심분야 태그  -->
     <div class="tags">
@@ -44,40 +34,12 @@
       <span class="tag" th:each="fw : ${dashboard.framework}" th:text="'#' + ${fw}">#프레임워크</span>
     </div>
 
-    <!--  마이페이지  -->
-    <p class="mypage">
-      <a th:href="@{/user/mypage}" style="text-decoration: none; color: inherit;">
-        <span class="material-icons">account_circle</span>마이페이지
-      </a>
-    </p>
 
-    <!-- 프로필 카드 -->
-    <div class="profile-card">
-      <div class="profile-card">
-        <div class="profile-info">
-          <img class="profile-img"
-               th:src="${dashboard.userImage != null && !dashboard.userImage.isEmpty()
-             ? '/images/profile/' + dashboard.userImage
-             : '/images/profile/default.png'}"
-               alt="프로필 이미지"/>
-
-          <div class="level-info">
-            <p class="level-label" th:text="${dashboard.levelName}">레벨명</p>
-            <p class="level-value" th:text="'Lv.' + ${dashboard.levelValue}">Lv.N</p>
-          </div>
-        </div>
-
-        <!--  xp 진행바  -->
-        <div class="xp-label" th:text="${dashboard.exp} + 'xp'">N xp</div>
-        <div class="xp-bar">
-          <div class="xp-progress"
-               th:style="'width:' + (${dashboard.exp} > 100 ? 100 : dashboard.exp) + '%'">
-            <span th:text="${dashboard.exp} + 'xp'"></span>
-          </div>
-        </div>
-      </div>
+    <div>
+      <!-- TODO: AI 데브 -->
     </div>
 
+    <!-- 진행률 -->
     <div class="goal-item" th:each="goal : ${goals}">
       <div class="goal-info">
         <span class="goal-status" th:text="${goal.status}">상태</span>
@@ -90,10 +52,11 @@
         </div>
 
         <button class="goal-complete-btn"
-                th:if="${goal.progress != null and goal.progress >= 100 and goal.isDone == false}"
+                th:if="${goal.progress != null and goal.progress >= 100 and goal.isDone != null and !goal.isDone}"
                 th:attr="data-id=${goal.goalId}">
           완료
         </button>
+        <span th:text="'progress: ' + ${goal.progress} + ', isDone: ' + ${goal.isDone}">디버깅</span>
 
         <div class="progress-bar"
              th:if="${goal.progress != null}">
@@ -103,55 +66,46 @@
         </div>
       </div>
     </div>
-
-
-
-
-
   </aside>
 
-  <!-- 메인 영역 -->
+  <!--========== 목표 영역 ============-->
   <main class="main-content">
-    <div class="logout">
-      <a th:href="@{/logout}" style="text-decoration: none; color: inherit;">
-        로그아웃
-      </a>
+    <div class="menu">
+      <a th:href="@{/user/mypage}" th:text="마이페이지"/>
+      <a th:href="@{/logout}" th:text="로그아웃"/>
     </div>
 
-    <!--  Goal List   -->
-    <p class="section-title" th:text="${company.companyName}">Goal List</p>
-
-    <div class="company-list">
-      <div th:each="goal : ${goals}" class="company-card">
-
-
+    <div class="goal-list">
+      <div th:each="goal : ${goals}" class="goal-card">
         <div class="card-header">
           <span class="status" th:text="${goal.isDone}? '완료' : '진행 중'">진행 상태</span>
-          <p class="company-name" th:text="${goal.title}">회사명</p>
+          <p class="goal" th:text="${goal.title}">TODO 카테고리(goal name)</p>
         </div>
 
         <!-- 목표 카드 -->
-        <div class="status-dday">
+        <div>
           <ul>
-            <li th:each="todo : ${todoMap[goal.goalId]}">
-
+            <li class="todo-item" th:each="todo : ${todoMap[goal.goalId]}">
               <input type="checkbox"
                      th:checked="${todo.isDone}"
-                     th:attr="data-id=${todo.todoId}"
-                     class="todo-checkbox">
-              <span th:text="${todo.content}">투두 내용</span>
+                     th:attr="data-id=${todo.todoId}">
+              <span class="todo-content" th:text="${todo.content}">투두 내용</span>
 
               <div class="goal-actions">
-                <button type="button" class="update-todo-btn" th:attr="data-id=${todo.todoId}">수정</button>
-                <button type="button" class="delete-todo-btn" th:attr="data-id=${todo.todoId}">삭제</button>
+                <button type="button" class="modify-todo-btn" th:attr="data-id=${todo.todoId}">수정
+                </button>
+                <button type="button" class="delete-todo-btn" th:attr="data-id=${todo.todoId}">삭제
+                </button>
               </div>
             </li>
           </ul>
         </div>
+
         <div class="todo-actions">
-          <button type="button" class="update-goal-btn" th:attr="data-id=${goal.goalId}">수정</button>
-          <button type="button" class="delete-goal-btn" th:attr="data-id=${goal.goalId}">삭제</button>
-          <button type="button" class="add-todo-btn" th:attr="data-goal-id=${goal.goalId}">투두 추가</button>
+          <button type="button" class="todo-modify-btn" th:attr="data-id=${goal.goalId}">수정</button>
+          <button type="button" class="todo-delete-btn" th:attr="data-id=${goal.goalId}">삭제</button>
+          <button type="button" class="todo-add-btn" th:attr="data-goal-id=${goal.goalId}">TODO 추가
+          </button>
         </div>
       </div>
 
@@ -170,23 +124,23 @@
   </main>
 
 
-<!-- 목표  생성 모달 -->
-<div id="goalModal" class="modal" style="display: none;">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('goalModal')">&times;</span>
-    <h2>목표 생성</h2>
-    <form id="goal-form" th:attr="data-company-id=${company.companyId}">
-      <input type="text" name="title" placeholder="목표를 입력해주세요" required><br><br>
-      <label>시작일</label><br>
-      <input type="date" name="startDate"><br><br>
-      <label>마감일</label><br>
-      <input type="date" name="endDate"><br><br>
-      <button type="submit">생성</button>
-    </form>
+  <!-- 목표  생성 모달 -->
+  <div id="goalModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('goalModal')">&times;</span>
+      <h2>목표 생성</h2>
+      <form id="goal-form" th:attr="data-company-id=${company.companyId}">
+        <input type="text" name="title" placeholder="목표를 입력해주세요" required><br><br>
+        <label>시작일</label><br>
+        <input type="date" name="startDate"><br><br>
+        <label>마감일</label><br>
+        <input type="date" name="endDate"><br><br>
+        <button type="submit">생성</button>
+      </form>
+    </div>
   </div>
-</div>
 
-  <!-- todo  생성 모달 -->
+  <!-- todo 생성 모달 -->
   <div id="todoModal" class="modal" style="display: none;">
     <div class="modal-content">
       <span class="close" onclick="closeModal('todoModal')">&times;</span>
@@ -199,408 +153,370 @@
     </div>
   </div>
 
-
 <script>
-  const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
-  function getCsrfHeaders() {
-    return {
-      [csrfHeader]: csrfToken
-    };
-  }
-
-  // 목표 완료 이벤트
-  document.querySelectorAll('.goal-complete-btn').forEach(button => {
-    button.addEventListener('click', handleGoalCompleteClick);
-  });
-
-  // 목표 완료 이벤트 핸들러
-  function handleGoalCompleteClick(event) {
-    const goalId = event.currentTarget.getAttribute('data-id');
-
-    if (confirm('정말 목표를 완료하시겠습니까?')) {
-      goalComplete(goalId);
-    }
-  }
-
-  // 목표 완료 함수
-  function goalComplete(goalId) {
-    fetch(`/goals/${goalId}/complete`, {
-      method: 'POST',
-      headers: {
-        ...getCsrfHeaders()}
-    })
-            .then(response => {
-              if (response.ok) {
-                alert('목표 완료! 경험치 +10');
-                location.reload();
-              } else {
-                alert('목표 완료 처리 실패');
-              }
-            })
-            .catch(error => {
-              console.error('에러 발생:', error);
-              alert('요청 중 오류가 발생했습니다.');
-            });
-  }
-
-
-
-
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("goal-form");
-    const todoForm = document.getElementById("todo-form");
-
-    // goal 생성 이벤트
-    document.querySelector(".goal-create-btn").addEventListener("click", () => {
-      form.reset();
-      form.removeAttribute("data-id");
-      document.querySelector("#goalModal h2").textContent = "목표 추가";
-      document.querySelector("#goalModal button[type='submit']").textContent = "추가";
-      form.onsubmit = function (e) {
-        e.preventDefault();
-        createGoal();
+    function getCsrfHeaders() {
+      return {
+        [csrfHeader]: csrfToken
       };
-      openModal("goalModal");
-    });
+    }
 
-    // goal 수정 이벤트
-    document.querySelectorAll(".update-goal-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const goalId = btn.dataset.id;
-        fillGoalForm(goalId);
-        form.setAttribute("data-id", goalId);
-        document.querySelector("#goalModal h2").textContent = "목표 수정";
-        document.querySelector("#goalModal button[type='submit']").textContent = "수정";
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("goal-form");
+      const todoForm = document.getElementById("todo-form");
+
+      // goal 생성 이벤트
+      document.querySelector(".goal-create-btn").addEventListener("click", () => {
+        form.reset();
+        form.removeAttribute("data-id");
+        document.querySelector("#goalModal h2").textContent = "목표 추가";
+        document.querySelector("#goalModal button[type='submit']").textContent = "추가";
         form.onsubmit = function (e) {
           e.preventDefault();
-          updateGoal(e);
+          createGoal();
         };
         openModal("goalModal");
       });
-    });
 
-    // goal 삭제 이벤트
-    document.querySelectorAll(".delete-goal-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const goalId = btn.dataset.id;
-        deleteGoal(goalId);
+      // goal 수정 이벤트
+      document.querySelectorAll(".update-goal-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const goalId = btn.dataset.id;
+          fillGoalForm(goalId);
+          form.setAttribute("data-id", goalId);
+          document.querySelector("#goalModal h2").textContent = "목표 수정";
+          document.querySelector("#goalModal button[type='submit']").textContent = "수정";
+          form.onsubmit = function (e) {
+            e.preventDefault();
+            updateGoal(e);
+          };
+          openModal("goalModal");
+        });
       });
-    });
 
-    // 목표 별 Todo 생성 이벤트
-
-
-    document.querySelectorAll(".add-todo-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const goalId = btn.dataset.goalId;
-        const form = document.getElementById("todo-form");
-        form.reset();
-        form.goalId.value = goalId;
-
-        document.querySelector("#todoModal h2").textContent = "todo 생성";
-        document.querySelector("#todoModal button[type='submit']").textContent = "추가";
-
-
-        form.onsubmit = function (e) {
-          e.preventDefault();
-          createTodo();
-        };
-
-        openModal("todoModal");
+      // goal 삭제 이벤트
+      document.querySelectorAll(".delete-goal-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const goalId = btn.dataset.id;
+          deleteGoal(goalId);
+        });
       });
-    });
 
+      // 목표 별 Todo 생성 이벤트
 
-    // 목표별 todo 수정 이벤트
-    document.querySelectorAll(".update-todo-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const todoId = btn.dataset.id;
-        fetch(`/todos/${todoId}/select`)
-                .then(res => res.json())
-                .then(data => {
-                  const form = document.getElementById("todo-form");
-                  form.reset();
-                  form.goalId.value = data.goalId; // 필요 시 포함
-                  form.title.value = data.content;
+      document.querySelectorAll(".add-todo-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const goalId = btn.dataset.goalId;
+          const form = document.getElementById("todo-form");
+          form.reset();
+          form.goalId.value = goalId;
 
-                  document.querySelector("#todoModal h2").textContent = "todo 수정";
-                  document.querySelector("#todoModal button[type='submit']").textContent = "수정";
+          document.querySelector("#todoModal h2").textContent = "todo 생성";
+          document.querySelector("#todoModal button[type='submit']").textContent = "추가";
 
-                  openModal("todoModal");
+          form.onsubmit = function (e) {
+            e.preventDefault();
+            createTodo();
+          };
 
-                  form.onsubmit = function (e) {
-                    e.preventDefault();
-                    updateTodo(todoId);
-                  };
-                })
-                .catch(err => {
-                  console.error("투두 불러오기 실패", err);
-                  alert("수정할 데이터를 불러오지 못했습니다.");
-                });
+          openModal("todoModal");
+        });
       });
-    });
 
-    // 목표별 todo 삭제 이벤트
-    document.querySelectorAll(".delete-todo-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const todoId = btn.dataset.id;
-        deleteTodo(todoId);
+      // 목표별 todo 수정 이벤트
+      document.querySelectorAll(".update-todo-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const todoId = btn.dataset.id;
+          fetch(`/todos/${todoId}/select`)
+          .then(res => res.json())
+          .then(data => {
+            const form = document.getElementById("todo-form");
+            form.reset();
+            form.goalId.value = data.goalId; // 필요 시 포함
+            form.title.value = data.content;
+
+            document.querySelector("#todoModal h2").textContent = "todo 수정";
+            document.querySelector("#todoModal button[type='submit']").textContent = "수정";
+
+            openModal("todoModal");
+
+            form.onsubmit = function (e) {
+              e.preventDefault();
+              updateTodo(todoId);
+            };
+          })
+          .catch(err => {
+            console.error("투두 불러오기 실패", err);
+            alert("수정할 데이터를 불러오지 못했습니다.");
+          });
+        });
       });
-    });
 
-    // todo 완요 toggle 이벤트
-    document.querySelectorAll(".todo-checkbox").forEach(checkbox => {
-      checkbox.addEventListener("change", () => {
-        const todoId = checkbox.dataset.id;
-        const isDone = checkbox.checked;
-        toggleTodoStatus(todoId, isDone); // → 함수 분리!
+      // 목표별 todo 삭제 이벤트
+      document.querySelectorAll(".delete-todo-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const todoId = btn.dataset.id;
+          deleteTodo(todoId);
+        });
       });
+
+      // todo 완요 toggle 이벤트
+      document.querySelectorAll(".todo-checkbox").forEach(checkbox => {
+        checkbox.addEventListener("change", () => {
+          const todoId = checkbox.dataset.id;
+          const isDone = checkbox.checked;
+          toggleTodoStatus(todoId, isDone); // → 함수 분리!
+        });
+      });
+
     });
 
-  });
+    // goal 생성 함수
+    function createGoal() {
+      const form = document.getElementById("goal-form");
+      const companyId = form.dataset.companyId; // 필요시 상위에서 설정
+      const data = {
+        companyId: companyId,
+        title: form.title.value,
+        startDate: form.startDate.value,
+        endDate: form.endDate.value
+      };
 
-  // goal 생성 함수
-  function createGoal() {
-    const form = document.getElementById("goal-form");
-    const companyId = form.dataset.companyId; // 필요시 상위에서 설정
-    const data = {
-      companyId: companyId,
-      title: form.title.value,
-      startDate: form.startDate.value,
-      endDate: form.endDate.value
-    };
-
-    fetch(`/goals/${companyId}/create`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json',
-        ...getCsrfHeaders()},
-      body: JSON.stringify(data)
-    }).then(res => {
-      if (res.ok) {
-        alert("등록 완료!");
-        closeModal("goalModal");
-        location.reload();
-      } else {
-        alert("등록 실패");
-      }
-    }).catch(err => {
-      console.error(err);
-      alert("에러 발생");
-    });
-  }
-
-  // goal 수정 함수
-  function updateGoal(e) {
-    const form = document.getElementById("goal-form");
-    const goalId = form.dataset.id;
-
-    const data = {
-      title: form.title.value,
-      startDate: form.startDate.value,
-      endDate: form.endDate.value
-    };
-
-    fetch(`/goals/${goalId}/update`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' ,
-        ...getCsrfHeaders()},
-      body: JSON.stringify(data)
-    }).then(res => {
-      if (res.ok) {
-        alert("수정 완료!");
-        closeModal("goalModal");
-        location.reload();
-      } else {
-        alert("수정 실패");
-      }
-    }).catch(err => {
-      console.error(err);
-      alert("수정 중 오류 발생");
-    });
-  }
-
-  // goal 삭제 함수
-  function deleteGoal(goalId) {
-    if (confirm("정말 삭제하시겠습니까?")) {
-      fetch(`/goals/${goalId}/delete`, {
-        method: 'DELETE',
+      fetch(`/goals/${companyId}/create`, {
+        method: 'POST',
         headers: {
-          ...getCsrfHeaders()}
+          'Content-Type': 'application/json',
+          ...getCsrfHeaders()
+        },
+        body: JSON.stringify(data)
       }).then(res => {
         if (res.ok) {
-          alert("삭제 완료!");
+          alert("등록 완료!");
+          closeModal("goalModal");
           location.reload();
         } else {
-          alert("삭제 실패");
+          alert("등록 실패");
         }
       }).catch(err => {
         console.error(err);
         alert("에러 발생");
       });
     }
-  }
 
-  //goal 불러오기 함수
-  function fillGoalForm(goalId) {
-    fetch(`/goals/${goalId}/select`)
-            .then(res => res.json())
-            .then(data => {
-              const form = document.getElementById("goal-form");
-              form.title.value = data.title;
-              form.startDate.value = data.startDate;
-              form.endDate.value = data.endDate;
-            })
-            .catch(err => {
-              console.error("목표 불러오기 실패", err);
-              alert("수정할 데이터를 불러오지 못했습니다.");
-            });
-  }
+    // goal 수정 함수
+    function updateGoal(e) {
+      const form = document.getElementById("goal-form");
+      const goalId = form.dataset.id;
 
-  // todo 생성 함수
-  function createTodo() {
+      const data = {
+        title: form.title.value,
+        startDate: form.startDate.value,
+        endDate: form.endDate.value
+      };
 
-
-    const form = document.getElementById("todo-form");
-    const goalId = form.goalId.value;
-    const content = form.title.value;
-
-    const data = {
-      goalId: goalId,
-      content: content
-    };
-
-    fetch(`/todos/${goalId}/create`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json',
-        ...getCsrfHeaders()},
-      body: JSON.stringify(data)
-    })
-            .then(res => {
-              if (res.ok) {
-                alert("투두 추가 완료!");
-                closeModal("todoModal");
-                location.reload();
-              } else {
-                alert("추가 실패");
-              }
-            })
-            .catch(err => {
-              console.error("에러 발생", err);
-              alert("에러 발생");
-            });
-  }
-
-  // todo 수정 함수
-  function updateTodo(todoId) {
-    const form = document.getElementById("todo-form");
-    const content = form.title.value;
-
-    const data = {
-      content: content
-    };
-
-    fetch(`/todos/${todoId}/update`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json',
-        ...getCsrfHeaders()},
-      body: JSON.stringify(data)
-    })
-            .then(res => {
-              if (res.ok) {
-                alert("수정 완료!");
-                closeModal("todoModal");
-                location.reload();
-              } else {
-                alert("수정 실패");
-              }
-            })
-            .catch(err => {
-              console.error("수정 중 오류 발생", err);
-              alert("에러 발생");
-            });
-  }
-
-
-  // todo 삭제 함수
-  function deleteTodo(todoId) {
-    if (confirm("정말 삭제하시겠습니까?")) {
-      fetch(`/todos/${todoId}/delete`, {
-        method: 'DELETE',
+      fetch(`/goals/${goalId}/update`, {
+        method: 'PUT',
         headers: {
-          ...getCsrfHeaders()}
-      })
-              .then(res => {
-                if (res.ok) {
-                  alert("삭제 완료!");
-                  location.reload();
-                } else {
-                  alert("삭제 실패");
-                }
-              })
-              .catch(err => {
-                console.error("삭제 중 오류 발생", err);
-                alert("에러 발생");
-              });
+          'Content-Type': 'application/json',
+          ...getCsrfHeaders()
+        },
+        body: JSON.stringify(data)
+      }).then(res => {
+        if (res.ok) {
+          alert("수정 완료!");
+          closeModal("goalModal");
+          location.reload();
+        } else {
+          alert("수정 실패");
+        }
+      }).catch(err => {
+        console.error(err);
+        alert("수정 중 오류 발생");
+      });
     }
-  }
 
-  // todo 완료 toggle 함수
-  function toggleTodoStatus(todoId, isDone) {
-    const data = {
-      isDone: isDone
-    };
+    // goal 삭제 함수
+    function deleteGoal(goalId) {
+      if (confirm("정말 삭제하시겠습니까?")) {
+        fetch(`/goals/${goalId}/delete`, {
+          method: 'DELETE',
+          headers: {
+            ...getCsrfHeaders()
+          }
+        }).then(res => {
+          if (res.ok) {
+            alert("삭제 완료!");
+            location.reload();
+          } else {
+            alert("삭제 실패");
+          }
+        }).catch(err => {
+          console.error(err);
+          alert("에러 발생");
+        });
+      }
+    }
 
-    fetch(`/todos/${todoId}/toggle`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        ...getCsrfHeaders()
-      },
-      body: JSON.stringify(data)
-    })
-            .then(res => {
-              if (!res.ok) throw new Error("업데이트 실패");
-              location.reload();
-            })
-            .catch(err => {
-              console.error("체크박스 상태 변경 실패", err);
-              alert("상태 변경 중 오류 발생");
-            });
-  }
+    //goal 불러오기 함수
+    function fillGoalForm(goalId) {
+      fetch(`/goals/${goalId}/select`)
+      .then(res => res.json())
+      .then(data => {
+        const form = document.getElementById("goal-form");
+        form.title.value = data.title;
+        form.startDate.value = data.startDate;
+        form.endDate.value = data.endDate;
+      })
+      .catch(err => {
+        console.error("목표 불러오기 실패", err);
+        alert("수정할 데이터를 불러오지 못했습니다.");
+      });
+    }
 
+    // todo 생성 함수
+    function createTodo() {
 
-  // goal modal 열기 함수
-  function openModal(goalModal) {
-    document.getElementById(goalModal).style.display = "flex";
-  }
+      const form = document.getElementById("todo-form");
+      const goalId = form.goalId.value;
+      const content = form.title.value;
 
-  // goal modal 닫기 함수
-  function closeModal(goalModal) {
-    document.getElementById(goalModal).style.display = "none";
-  }
+      const data = {
+        goalId: goalId,
+        content: content
+      };
 
-  function openTodoModal(goalId) {
-    const form = document.getElementById("todo-form");
-    form.reset();
-    form.goalId.value = goalId;
-    openModal("todoModal");
-  }
+      fetch(`/todos/${goalId}/create`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getCsrfHeaders()
+        },
+        body: JSON.stringify(data)
+      })
+      .then(res => {
+        if (res.ok) {
+          alert("투두 추가 완료!");
+          closeModal("todoModal");
+          location.reload();
+        } else {
+          alert("추가 실패");
+        }
+      })
+      .catch(err => {
+        console.error("에러 발생", err);
+        alert("에러 발생");
+      });
+    }
 
-  function closeTodoModal() {
-    const form = document.getElementById("todo-form");
-    form.reset();
+    // todo 수정 함수
+    function updateTodo(todoId) {
+      const form = document.getElementById("todo-form");
+      const content = form.title.value;
 
-    closeModal("todoModal");
-  }
+      const data = {
+        content: content
+      };
 
-</script>
+      fetch(`/todos/${todoId}/update`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getCsrfHeaders()
+        },
+        body: JSON.stringify(data)
+      })
+      .then(res => {
+        if (res.ok) {
+          alert("수정 완료!");
+          closeModal("todoModal");
+          location.reload();
+        } else {
+          alert("수정 실패");
+        }
+      })
+      .catch(err => {
+        console.error("수정 중 오류 발생", err);
+        alert("에러 발생");
+      });
+    }
 
+    // todo 삭제 함수
+    function deleteTodo(todoId) {
+      if (confirm("정말 삭제하시겠습니까?")) {
+        fetch(`/todos/${todoId}/delete`, {
+          method: 'DELETE',
+          headers: {
+            ...getCsrfHeaders()
+          }
+        })
+        .then(res => {
+          if (res.ok) {
+            alert("삭제 완료!");
+            location.reload();
+          } else {
+            alert("삭제 실패");
+          }
+        })
+        .catch(err => {
+          console.error("삭제 중 오류 발생", err);
+          alert("에러 발생");
+        });
+      }
+    }
 
+    // todo 완료 toggle 함수
+    function toggleTodoStatus(todoId, isDone) {
+      const data = {
+        isDone: isDone
+      };
 
+      fetch(`/todos/${todoId}/toggle`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getCsrfHeaders()
+        },
+        body: JSON.stringify(data)
+      })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error("업데이트 실패");
+        }
+        location.reload();
+      })
+      .catch(err => {
+        console.error("체크박스 상태 변경 실패", err);
+        alert("상태 변경 중 오류 발생");
+      });
+    }
 
+    // goal modal 열기 함수
+    function openModal(goalModal) {
+      document.getElementById(goalModal).style.display = "flex";
+    }
 
+    // goal modal 닫기 함수
+    function closeModal(goalModal) {
+      document.getElementById(goalModal).style.display = "none";
+    }
+
+    function openTodoModal(goalId) {
+      const form = document.getElementById("todo-form");
+      form.reset();
+      form.goalId.value = goalId;
+      openModal("todoModal");
+    }
+
+    function closeTodoModal() {
+      const form = document.getElementById("todo-form");
+      form.reset();
+
+      closeModal("todoModal");
+    }
+
+  </script>
+</div>
 </body>
 </html>
