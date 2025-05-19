@@ -122,6 +122,80 @@ VALUES
     (2, '프로젝트 README 작성', '2025-05-15 10:00:00', '2025-05-18 17:00:00', true),
     (2, '배포 테스트', '2025-06-10 09:00:00', '2025-06-12 17:00:00', false);
 
+-- 유저 레벨 먼저 삽입 (level_id = 1)
+INSERT INTO level (level_name, xp)
+VALUES ('초보 개발자', 0);
+
+-- 유저 삽입
+INSERT INTO user (
+    level_id,
+    user_image,
+    email,
+    password,
+    nickname,
+    role,
+    exp,
+    profile_image_url,
+    comment,
+    created_at,
+    is_notification_on
+) VALUES (
+             1, -- level_id
+             NULL, -- user_image (이 컬럼은 user_image 테이블과 혼동될 수 있음)
+             'test@example.com', -- 이메일
+             '{bcrypt}$2a$10$2UViZ9lLO3y1IxgEAG92ZO1LIsPB9Xz8GCMHZaVjcjG4SgD68GRsK', -- 비밀번호: "1234"의 bcrypt 해시
+             '테스트유저',
+             'USER',
+             0, -- exp
+             NULL,
+             '열심히 하겠습니다!',
+             NOW(),
+             true
+         );
 
 
 
+-- 기존 유저 및 레벨 삭제
+DELETE FROM user;
+DELETE FROM level;
+
+-- 레벨 삽입 (level_id = 1 예상)
+INSERT INTO level (level_name, xp)
+VALUES ('초보 개발자', 0);
+
+-- 유저 삽입
+INSERT INTO user (
+    level_id,
+    user_image,
+    email,
+    password,
+    nickname,
+    role,
+    exp,
+    profile_image_url,
+    comment,
+    created_at,
+    is_notification_on
+) VALUES (
+             1,
+             NULL,
+             'test@example.com',
+             '{bcrypt}$2a$10$N7YAUxu/fHTCRXnWpiFEO.DWBw6qK6Xpgxsv1D7Lvw9FX26OdFQlK',
+             '테스트유저',
+             'USER',
+             0,
+             NULL,
+             '열심히 하겠습니다!',
+             NOW(),
+             true
+         );
+UPDATE user
+SET password = '{bcrypt}$2a$10$N7YAUxu/fHTCRXnWpiFEO.DWBw6qK6Xpgxsv1D7Lvw9FX26OdFQlK'
+WHERE email = 'test@example.com';
+
+
+UPDATE user SET role = 'ROLE_USER' WHERE role = 'USER';
+
+
+UPDATE user SET role = 'ROLE_USER' WHERE role = 'USER';
+UPDATE user SET role = 'ROLE_ADMIN' WHERE role = 'ADMIN';

@@ -12,6 +12,7 @@ import com.grepp.nbe562team04.model.user.UserRepository;
 import com.grepp.nbe562team04.model.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,7 @@ public class GoalController {
 
     // 목표기업 단일 조회(진행률 조회 포함)
     @GetMapping("/companies/{CompanyId}/select")
-    public String companyDetail(@AuthenticationPrincipal Principal principal,@PathVariable Long CompanyId, Model model) {
+    public String companyDetail(@AuthenticationPrincipal Principal principal, @PathVariable Long CompanyId, Model model, CsrfToken csrfToken) {
         User detachedUser = principal.getUser();
 
         User managedUser = userRepository.findById(detachedUser.getUserId())
@@ -54,6 +55,7 @@ public class GoalController {
         model.addAttribute("company", companyDto);   // 기업 정보
         model.addAttribute("goals", goalList);       // 목표 리스트(진행률 포함)
         model.addAttribute("todoMap", todoMap);
+        model.addAttribute("_csrf", csrfToken);
 
         return "goal/goal";
     }

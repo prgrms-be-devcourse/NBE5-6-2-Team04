@@ -14,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,9 +51,12 @@ public class GoalService {
     public List<GoalResponseDto> getGoalsByCompanyId(Long companyId) {
         return goalRepository.findByCompanyCompanyId(companyId).stream()
                 .map(goal -> {
-                    List<Todo> todos = todoRepository.findByGoalGoalId(goal.getGoalId());
+                    List<Todo> todos = Optional.ofNullable(todoRepository.findByGoalGoalId(goal.getGoalId()))
+                            .orElse(Collections.emptyList());
                     long total = todos.size();
-                    long done = todos.stream().filter(Todo::getIsDone).count();
+                    long done = todos.stream()
+                            .filter(todo -> Boolean.TRUE.equals(todo.getIsDone()))
+                            .count();
                     int progress = total == 0 ? 0 : (int) ((done * 100.0) / total);
 
                     return GoalResponseDto.builder()

@@ -343,7 +343,7 @@
       });
     });
 
-    // 목표별 todo 삭제 이벤트
+    // 목표별 투두 삭제 이벤트
     document.querySelectorAll(".delete-todo-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         const todoId = btn.dataset.id;
@@ -351,7 +351,7 @@
       });
     });
 
-    // todo 완요 toggle 이벤트
+    // 투두 완료 toggle 이벤트
     document.querySelectorAll(".todo-checkbox").forEach(checkbox => {
       checkbox.addEventListener("change", () => {
         const todoId = checkbox.dataset.id;
@@ -403,7 +403,7 @@
       endDate: form.endDate.value
     };
 
-    fetch(`/goals/${goalId}/update`, {
+    fetch(`/goals/${goalId}/select`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' ,
         ...getCsrfHeaders()},
@@ -510,6 +510,7 @@
     })
             .then(res => {
               if (res.ok) {
+                console.log("aaaaa",res);
                 alert("수정 완료!");
                 closeModal("todoModal");
                 location.reload();
@@ -597,10 +598,6 @@
   }
 
 </script>
-
-
-
-
 
 </body>
 </html>
