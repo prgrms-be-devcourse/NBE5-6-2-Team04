@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/companies")
@@ -18,11 +20,20 @@ public class GoalCompanyApiController {
 
     // 생성
     @PostMapping
-    public ResponseEntity<String> createCompany(@RequestBody GoalCompanyRequestDto dto,
+    public ResponseEntity<?> createCompany(@RequestBody GoalCompanyRequestDto dto,
         @AuthenticationPrincipal Principal principal) { // json -> dto 자동 변환
-        Long userId = principal.getUser().getUserId();  // 로그인된 유저 ID 꺼내기
-        goalCompanyService.createGoalCompany(dto, userId);
-        return ResponseEntity.ok("등록 완료");
+        Long userId = principal.getUser().getUserId();
+        String achievementName = goalCompanyService.createGoalCompany(dto, userId);// 로그인된 유저 ID 꺼내기
+        if (achievementName != null) {
+            return ResponseEntity.ok(Map.of(
+                    "message", "등록 완료",
+                    "achievementName", achievementName
+            ));
+        } else {
+            return ResponseEntity.ok(Map.of(
+                    "message", "등록 완료"
+            ));
+        }
     }
 
     // 조회(단순 화면 상에 출력) -> 추후 뷰 컨트롤러로 이동 필요

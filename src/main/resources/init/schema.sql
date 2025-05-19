@@ -3,8 +3,8 @@
 DROP TABLE IF EXISTS user_interest;
 DROP TABLE IF EXISTS todos;
 DROP TABLE IF EXISTS goal;
-DROP TABLE IF EXISTS achievement;
 DROP TABLE IF EXISTS users_achieve;
+DROP TABLE IF EXISTS achievement;
 DROP TABLE IF EXISTS user_image;
 DROP TABLE IF EXISTS project_recommendation;
 DROP TABLE IF EXISTS ai_feedback;
@@ -86,22 +86,24 @@ CREATE TABLE todos (
 );
 
 -- achievement
-CREATE TABLE achievement (
-                             achieve_id BIGINT NOT NULL AUTO_INCREMENT,
-                             user_id BIGINT NOT NULL,
-                             name VARCHAR(255),
-                             description VARCHAR(255),
-                             PRIMARY KEY (achieve_id),
-                             FOREIGN KEY (user_id) REFERENCES user(user_id)
+CREATE TABLE achievement
+(
+    achieve_id  BIGINT NOT NULL AUTO_INCREMENT,
+    name        VARCHAR(255),
+    description VARCHAR(255),
+    PRIMARY KEY (achieve_id)
 );
 
 -- users_achieve
-CREATE TABLE users_achieve (
-                               id BIGINT NOT NULL AUTO_INCREMENT,
-                               user_id BIGINT NOT NULL,
-                               achieved_at TIMESTAMP NULL,
-                               PRIMARY KEY (id),
-                               FOREIGN KEY (user_id) REFERENCES user(user_id)
+CREATE TABLE users_achieve
+(
+    id          BIGINT    NOT NULL AUTO_INCREMENT,
+    user_id     BIGINT    NOT NULL,
+    achieve_id  BIGINT    NOT NULL,
+    achieved_at TIMESTAMP NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES user (user_id),
+    FOREIGN KEY (achieve_id) REFERENCES achievement (achieve_id)
 );
 
 -- user_image

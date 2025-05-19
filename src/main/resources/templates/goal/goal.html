@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>DevQuest Dashboard</title>
   <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+  <link rel="stylesheet" th:href="@{/css/goal.css}">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 </head>
@@ -43,7 +44,7 @@
 
     <!--  마이페이지  -->
     <p class="mypage">
-      <a th:href="@{/templates/mypage}" style="text-decoration: none; color: inherit;">
+      <a th:href="@{/user/mypage}" style="text-decoration: none; color: inherit;">
         <span class="material-icons">account_circle</span>마이페이지
       </a>
     </p>
@@ -75,17 +76,28 @@
       </div>
     </div>
 
-      알림 토글
-    <div class="toggle-box">
-      <form th:action="@{/dashboard/notification-toggle}" method="post">
-        <!-- 서현님 csrf 토큰 추가 후 주석해제 -->
-        <!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
-        <input type="checkbox"
-               name="notification"
-               th:checked="${dashboard.notificationOn}" onchange="this.form.submit()">
-        <label>알림</label>
-      </form>
+    <div class="goal-list">
+      <div th:each="goal : ${goals}" class="goal-item">
+        <div class="goal-info">
+          <span class="goal-status" th:text="${goal.status}">상태</span>
+          <span class="goal-title" th:text="${goal.title}">제목</span>
+
+          <div class="goal-progress-text"
+               th:if="${progressMap != null and goal.goalId != null and progressMap[goal.goalId] != null}"
+               th:text="'진행률: ' + ${progressMap[goal.goalId]} + '%'">
+            진행률 표시
+          </div>
+        </div>
+
+        <div class="progress-bar"
+             th:if="${progressMap != null and goal.goalId != null and progressMap[goal.goalId] != null}">
+          <div class="progress-fill"
+               th:style="'width:' + ${progressMap[goal.goalId]} + '%'">
+          </div>
+        </div>
+      </div>
     </div>
+
 
 
   </aside>
