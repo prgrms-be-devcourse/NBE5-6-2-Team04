@@ -28,12 +28,14 @@ public class DashboardDto {
     private int levelValue;
     private int exp;
 
+    @Getter
+    private String jobType;
+
     // 목표 기업
     private List<GoalCompanyDto> goalCompanies;
 
     // 알림 토글
     private boolean notificationOn;
-
 
 
 }

@@ -26,14 +26,12 @@
         <div class="tags">
       <span class="tag"
             th:if="${dashboard.jobType != null and !dashboard.jobType.isEmpty()}"
-            th:text="'#' + ${dashboard.jobType[0]}">#직무</span>
+            th:text="'#' + ${dashboard.jobType}">#직무</span>
             <span class="tag"
                   th:unless="${dashboard.jobType != null and !dashboard.jobType.isEmpty()}">#직무 없음</span>
-
-            <span class="tag" th:each="lang : ${dashboard.devLang}" th:text="'#' + ${lang}">#언어</span>
-            <span class="tag" th:each="fw : ${dashboard.framework}" th:text="'#' + ${fw}">#프레임워크</span>
+            <span class="tag" th:each="lang : ${dashboard.devLangs}" th:text="'#' + ${lang.interestName}">#언어</span>
+            <span class="tag" th:each="fw : ${dashboard.frameworks}" th:text="'#' + ${fw.interestName}">#프레임워크</span>
         </div>
-
 
         <div>
             <!-- TODO: AI 데브 -->
