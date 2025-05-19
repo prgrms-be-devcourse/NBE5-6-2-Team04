@@ -18,12 +18,12 @@ public class InterestDto {
     private Long interestId;
     private Type type;
     private String interestName;
+    private String roadmapUrl;
 
     public InterestDto (Interest interest){
         this.interestId = interest.getInterestId();
         this.type = interest.getType();
         this.interestName = interest.getInterestName();
+        this.roadmapUrl = interest.getRoadmapUrl();
     }
-
-
 }

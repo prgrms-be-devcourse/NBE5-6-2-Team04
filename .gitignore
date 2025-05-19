@@ -39,3 +39,6 @@ uploads/profile/*.png
 
 # 하지만 default.png는 예외로 추적 허용
 !uploads/profile/default.pnguploads/profile/*.png
+
+# macOS 시스템 파일 무시
+.DS_Store
