@@ -75,7 +75,7 @@ public class SecurityConfig {
                 .anonymous() // 회원가입, 로그인 접근 권한
                 .requestMatchers("/admin/dashboard").hasRole("ADMIN") // 관리자페이지 접근 권한
                 .requestMatchers("/user/**",  "/dashboard/**", "/api/dashboard/**", 
-                    "/todos/**", "/companies/**", "/goals/**", "/images/profile/**").hasRole("USER") // 사용자페이지 접근 권한
+                    "/todos/**", "/companies/**", "/goals/**", "/images/profile/**","/ai/feedback").hasRole("USER") // 사용자페이지 접근 권한
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
