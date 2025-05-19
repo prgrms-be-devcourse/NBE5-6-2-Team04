@@ -1,10 +1,12 @@
 package com.grepp.nbe562team04.app.controller.api.goal;
 
+import com.grepp.nbe562team04.model.auth.domain.Principal;
 import com.grepp.nbe562team04.model.goal.dto.GoalRequestDto;
 import com.grepp.nbe562team04.model.goal.dto.GoalResponseDto;
 import com.grepp.nbe562team04.model.goal.GoalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,5 +44,15 @@ public class GoalApiController {
     public ResponseEntity<String> delete(@PathVariable Long goalId) {
         goalService.deleteGoal(goalId);
         return ResponseEntity.ok("목표 삭제 완료");
+    }
+
+    // 목표 완료(진행률이 100%)
+    @PostMapping("/{goalId}/complete")
+    public ResponseEntity<String> completeGoal(
+            @PathVariable Long goalId,
+            @AuthenticationPrincipal Principal principal) {
+
+        goalService.completeGoal(goalId, principal.getUser());
+        return ResponseEntity.ok("완료 처리됨");
     }
 }

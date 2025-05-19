@@ -57,4 +57,10 @@ public class User {
     private LocalDate deletedAt;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GoalCompany> goalCompanies;
+
+    // 경험치 추가 로직
+    public void addXp(int amount) {
+        if (this.exp == null) this.exp = 0; // null 방어
+        this.exp += amount;
+    }
 }
