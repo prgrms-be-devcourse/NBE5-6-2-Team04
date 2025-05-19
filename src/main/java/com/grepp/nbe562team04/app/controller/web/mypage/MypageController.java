@@ -56,13 +56,14 @@ public class MypageController {
     }
 
     @GetMapping("update")
-    public String showUpdatePage(@AuthenticationPrincipal Principal principal, Model model) {
+    public String showUpdatePage(@AuthenticationPrincipal Principal principal, CsrfToken csrfToken, Model model) {
         String email = principal.getUsername();
         User user = userService.findByEmail(email);
 
         int progress = levelService.levelProgress(user);
         model.addAttribute("user", user);
         model.addAttribute("progressPercent", progress);
+        model.addAttribute("_csrf", csrfToken);
         return "mypage/mypageUpdate";
     }
 
