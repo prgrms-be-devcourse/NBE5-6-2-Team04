@@ -33,5 +33,5 @@ public class Interest {
     @OneToMany(mappedBy = "interest", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserInterest> userInterests;
 
-
+    public String roadmapUrl;
 }

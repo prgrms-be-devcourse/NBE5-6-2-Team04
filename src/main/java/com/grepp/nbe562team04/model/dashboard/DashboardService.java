@@ -2,14 +2,13 @@ package com.grepp.nbe562team04.model.dashboard;
 
 import com.grepp.nbe562team04.model.dashboard.dto.DashboardDto;
 import com.grepp.nbe562team04.model.dashboard.dto.GoalCompanyDto;
-import com.grepp.nbe562team04.model.dashboard.dto.InterestDto;
 import com.grepp.nbe562team04.model.goalcompany.GoalCompanyRepository;
 import com.grepp.nbe562team04.model.goalcompany.entity.GoalCompany;
 import com.grepp.nbe562team04.model.interest.code.Type;
+import com.grepp.nbe562team04.model.interest.dto.InterestDto;
 import com.grepp.nbe562team04.model.interest.entity.Interest;
 import com.grepp.nbe562team04.model.user.UserRepository;
 import com.grepp.nbe562team04.model.user.entity.User;
-import com.grepp.nbe562team04.model.user.entity.UserInterest;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -48,27 +47,54 @@ public class DashboardService {
         dto.setDayCount(dayCount);
 
         // 관심 분야 필터링
+//        List<InterestDto> interests = user.getUserInterests().stream()
+//            .map(UserInterest::getInterest)
+//            .map(i -> new InterestDto(i.getType().name(), i.getInterestName()))
+//            .toList();
+//        dto.setInterests(interests);
+
+        // 기존
+//        List<String> roles = user.getUserInterests().stream()
+//            .map(UserInterest::getInterest)
+//            .filter(i -> i.getType() == Type.ROLE)
+//            .map(Interest::getInterestName)
+//            .toList();
+//
+//        List<String> skills = user.getUserInterests().stream()
+//            .map(UserInterest::getInterest)
+//            .filter(i -> i.getType() == Type.SKILL)
+//            .map(Interest::getInterestName)
+//            .toList();
+
         List<InterestDto> interests = user.getUserInterests().stream()
-            .map(UserInterest::getInterest)
-            .map(i -> new InterestDto(i.getType().name(), i.getInterestName()))
+            .map(userInterest -> {
+                Interest interest = userInterest.getInterest();
+                return new InterestDto(interest);
+            })
             .toList();
         dto.setInterests(interests);
 
-        List<String> roles = user.getUserInterests().stream()
-            .map(UserInterest::getInterest)
+        // type으로 필터링
+        List<InterestDto> roles = interests.stream()
             .filter(i -> i.getType() == Type.ROLE)
-            .map(Interest::getInterestName)
             .toList();
 
-        List<String> skills = user.getUserInterests().stream()
-            .map(UserInterest::getInterest)
+        List<InterestDto> skills = interests.stream()
             .filter(i -> i.getType() == Type.SKILL)
-            .map(Interest::getInterestName)
             .toList();
 
         // 빈 리스트 방어처리
-        dto.setJobType(roles.isEmpty() ? List.of("직무 없음") : roles);
-        dto.setDevLang(skills.isEmpty() ? List.of("언어 없음") : skills);
+        dto.setRoles(
+            roles.isEmpty()
+                ? List.of(new InterestDto(null, Type.ROLE, "직무 없음", null))
+                : roles
+        );
+
+        dto.setDevLangs(
+            skills.isEmpty()
+                ? List.of(new InterestDto(null, Type.SKILL, "언어 없음", null))
+                : skills
+        );
 
         // 레벨 정보
         dto.setLevelName(user.getLevel().getLevelName());
