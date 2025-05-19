@@ -4,7 +4,7 @@ function openModal() {
     const list = document.getElementById("achievementList");
     list.innerHTML = "<p>불러오는 중...</p>";
 
-    fetch("/users/achievements")
+    fetch("/user/achievements")
         .then(response => {
             if (!response.ok) {
                 throw new Error("업적 데이터를 불러오지 못했습니다.");
