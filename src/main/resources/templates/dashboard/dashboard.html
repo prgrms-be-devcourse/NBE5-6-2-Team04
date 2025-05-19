@@ -12,6 +12,9 @@
 
 </head>
 <body>
+<div class="logo">
+  <a href="/admin/dashboard">DevQuest</a>
+</div>
 <div th:replace="~{fragments/header :: header}"></div>
 <div class="dashboard">
 
@@ -65,13 +68,6 @@
              : '/images/profile/default.png'}"
                alt="프로필 이미지"/>
 
-<!--          <div class="level-info">-->
-<!--            <p class="level-label" th:text="${dashboard.levelName}">레벨명</p>-->
-<!--            <p class="level-value" th:text="'Lv.' + ${dashboard.levelValue}">Lv.N</p>-->
-<!--          </div>-->
-
-<!--          <div class="level-title" th:text="${user.level.levelName}">레벨명</div>-->
-<!--          <div class="level" th:text="'Lv.' + ${user.level.levelId}">Lv.N</div>-->
           <div class="level-info">
             <p class="level-title" th:text="${user.level.levelName}">레벨명</p>
             <p class="level" th:text="'Lv. ' + ${user.level.levelId}">Lv. N</p>
@@ -120,6 +116,64 @@
   </aside>
 
   <!-- 메인 영역 -->
+  <!--  <main class="main-content">-->
+
+  <!--    &lt;!&ndash;  Company List   &ndash;&gt;-->
+  <!--    <p class="section-title">Company List</p>-->
+
+  <!--    <div class="company-list">-->
+  <!--      <div th:each="company : ${dashboard.goalCompanies}"-->
+  <!--           class="company-card"-->
+  <!--           th:classappend="|-->
+  <!--                         ${company.companyName.toLowerCase()}-->
+  <!--                         ${(company.companyName == '네이버') ? ' naver' : ''}-->
+  <!--                         ${(company.companyName == '토스') ? ' toss' : ''}-->
+  <!--                         ${(company.companyName == '당근') ? ' danggeun' : ''}-->
+  <!--                         ${(company.companyName == '배달의민족') ? ' baemin' : ''}-->
+  <!--                         ${(company.companyName == '카카오') ? ' kakao' : ''}-->
+  <!--                       |">-->
+
+  <!--        <div class="card-header">-->
+  <!--          <span class="status" th:text="${company.statusLabel}">진행 상태</span>-->
+  <!--          <span class="dDay" th:text="'D-' + ${company.DDay}">D-day</span>-->
+
+  <!--          &lt;!&ndash; 수정/삭제 드롭다운  &ndash;&gt;-->
+  <!--          <div class="dropdown">-->
+  <!--            <button class="dropdown-toggle" type="button">  ⋮  </button>-->
+  <!--            <ul class="dropdown-menu">-->
+  <!--              <li class="update-btn" th:attr="data-id=${company.companyId}">수정</li>-->
+  <!--              <li class="delete-btn" th:attr="data-id=${company.companyId}">삭제</li>-->
+  <!--            </ul>-->
+  <!--          </div>-->
+  <!--        </div>-->
+
+  <!--        &lt;!&ndash; 목표 기업 카드 &ndash;&gt;-->
+  <!--        <p class="company-name" th:text="${company.companyName}">회사명</p>-->
+  <!--        <p class="content" th:text="${company.content}">내용</p>-->
+  <!--        <div class="status-dDay">-->
+  <!--          <span class="status" th:text="${company.statusLabel}">진행 상태</span>-->
+  <!--          <span class="endDate" th:text="'~' + ${company.endDate}">~마감일</span>-->
+  <!--        </div>-->
+
+  <!--        <a th:href="@{/companies/{companyId}/select(companyId=${company.companyId})}">-->
+  <!--          <button type="button">조회</button>-->
+  <!--        </a>-->
+  <!--      </div>-->
+  <!--  &lt;!&ndash; TODO 생성 카드 &ndash;&gt;-->
+  <!--  <div class="company-card create" onclick="openModal('companyModal')">-->
+  <!--    <p class="goal-todo-desc-top">-->
+  <!--      <span class="material-icons">control_point</span>-->
+  <!--      목표 기업 TODO 생성-->
+  <!--    </p>-->
+
+  <!--    <p class="goal-todo-desc-bottom">-->
+  <!--      목표 기업은 최대 3개까지 생성 가능합니다.-->
+  <!--    </p>-->
+  <!--  </div>-->
+  <!--</div>-->
+  <!--</main>-->
+  <!--</div>-->
+
   <main class="main-content">
 
     <!--  Company List   -->
@@ -127,45 +181,41 @@
 
     <div class="company-list">
       <div th:each="company : ${dashboard.goalCompanies}"
-
-           class="company-card"
+          class="company-card"
            th:classappend="|
-                         ${company.companyName.toLowerCase()}
-                         ${(company.companyName == '네이버') ? ' naver' : ''}
-                         ${(company.companyName == '토스') ? ' toss' : ''}
-                         ${(company.companyName == '당근') ? ' danggeun' : ''}
-                         ${(company.companyName == '배달의민족') ? ' baemin' : ''}
-                         ${(company.companyName == '카카오') ? ' kakao' : ''}
-                       |">
+             ${company.companyName.toLowerCase()}
+             ${(company.companyName == '네이버') ? ' naver' : ''}
+             ${(company.companyName == '토스') ? ' toss' : ''}
+             ${(company.companyName == '당근') ? ' danggeun' : ''}
+             ${(company.companyName == '배달의민족') ? ' baemin' : ''}
+             ${(company.companyName == '카카오') ? ' kakao' : ''}
+           |">
 
+          <div class="card-header">
+            <span class="status" th:text="${company.statusLabel}">진행 상태</span>
+            <span class="dDay" th:text="'D-' + ${company.DDay}">D-day</span>
 
-        <div class="card-header">
-          <span class="status" th:text="${company.statusLabel}">진행 상태</span>
-          <span class="dday" th:text="'D-' + ${company.DDay}">D-day</span>
-
-          <!-- 수정/삭제 드롭다운  -->
-          <div class="dropdown">
-            <button class="dropdown-toggle" type="button">⋮</button>
-            <ul class="dropdown-menu">
-              <!--              <li class="update-btn" th:attr="data-id=${company.companyId}">수정</li>-->
-              <!--              <li class="delete-btn" th:attr="data-id=${company.companyId}">삭제</li>-->
-            </ul>
+            <!-- 수정/삭제 드롭다운  -->
+            <div class="dropdown" onclick="event.stopPropagation()">
+              <button class="dropdown-toggle" type="button"> ⋮  </button>
+              <ul class="dropdown-menu">
+                <li class="update-btn" th:attr="data-id=${company.companyId}">수정</li>
+                <li class="delete-btn" th:attr="data-id=${company.companyId}">삭제</li>
+              </ul>
+            </div>
           </div>
-        </div>
 
-        <!-- 목표 기업 카드 -->
-        <p class="company-name" th:text="${company.companyName}">회사명</p>
-        <p class="content" th:text="${company.content}">내용</p>
-        <div class="status-dday">
-          <span class="status" th:text="${company.statusLabel}">진행 상태</span>
-          <span class="endDate" th:text="'~' + ${company.endDate}">~마감일</span>
+        <a th:href="@{/companies/{companyId}/select(companyId=${company.companyId})}"
+           style="text-decoration: none; color: inherit; ">
 
-        </div>
-        <a th:href="@{/companies/{companyId}/select(companyId=${company.companyId})}">
-          <button type="button">조회</button>
+          <!-- 목표 기업 카드 내용 -->
+          <p class="company-name" th:text="${company.companyName}">회사명</p>
+          <p class="content" th:text="${company.content}">내용</p>
+          <div class="status-dDay">
+            <span class="status" th:text="${company.statusLabel}">진행 상태</span>
+            <span class="endDate" th:text="'~' + ${company.endDate}">~마감일</span>
+          </div>
         </a>
-        <button type="button" class="update-btn" th:attr="data-id=${company.companyId}">수정</button>
-        <button type="button" class="delete-btn" th:attr="data-id=${company.companyId}">삭제</button>
       </div>
 
       <!-- TODO 생성 카드 -->
@@ -174,262 +224,268 @@
           <span class="material-icons">control_point</span>
           목표 기업 TODO 생성
         </p>
-
         <p class="goal-todo-desc-bottom">
           목표 기업은 최대 3개까지 생성 가능합니다.
         </p>
       </div>
     </div>
   </main>
-</div>
 
-<!-- 목표 기업 생성 모달 -->
-<div id="companyModal" class="modal" style="display: none;">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('companyModal')">&times;</span>
-    <h2>목표 기업 생성</h2>
-    <form id="create-form">
-      <input type="text" name="companyName" placeholder="기업명을 입력해주세요" required><br><br>
-      <input type="text" name="content" placeholder="어떤 개발자가 되고 싶은지 한마디" required><br><br>
-      <label>일정</label><br>
-      <select name="status">
-        <option value="DOCUMENT">서류 마감</option>
-        <option value="CODING_TEST">코딩테스트</option>
-        <option value="ASSIGNMENT">과제</option>
-        <option value="APTITUDE">인적성검사</option>
-        <option value="INTERVIEW_1">1차 면접</option>
-        <option value="INTERVIEW_2">2차 면접</option>
-        <option value="INTERVIEW_3">3차 면접 (컬처핏)</option>
-      </select><br><br>
-      <label>마감일</label><br>
-      <input type="date" name="endDate"><br><br>
-      <button type="submit">생성</button>
-    </form>
+
+  <!-- 목표 기업 생성 모달 -->
+  <div id="companyModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('companyModal')">&times;</span>
+      <h2>목표 기업 생성</h2>
+      <form id="create-form">
+        <input type="text" name="companyName" placeholder="기업명을 입력해주세요" required><br><br>
+        <input type="text" name="content" placeholder="어떤 개발자가 되고 싶은지 한마디" required><br><br>
+        <label>일정</label><br>
+        <select name="status">
+          <option value="DOCUMENT">서류 마감</option>
+          <option value="CODING_TEST">코딩테스트</option>
+          <option value="ASSIGNMENT">과제</option>
+          <option value="APTITUDE">인적성검사</option>
+          <option value="INTERVIEW_1">1차 면접</option>
+          <option value="INTERVIEW_2">2차 면접</option>
+          <option value="INTERVIEW_3">3차 면접 (컬처핏)</option>
+        </select><br><br>
+        <label>마감일</label><br>
+        <input type="date" name="endDate"><br><br>
+        <button type="submit">생성</button>
+      </form>
+    </div>
   </div>
-</div>
-<div th:replace="~{fragments/achievement-modal :: achievementModal}"></div>
+  <div th:replace="~{fragments/achievement-modal :: achievementModal}"></div>
 
-<script src="/js/header.js" defer>
-  // 드롭다운(수정, 삭제)
-  document.addEventListener('DOMContentLoaded', () => {
-    const toggles = document.querySelectorAll('.dropdown-toggle');
+  <script src="/js/header.js" defer></script>
 
-    toggles.forEach((toggle) => {
-      toggle.addEventListener('click', (e) => {
-        e.stopPropagation(); // 다른 곳 클릭 막기
-        // 모든 드롭다운 닫기
-        document.querySelectorAll('.dropdown-menu').forEach(menu => {
-          if (menu !== toggle.nextElementSibling) {
-            menu.style.display = 'none';
-          }
-        });
-        // 현재 것만 토글
-        const menu = toggle.nextElementSibling;
-        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+  <script>
+    // 드롭다운(수정, 삭제)
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggles = document.querySelectorAll('.dropdown-toggle');
 
-        const items = menu.querySelectorAll('li');
-        items.forEach(item => {
-          item.addEventListener('click', (e) => {
-            e.stopPropagation(); // 수정, 삭제 눌러도 상세 진입 안 됨
+      toggles.forEach((toggle) => {
+        toggle.addEventListener('click', (e) => {
+          e.stopPropagation(); // 다른 곳 클릭 막기
+          // 모든 드롭다운 닫기
+          document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            if (menu !== toggle.nextElementSibling) {
+              menu.style.display = 'none';
+            }
+          });
+          // 현재 것만 토글
+          const menu = toggle.nextElementSibling;
+          menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+
+          const items = menu.querySelectorAll('li');
+          items.forEach(item => {
+            item.addEventListener('click', (e) => {
+              e.stopPropagation(); // 수정, 삭제 눌러도 상세 진입 안 됨
+            });
           });
         });
       });
-    });
 
-    // 페이지 어디든 클릭하면 메뉴 닫힘
-    document.addEventListener('click', () => {
-      document.querySelectorAll('.dropdown-menu').forEach(menu => {
-        menu.style.display = 'none';
+      document.querySelectorAll('.dropdown-toggle, .dropdown-menu').forEach(el => {
+        el.addEventListener('click', e => {
+          e.stopPropagation();
+        });
+      });
+
+      // 페이지 어디든 클릭하면 메뉴 닫힘
+      document.addEventListener('click', () => {
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+          menu.style.display = 'none';
+        });
       });
     });
-  });
-</script>
+  </script>
 
 
-<script>
+  <script>
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
-  const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-
-  function getCsrfHeaders() {
-    return {
-      [csrfHeader]: csrfToken
-    };
-  }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("create-form");
-
-    // 생성 카드 눌렀을 때
-    document.querySelector(".company-card.create").addEventListener("click", () => {
-      form.reset();
-      form.removeAttribute("data-id");
-      document.querySelector("#companyModal h2").textContent = "목표 기업 생성";
-      document.querySelector("#companyModal button[type='submit']").textContent = "생성";
-      form.onsubmit = function (e) {
-        e.preventDefault();
-        createCompany();
+    function getCsrfHeaders() {
+      return {
+        [csrfHeader]: csrfToken
       };
-      openModal("companyModal");
-    });
+    }
 
-    // 수정 버튼들
-    document.querySelectorAll(".update-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const companyId = btn.dataset.id;
-        fillForm(companyId);
-        form.setAttribute("data-id", companyId);
-        document.querySelector("#companyModal h2").textContent = "목표 기업 수정";
-        document.querySelector("#companyModal button[type='submit']").textContent = "수정";
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("create-form");
+
+      // 생성 카드 눌렀을 때
+      document.querySelector(".company-card.create").addEventListener("click", () => {
+        form.reset();
+        form.removeAttribute("data-id");
+        document.querySelector("#companyModal h2").textContent = "목표 기업 생성";
+        document.querySelector("#companyModal button[type='submit']").textContent = "생성";
         form.onsubmit = function (e) {
           e.preventDefault();
-          updateCompany(e);
+          createCompany();
         };
         openModal("companyModal");
       });
-    });
 
-    // 삭제 버튼들
-    document.querySelectorAll(".delete-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const companyId = btn.dataset.id;
-        deleteCompany(companyId);
+      // 수정 버튼들
+      document.querySelectorAll(".update-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const companyId = btn.dataset.id;
+          fillForm(companyId);
+          form.setAttribute("data-id", companyId);
+          document.querySelector("#companyModal h2").textContent = "목표 기업 수정";
+          document.querySelector("#companyModal button[type='submit']").textContent = "수정";
+          form.onsubmit = function (e) {
+            e.preventDefault();
+            updateCompany(e);
+          };
+          openModal("companyModal");
+        });
+      });
+
+      // 삭제 버튼들
+      document.querySelectorAll(".delete-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const companyId = btn.dataset.id;
+          deleteCompany(companyId);
+        });
       });
     });
-  });
 
-  // 목표 기업 생성 함수
-  function createCompany() {
-    const form = document.getElementById("create-form"); // 전역에서 한번만 받아도 무방함
-    const data = {
-      companyName: form.companyName.value,
-      content: form.content.value,
-      status: form.status.value,
-      endDate: form.endDate.value
-    };
+    // 목표 기업 생성 함수
+    function createCompany() {
+      const form = document.getElementById("create-form"); // 전역에서 한번만 받아도 무방함
+      const data = {
+        companyName: form.companyName.value,
+        content: form.content.value,
+        status: form.status.value,
+        endDate: form.endDate.value
+      };
 
-    fetch('/companies/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...getCsrfHeaders()
-      },
-      body: JSON.stringify(data)
-    })
-    .then(res => {
-      if (!res.ok) {
-        throw new Error(`서버 오류: ${res.status}`);
-      }
-      return res.json();
-    })
-    .then(result => {
-      closeModal("companyModal");
-
-      const baseUrl = `${window.location.origin}${window.location.pathname}`;
-
-      if (result.achievementName) {
-        const encodedName = encodeURIComponent(result.achievementName);
-        const redirectUrl = `${baseUrl}?achievementName=${encodedName}`;
-        window.location.href = redirectUrl;
-      } else {
-        alert("등록 완료!");
-        window.location.reload();
-      }
-    })
-    .catch(error => {
-      console.error("🚨 에러 발생:", error);
-      alert("에러 발생");
-    });
-  }
-
-  // 목표 기업 삭제 함수
-  function deleteCompany(companyId) {
-    console.log("삭제 요청 ID:", companyId);
-    if (confirm("정말 삭제하시겠습니까?")) {
-      fetch(`/companies/${companyId}/delete`, {
-        method: 'DELETE',
+      fetch('/companies/create', {
+        method: 'POST',
         headers: {
+          'Content-Type': 'application/json',
           ...getCsrfHeaders()
-        }
+        },
+        body: JSON.stringify(data)
       })
       .then(res => {
-        if (res.ok) {
-          alert("삭제 완료!");
-          window.location.reload(); // 새로고침
+        if (!res.ok) {
+          throw new Error(`서버 오류: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then(result => {
+        closeModal("companyModal");
+
+        const baseUrl = `${window.location.origin}${window.location.pathname}`;
+
+        if (result.achievementName) {
+          const encodedName = encodeURIComponent(result.achievementName);
+          const redirectUrl = `${baseUrl}?achievementName=${encodedName}`;
+          window.location.href = redirectUrl;
         } else {
-          alert("삭제 실패");
+          alert("등록 완료!");
+          window.location.reload();
         }
       })
-      .catch(err => {
-        console.error(err);
+      .catch(error => {
+        console.error("🚨 에러 발생:", error);
         alert("에러 발생");
       });
     }
-  }
 
-  function fillForm(companyId) {
-    fetch(`/companies/${companyId}`)
-    .then(res => res.json())
-    .then(data => {
-      const form = document.getElementById("create-form");
-      form.companyName.value = data.companyName;
-      form.content.value = data.content;
-      form.status.value = data.status;
-      form.endDate.value = data.endDate;
-    })
-    .catch(err => {
-      console.error("회사 정보 불러오기 실패", err);
-      alert("수정할 데이터를 불러오지 못했습니다.");
-    });
-  }
-
-  //목표 기업 수정 함수
-  function updateCompany(e) {
-    e.preventDefault();
-
-    const form = document.getElementById("create-form");
-    const companyId = form.dataset.id;
-
-    const data = {
-      companyName: form.companyName.value,
-      content: form.content.value,
-      status: form.status.value,
-      endDate: form.endDate.value
-    };
-
-    fetch(`/companies/${companyId}/update`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        ...getCsrfHeaders()
-      },
-      body: JSON.stringify(data)
-    })
-    .then(res => {
-      if (!res.ok) {
-        throw new Error('수정 실패');
+    // 목표 기업 삭제 함수
+    function deleteCompany(companyId) {
+      console.log("삭제 요청 ID:", companyId);
+      if (confirm("정말 삭제하시겠습니까?")) {
+        fetch(`/companies/${companyId}/delete`, {
+          method: 'DELETE',
+          headers: {
+            ...getCsrfHeaders()
+          }
+        })
+        .then(res => {
+          if (res.ok) {
+            alert("삭제 완료!");
+            window.location.reload(); // 새로고침
+          } else {
+            alert("삭제 실패");
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert("에러 발생");
+        });
       }
-      return res.text();
-    })
-    .then(msg => {
-      alert("수정 완료!");
-      closeModal("companyModal");
-      location.reload();
-    })
-    .catch(err => {
-      console.error(err);
-      alert("수정 중 오류 발생");
-    });
-  }
+    }
 
-  function openModal(companyModal) {
-    document.getElementById(companyModal).style.display = "flex";
-  }
+    function fillForm(companyId) {
+      fetch(`/companies/${companyId}`)
+      .then(res => res.json())
+      .then(data => {
+        const form = document.getElementById("create-form");
+        form.companyName.value = data.companyName;
+        form.content.value = data.content;
+        form.status.value = data.status;
+        form.endDate.value = data.endDate;
+      })
+      .catch(err => {
+        console.error("회사 정보 불러오기 실패", err);
+        alert("수정할 데이터를 불러오지 못했습니다.");
+      });
+    }
 
-  function closeModal(companyModal) {
-    document.getElementById(companyModal).style.display = "none";
-  }
-</script>
+    //목표 기업 수정 함수
+    function updateCompany(e) {
+      e.preventDefault();
+
+      const form = document.getElementById("create-form");
+      const companyId = form.dataset.id;
+
+      const data = {
+        companyName: form.companyName.value,
+        content: form.content.value,
+        status: form.status.value,
+        endDate: form.endDate.value
+      };
+
+      fetch(`/companies/${companyId}/update`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getCsrfHeaders()
+        },
+        body: JSON.stringify(data)
+      })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('수정 실패');
+        }
+        return res.text();
+      })
+      .then(msg => {
+        alert("수정 완료!");
+        closeModal("companyModal");
+        location.reload();
+      })
+      .catch(err => {
+        console.error(err);
+        alert("수정 중 오류 발생");
+      });
+    }
+
+    function openModal(companyModal) {
+      document.getElementById(companyModal).style.display = "flex";
+    }
+
+    function closeModal(companyModal) {
+      document.getElementById(companyModal).style.display = "none";
+    }
+  </script>
 </body>
 <script defer src="/js/achievement/congratulation.js"></script>
 <script
