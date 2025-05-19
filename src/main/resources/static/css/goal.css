@@ -31,3 +31,20 @@
     background-color: #4caf50;
     transition: width 0.5s ease-in-out;
 }
+
+.tags {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.3rem;
+    margin-bottom: 1rem;
+}
+
+.tags .tag {
+    background: #dcdcdc;
+    color: #000000;
+    font-weight: 500;
+    border-radius: 5px;
+    padding: 2px 8px;
+    font-size: 0.8rem;
+    text-decoration: none;
+}
