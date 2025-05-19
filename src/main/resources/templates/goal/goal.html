@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>DevQuest Dashboard</title>
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <link rel="stylesheet" th:href="@{/css/dashboard.css}">
   <link rel="stylesheet" th:href="@{/css/goal.css}">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -192,6 +194,17 @@
 
 
 <script>
+
+  const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+  function getCsrfHeaders() {
+    return {
+      [csrfHeader]: csrfToken
+    };
+  }
+
+
   document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("goal-form");
     const todoForm = document.getElementById("todo-form");
@@ -318,7 +331,8 @@
 
     fetch(`/goals/${companyId}/create`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json',
+        ...getCsrfHeaders()},
       body: JSON.stringify(data)
     }).then(res => {
       if (res.ok) {
@@ -347,7 +361,8 @@
 
     fetch(`/goals/${goalId}/update`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' ,
+        ...getCsrfHeaders()},
       body: JSON.stringify(data)
     }).then(res => {
       if (res.ok) {
@@ -367,7 +382,9 @@
   function deleteGoal(goalId) {
     if (confirm("정말 삭제하시겠습니까?")) {
       fetch(`/goals/${goalId}/delete`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          ...getCsrfHeaders()}
       }).then(res => {
         if (res.ok) {
           alert("삭제 완료!");
@@ -413,7 +430,8 @@
 
     fetch(`/todos/${goalId}/create`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json',
+        ...getCsrfHeaders()},
       body: JSON.stringify(data)
     })
             .then(res => {
@@ -442,7 +460,8 @@
 
     fetch(`/todos/${todoId}/update`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json',
+        ...getCsrfHeaders()},
       body: JSON.stringify(data)
     })
             .then(res => {
@@ -465,7 +484,9 @@
   function deleteTodo(todoId) {
     if (confirm("정말 삭제하시겠습니까?")) {
       fetch(`/todos/${todoId}/delete`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          ...getCsrfHeaders()}
       })
               .then(res => {
                 if (res.ok) {
@@ -491,7 +512,8 @@
     fetch(`/todos/${todoId}/toggle`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...getCsrfHeaders()
       },
       body: JSON.stringify(data)
     })

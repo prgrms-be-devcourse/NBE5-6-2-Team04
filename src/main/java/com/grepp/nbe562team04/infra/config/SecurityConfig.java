@@ -72,7 +72,7 @@ public class SecurityConfig {
                 .requestMatchers("/css/**", "/js/**", "/img/**", "/api/user/exists/*", "/user/interests").permitAll() // 모두에게 허용
                 .requestMatchers("/", "/serviceInfo", "/signin", "/signup", "/admin/signup").anonymous() // 회원가입, 로그인 접근 권한
                 .requestMatchers("/admin/dashboard").hasRole("ADMIN") // 관리자페이지 접근 권한
-                    .requestMatchers("/user/**", "/dashboard", "/companies/**", "/goals/**", "/todos/**").hasRole("USER")// 사용자페이지 접근 권한
+                .requestMatchers("/user/**", "/dashboard", "/companies/**", "/goals/**", "/todos/**").hasRole("USER")// 사용자페이지 접근 권한
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
