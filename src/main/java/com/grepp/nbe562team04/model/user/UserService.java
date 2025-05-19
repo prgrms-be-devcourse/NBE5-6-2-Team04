@@ -1,6 +1,6 @@
 package com.grepp.nbe562team04.model.user;
 
-import com.grepp.nbe562team04.model.achieve.AchievementService;
+import com.grepp.nbe562team04.model.achievement.AchievementService;
 import com.grepp.nbe562team04.model.user.entity.UsersAchieve;
 import com.grepp.nbe562team04.model.auth.code.Role;
 import com.grepp.nbe562team04.model.auth.domain.Principal;

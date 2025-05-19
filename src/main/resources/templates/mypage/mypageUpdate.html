@@ -10,28 +10,30 @@
             margin: 0;
             padding: 0;
             background: #f5f4f8;
-            font-family: "Apple SD Gothic Neo", sans-serif;
+            font-family: 'Arial', sans-serif;
             text-align: center;
         }
-
         .header {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             padding: 20px 40px;
             font-weight: bold;
-            color: #666;
         }
 
-        .title {
-            font-size: 24px;
-            color: #3b2ba8;
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #3F2296;
+            /* position 제거 */
+            top: 30px;
+            left: 40px;
         }
 
         .menu {
             font-size: 14px;
             color: #666;
         }
-
         .container {
             margin-top: 40px;
         }
@@ -121,7 +123,11 @@
 <body>
 
 <div class="header">
-    <div class="title">DevQuest</div>
+    <div class="logo">
+        <a th:href="@{/dashboard}" style="text-decoration: none; color:inherit;">
+            DevQuest
+        </a>
+    </div>
     <div class="menu">
         <span class="menu-item" onclick="goToDashboard()">대시보드</span>
         &nbsp;&nbsp;|&nbsp;&nbsp;

@@ -1,6 +1,6 @@
 package com.grepp.nbe562team04.model.goalcompany;
 
-import com.grepp.nbe562team04.model.achieve.AchievementService;
+import com.grepp.nbe562team04.model.achievement.AchievementService;
 import com.grepp.nbe562team04.model.goal.GoalRepository;
 import com.grepp.nbe562team04.model.goal.entity.Goal;
 import com.grepp.nbe562team04.model.goalcompany.dto.GoalCompanyRequestDto;
@@ -10,7 +10,7 @@ import com.grepp.nbe562team04.model.todo.TodoRepository;
 import com.grepp.nbe562team04.model.user.entity.User;
 import com.grepp.nbe562team04.model.user.UserRepository;
 import java.time.temporal.ChronoUnit;
-import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -60,7 +60,6 @@ public class TodoService {
                 .collect(Collectors.toList());
     }
 
-
     // 투두 수정
     @Transactional
     public void update(Long todoId, TodoRequestDto dto) {
@@ -95,7 +94,6 @@ public class TodoService {
                 .goalId(todo.getGoal().getGoalId())
                 .build();
     }
-
 
     @Transactional
     public void toggleStatus(Long todoId, Boolean isDone) {
