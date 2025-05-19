@@ -102,9 +102,12 @@ public class GoalService {
         Goal goal = goalRepository.findById(goalId)
                 .orElseThrow(() -> new RuntimeException("목표 없음"));
 
-        List<Todo> todos = todoRepository.findByGoalGoalId(goalId);
+        List<Todo> todos = Optional.ofNullable(todoRepository.findByGoalGoalId(goalId))
+                .orElse(Collections.emptyList());
         long total = todos.size();
-        long done = todos.stream().filter(Todo::getIsDone).count();
+        long done = todos.stream()
+                .filter(todo -> Boolean.TRUE.equals(todo.getIsDone()))
+                .count();
         int percent = total == 0 ? 0 : (int) ((done * 100.0) / total);
 
         return GoalResponseDto.builder()
