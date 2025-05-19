@@ -57,7 +57,7 @@ public class GeminiController {
         // 응답결과를 HTMl에 전달
         model.addAttribute("userMessage", userMessage); // (긍정,부정)전달
         model.addAttribute("reply", reply); // LLM의 답변 ex) 자소서 준비하세요
-        return "todo";
+        return "goal/goal";
     }
 
 }
