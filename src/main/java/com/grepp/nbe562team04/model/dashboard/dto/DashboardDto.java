@@ -27,6 +27,7 @@ public class DashboardDto {
     private String levelName;
     private int levelValue;
     private int exp;
+    private int progressPercent;
 
     // 목표 기업
     private List<GoalCompanyDto> goalCompanies;

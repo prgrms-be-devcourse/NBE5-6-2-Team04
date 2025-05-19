@@ -65,19 +65,25 @@
              : '/images/profile/default.png'}"
                alt="프로필 이미지"/>
 
+<!--          <div class="level-info">-->
+<!--            <p class="level-label" th:text="${dashboard.levelName}">레벨명</p>-->
+<!--            <p class="level-value" th:text="'Lv.' + ${dashboard.levelValue}">Lv.N</p>-->
+<!--          </div>-->
+
+<!--          <div class="level-title" th:text="${user.level.levelName}">레벨명</div>-->
+<!--          <div class="level" th:text="'Lv.' + ${user.level.levelId}">Lv.N</div>-->
           <div class="level-info">
-            <p class="level-label" th:text="${dashboard.levelName}">레벨명</p>
-            <p class="level-value" th:text="'Lv.' + ${dashboard.levelValue}">Lv.N</p>
+            <p class="level-title" th:text="${user.level.levelName}">레벨명</p>
+            <p class="level" th:text="'Lv. ' + ${user.level.levelId}">Lv. N</p>
           </div>
+
         </div>
 
         <!--  xp 진행바  -->
         <div class="xp-label" th:text="${dashboard.exp} + 'xp'">N xp</div>
         <div class="xp-bar">
-          <div class="xp-progress"
-               th:style="'width:' + (${dashboard.exp} > 100 ? 100 : dashboard.exp) + '%'">
-            <span th:text="${dashboard.exp} + 'xp'"></span>
-          </div>
+          <div class="xp-progress" th:style="'width:' + ${dashboard.progressPercent} + '%'"></div>
+          <span>[[${dashboard.progressPercent}]]%</span>
         </div>
       </div>
     </div>

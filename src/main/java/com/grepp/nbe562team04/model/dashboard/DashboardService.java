@@ -7,12 +7,15 @@ import com.grepp.nbe562team04.model.goalcompany.entity.GoalCompany;
 import com.grepp.nbe562team04.model.interest.code.Type;
 import com.grepp.nbe562team04.model.interest.dto.InterestDto;
 import com.grepp.nbe562team04.model.interest.entity.Interest;
+import com.grepp.nbe562team04.model.level.LevelRepository;
+import com.grepp.nbe562team04.model.level.entity.Level;
 import com.grepp.nbe562team04.model.user.UserRepository;
 import com.grepp.nbe562team04.model.user.entity.User;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,11 +25,14 @@ public class DashboardService {
 
     private final DashboardRepository dashboardRepository;
     private final UserRepository userRepository;
+    private final LevelRepository levelRepository;
 
     public DashboardService(DashboardRepository dashboardRepository,
-        UserRepository userRepository, GoalCompanyRepository goalCompanyRepository) {
+        UserRepository userRepository, GoalCompanyRepository goalCompanyRepository,
+        LevelRepository levelRepository) {
         this.dashboardRepository = dashboardRepository;
         this.userRepository = userRepository;
+        this.levelRepository = levelRepository;
     }
 
     // 대시보드 조회
@@ -77,10 +83,35 @@ public class DashboardService {
                 : skills
         );
 
-        // 레벨 정보
+        // 현재 레벨 계산
+        Level currentLevel = levelRepository.findTopByXpLessThanEqualOrderByXpDesc(user.getExp())
+            .orElseThrow(() -> new IllegalStateException("레벨 데이터가 없습니다."));
+        user.setLevel(currentLevel);
+
+        // 다음 레벨 계산
+        Optional<Level> nextLevelOpt = levelRepository.findTopByXpGreaterThanOrderByXpAsc(user.getExp());
+
+
+        // xp bar - 진행률 계산
+        int progress = 0;
+        if (nextLevelOpt.isPresent()) {
+            Level nextLevel = nextLevelOpt.get();
+            int curExp = user.getExp();
+            int curXp = currentLevel.getXp();
+            int nextXp = nextLevel.getXp();
+
+            progress = (int) (((double)(curExp - curXp) / (nextXp - curXp)) * 100);
+        } else {
+            progress = 100;
+        }
+
+
+
+        // 레벨 정보 - 대시보드 반영
         dto.setLevelName(user.getLevel().getLevelName());
         dto.setLevelValue(user.getLevel().getLevelId().intValue());
         dto.setExp(user.getExp());
+        dto.setProgressPercent(progress);
 
         // 알림
         dto.setNotificationOn(user.isNotificationOn());
