@@ -32,8 +32,8 @@ public class SecurityConfig {
         return (request, response, authentication) -> {
 
             boolean isAdmin = authentication.getAuthorities()
-                .stream()
-                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+                    .stream()
+                    .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
 
             if (isAdmin) {
                 response.sendRedirect("/admin/dashboard");
@@ -50,8 +50,8 @@ public class SecurityConfig {
 
             if (auth != null) {
                 boolean isAdmin = auth.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .anyMatch(role -> role.equals("ROLE_ADMIN"));
+                        .map(GrantedAuthority::getAuthority)
+                        .anyMatch(role -> role.equals("ROLE_ADMIN"));
 
                 if (isAdmin) {
                     response.sendRedirect("/admin/dashboard");
@@ -66,38 +66,39 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, UserService userService)
-        throws Exception {
+            throws Exception {
         http.userDetailsService(userService)
-            .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/css/**", "/js/**", "/img/**", "/api/user/exists/*",
-                    "/user/interests").permitAll() // 모두에게 허용
-                .requestMatchers("/", "/serviceInfo", "/signin", "/signup", "/admin/signup")
-                .anonymous() // 회원가입, 로그인 접근 권한
-                .requestMatchers("/admin/dashboard").hasRole("ADMIN") // 관리자페이지 접근 권한
-                .requestMatchers("/user/**",  "/dashboard/**", "/api/dashboard/**",
-                    "/todos/**", "/companies/**", "/goals/**", "/images/profile/**").hasRole("USER") // 사용자페이지 접근 권한
-                .anyRequest().authenticated()
-            )
-            .formLogin(form -> form
-                .loginPage("/signin")
-                .usernameParameter("email")
-                .loginProcessingUrl("/user/signin")
-                .successHandler(successHandler())
-            )
-            .rememberMe(rememberMe -> rememberMe
-                .key(rememberMeKey).rememberMeParameter("remember-me")
-                .userDetailsService(userService)
-            )
-            .exceptionHandling(exception -> exception
-                .accessDeniedHandler(accessDeniedHandler())
-            )
-            .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/signin")
-                .invalidateHttpSession(true) // 세션무효화
-                .deleteCookies("JSESSIONID")  // 쿠키 삭제
-                .permitAll()
-            );
+                .authorizeHttpRequests(authz -> authz
+                        .requestMatchers("/css/**", "/js/**", "/img/**", "/api/user/exists/*",
+                                "/user/interests").permitAll() // 모두에게 허용
+                        .requestMatchers("/", "/serviceInfo", "/signin", "/signup", "/admin/signup")
+                        .anonymous() // 회원가입, 로그인 접근 권한
+                        .requestMatchers("/user/withdraw-success").permitAll()
+                        .requestMatchers("/admin/dashboard").hasRole("ADMIN") // 관리자페이지 접근 권한
+                        .requestMatchers("/user/**", "/dashboard/**", "/api/dashboard/**",
+                                "/todos/**", "/companies/**", "/goals/**", "/images/profile/**").hasRole("USER") // 사용자페이지 접근 권한
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/signin")
+                        .usernameParameter("email")
+                        .loginProcessingUrl("/user/signin")
+                        .successHandler(successHandler())
+                )
+                .rememberMe(rememberMe -> rememberMe
+                        .key(rememberMeKey).rememberMeParameter("remember-me")
+                        .userDetailsService(userService)
+                )
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(accessDeniedHandler())
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/signin")
+                        .invalidateHttpSession(true) // 세션무효화
+                        .deleteCookies("JSESSIONID")  // 쿠키 삭제
+                        .permitAll()
+                );
         return http.build();
     }
 

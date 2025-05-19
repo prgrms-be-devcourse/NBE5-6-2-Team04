@@ -58,7 +58,7 @@ public class MypageController {
     }
 
     @GetMapping("update")
-    public String showUpdatePage(@AuthenticationPrincipal Principal principal, Model model) {
+    public String showUpdatePage(@AuthenticationPrincipal Principal principal, Model model,CsrfToken csrfToken) {
         String email = principal.getUsername();
         User user = userService.findByEmail(email);
 
@@ -97,6 +97,11 @@ public class MypageController {
         }
 
         return "redirect:/user/mypage";
+    }
+
+    @GetMapping("/withdraw-success")
+    public String showWithdrawSuccess() {
+        return "mypage/withdrawSuccess"; // → withdrawSuccess.html
     }
 
     @PostMapping("delete")
