@@ -67,23 +67,22 @@ public class MypageController {
     }
 
     @PostMapping("update")
-    public String updateUser(@AuthenticationPrincipal Principal principal,
+    public String updateUser(@AuthenticationPrincipal UserDetails userDetails,
                              @ModelAttribute UserDto dto,
                              @RequestParam("userImageFile") MultipartFile file,
                              @RequestParam("currentPassword") String currentPassword,
                              Model model,
                              RedirectAttributes redirectAttributes) throws IOException {
 
-        String email = principal.getUsername();
+        String email = userDetails.getUsername();
         User user = userService.findByEmail(email);
 
-        // 현재 비밀번호 확인
         if (!userService.checkPassword(user, currentPassword)) {
             int progress = levelService.levelProgress(user);
             model.addAttribute("user", user);
             model.addAttribute("passwordError", "비밀번호를 확인하세요");
             model.addAttribute("progressPercent", progress);
-            return "mypage/mypageUpdate"; // 다시 수정 페이지로
+            return "mypage/mypageUpdate";
         }
 
         userService.updateUser(email, dto, file);
