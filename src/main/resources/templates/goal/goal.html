@@ -22,16 +22,28 @@
     <span class="comment" th:text="${dashboard.comment}">한마디</span>
     <span class="nickname" th:text="${dashboard.nickname} + ' 님'">회원</span>
 
-    <!--  관심분야 태그  -->
+    <!-- 관심분야 태그 -->
     <div class="tags">
-      <span class="tag"
-            th:if="${dashboard.jobType != null and !dashboard.jobType.isEmpty()}"
-            th:text="'#' + ${dashboard.jobType[0]}">#직무</span>
-      <span class="tag"
-            th:unless="${dashboard.jobType != null and !dashboard.jobType.isEmpty()}">#직무 없음</span>
+      <!-- 직무 -->
+      <a class="tag" th:each="i : ${dashboard.roles}"
+         th:href="${i.roadmapUrl}"
+         th:text="'#' + ${i.interestName}"
+         target="_blank">#직무</a>
+      <a class="tag"
+         th:if="${#lists.isEmpty(dashboard.roles)}"
+         target="_blank">#직무 없음</a>
 
-      <span class="tag" th:each="lang : ${dashboard.devLang}" th:text="'#' + ${lang}">#언어</span>
-      <span class="tag" th:each="fw : ${dashboard.framework}" th:text="'#' + ${fw}">#프레임워크</span>
+      <!-- 언어 -->
+      <a class="tag" th:each="i : ${dashboard.devLangs}"
+         th:href="${i.roadmapUrl}"
+         th:text="'#' + ${i.interestName}"
+         target="_blank">#언어</a>
+
+      <!-- 프레임워크 -->
+      <a class="tag" th:each="i : ${dashboard.frameworks}"
+         th:href="${i.roadmapUrl}"
+         th:text="'#' + ${i.interestName}"
+         target="_blank">#프레임워크</a>
     </div>
 
 
