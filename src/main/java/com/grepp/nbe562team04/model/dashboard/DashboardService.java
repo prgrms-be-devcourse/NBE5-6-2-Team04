@@ -47,25 +47,6 @@ public class DashboardService {
         dto.setDayCount(dayCount);
 
         // 관심 분야 필터링
-//        List<InterestDto> interests = user.getUserInterests().stream()
-//            .map(UserInterest::getInterest)
-//            .map(i -> new InterestDto(i.getType().name(), i.getInterestName()))
-//            .toList();
-//        dto.setInterests(interests);
-
-        // 기존
-//        List<String> roles = user.getUserInterests().stream()
-//            .map(UserInterest::getInterest)
-//            .filter(i -> i.getType() == Type.ROLE)
-//            .map(Interest::getInterestName)
-//            .toList();
-//
-//        List<String> skills = user.getUserInterests().stream()
-//            .map(UserInterest::getInterest)
-//            .filter(i -> i.getType() == Type.SKILL)
-//            .map(Interest::getInterestName)
-//            .toList();
-
         List<InterestDto> interests = user.getUserInterests().stream()
             .map(userInterest -> {
                 Interest interest = userInterest.getInterest();
