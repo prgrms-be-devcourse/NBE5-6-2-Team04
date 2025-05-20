@@ -67,6 +67,10 @@
   font-size: 0.8rem;
 }
 
+.tags .tag:hover {
+  text-decoration: underline;
+}
+
 /* 마이페이지 */
 .mypage {
   display: flex;
