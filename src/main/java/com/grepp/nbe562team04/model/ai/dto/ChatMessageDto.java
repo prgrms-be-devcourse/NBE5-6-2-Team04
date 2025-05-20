@@ -1,20 +1,24 @@
-package com.grepp.nbe562team04.ai.dto;
+package com.grepp.nbe562team04.model.ai.dto;
 
-import com.grepp.nbe562team04.ai.dto.GeminiResponseDto.Candidate;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-//AI와 나눈 대화 내용 저장
 @Getter
+@Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatMessageDto {
 
-
-    private String role;
     private String message;
+    private Role role;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate timestamp;
 }
+

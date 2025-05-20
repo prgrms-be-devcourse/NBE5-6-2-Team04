@@ -75,7 +75,7 @@ public class SecurityConfig {
                         .requestMatchers("/user/withdraw-success").permitAll()
                         .requestMatchers("/admin/dashboard").hasRole("ADMIN") // 관리자페이지 접근 권한
                         .requestMatchers("/user/**", "/dashboard/**", "/api/dashboard/**",
-                                "/todos/**", "/companies/**", "/goals/**", "/images/profile/**").hasRole("USER") // 사용자페이지 접근 권한
+                                "/todos/**", "/companies/**", "/goals/**", "/images/profile/**","/api/ai/feedback").hasRole("USER") // 사용자페이지 접근 권한
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
