@@ -127,6 +127,7 @@ public class GoalService {
     }
 
 
+    //목표 완료
     @Transactional
     public Map<String, Object> completeGoal(Long goalId, User user) {
         Goal goal = goalRepository.findById(goalId)

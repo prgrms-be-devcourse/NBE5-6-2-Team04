@@ -123,4 +123,3 @@ INSERT INTO interest (type, interest_name, roadmap_url) VALUES
 #
 
 
-

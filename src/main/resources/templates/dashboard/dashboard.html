@@ -102,14 +102,14 @@
     <div class="alert-box">
       <h3>
         🔔 주요 알림
-        <span class="count" th:text="${#lists.size(dashboard.goalCompanies)}">0</span>
+        <span class="count" th:text="${#lists.size(dashboard.alerts)}">0</span>
       </h3>
       <ul th:if="${dashboard.notificationOn}">
-        <li th:each="company : ${dashboard.goalCompanies}">
+        <li th:each="alert : ${dashboard.alerts}">
           <span class="material-icons">access_alarms</span>
-          <strong th:text="${company.companyName} + ' - '">기업명</strong>
-          <span th:text="${company.statusLabel != null ? company.statusLabel : '상태없음'}">상태</span>
-          <span th:text="${company.DDay == 0} ? '입니다. 🐣' : 'D-' + ${company.DDay} + ' 일 입니다.'">일 입니다. 🐣</span>
+          <strong th:text="${alert.companyName} + ' - '">기업명</strong>
+          <span th:text="${alert.status != null ? alert.status.label : '상태 없음'}">상태</span>
+          <span th:text="${alert.dDay == 0} ? '입니다. 🐣' : 'D-' + ${alert.dDay} + ' 일 입니다.'">일 입니다. 🐣</span>
         </li>
       </ul>
       <p th:unless="${dashboard.notificationOn}">
@@ -118,73 +118,15 @@
     </div>
   </aside>
 
-  <!-- 메인 영역 -->
-  <!--  <main class="main-content">-->
-
-  <!--    &lt;!&ndash;  Company List   &ndash;&gt;-->
-  <!--    <p class="section-title">Company List</p>-->
-
-  <!--    <div class="company-list">-->
-  <!--      <div th:each="company : ${dashboard.goalCompanies}"-->
-  <!--           class="company-card"-->
-  <!--           th:classappend="|-->
-  <!--                         ${company.companyName.toLowerCase()}-->
-  <!--                         ${(company.companyName == '네이버') ? ' naver' : ''}-->
-  <!--                         ${(company.companyName == '토스') ? ' toss' : ''}-->
-  <!--                         ${(company.companyName == '당근') ? ' danggeun' : ''}-->
-  <!--                         ${(company.companyName == '배달의민족') ? ' baemin' : ''}-->
-  <!--                         ${(company.companyName == '카카오') ? ' kakao' : ''}-->
-  <!--                       |">-->
-
-  <!--        <div class="card-header">-->
-  <!--          <span class="status" th:text="${company.statusLabel}">진행 상태</span>-->
-  <!--          <span class="dDay" th:text="'D-' + ${company.DDay}">D-day</span>-->
-
-  <!--          &lt;!&ndash; 수정/삭제 드롭다운  &ndash;&gt;-->
-  <!--          <div class="dropdown">-->
-  <!--            <button class="dropdown-toggle" type="button">  ⋮  </button>-->
-  <!--            <ul class="dropdown-menu">-->
-  <!--              <li class="update-btn" th:attr="data-id=${company.companyId}">수정</li>-->
-  <!--              <li class="delete-btn" th:attr="data-id=${company.companyId}">삭제</li>-->
-  <!--            </ul>-->
-  <!--          </div>-->
-  <!--        </div>-->
-
-  <!--        &lt;!&ndash; 목표 기업 카드 &ndash;&gt;-->
-  <!--        <p class="company-name" th:text="${company.companyName}">회사명</p>-->
-  <!--        <p class="content" th:text="${company.content}">내용</p>-->
-  <!--        <div class="status-dDay">-->
-  <!--          <span class="status" th:text="${company.statusLabel}">진행 상태</span>-->
-  <!--          <span class="endDate" th:text="'~' + ${company.endDate}">~마감일</span>-->
-  <!--        </div>-->
-
-  <!--        <a th:href="@{/companies/{companyId}/select(companyId=${company.companyId})}">-->
-  <!--          <button type="button">조회</button>-->
-  <!--        </a>-->
-  <!--      </div>-->
-  <!--  &lt;!&ndash; TODO 생성 카드 &ndash;&gt;-->
-  <!--  <div class="company-card create" onclick="openModal('companyModal')">-->
-  <!--    <p class="goal-todo-desc-top">-->
-  <!--      <span class="material-icons">control_point</span>-->
-  <!--      목표 기업 TODO 생성-->
-  <!--    </p>-->
-
-  <!--    <p class="goal-todo-desc-bottom">-->
-  <!--      목표 기업은 최대 3개까지 생성 가능합니다.-->
-  <!--    </p>-->
-  <!--  </div>-->
-  <!--</div>-->
-  <!--</main>-->
-  <!--</div>-->
-
   <main class="main-content">
 
     <!--  Company List   -->
     <p class="section-title">Company List</p>
 
     <div class="company-list">
+
       <div th:each="company : ${dashboard.goalCompanies}"
-          class="company-card"
+           class="company-card"
            th:classappend="|
              ${company.companyName.toLowerCase()}
              ${(company.companyName == '네이버') ? ' naver' : ''}
@@ -194,19 +136,19 @@
              ${(company.companyName == '카카오') ? ' kakao' : ''}
            |">
 
-          <div class="card-header">
-            <span class="status" th:text="${company.statusLabel}">진행 상태</span>
-            <span class="dDay" th:text="'D-' + ${company.DDay}">D-day</span>
+        <div class="card-header">
+          <span class="status" th:text="${company.statusLabel}">진행 상태</span>
+          <span class="dDay" th:text="'D-' + ${company.DDay}">D-day</span>
 
-            <!-- 수정/삭제 드롭다운  -->
-            <div class="dropdown" onclick="event.stopPropagation()">
-              <button class="dropdown-toggle" type="button"> ⋮  </button>
-              <ul class="dropdown-menu">
-                <li class="update-btn" th:attr="data-id=${company.companyId}">수정</li>
-                <li class="delete-btn" th:attr="data-id=${company.companyId}">삭제</li>
-              </ul>
-            </div>
+          <!-- 수정/삭제 드롭다운  -->
+          <div class="dropdown" onclick="event.stopPropagation()">
+            <button class="dropdown-toggle" type="button"> ⋮  </button>
+            <ul class="dropdown-menu">
+              <li class="update-btn" th:attr="data-id=${company.companyId}">수정</li>
+              <li class="delete-btn" th:attr="data-id=${company.companyId}">삭제</li>
+            </ul>
           </div>
+        </div>
 
         <a th:href="@{/companies/{companyId}/select(companyId=${company.companyId})}"
            style="text-decoration: none; color: inherit; ">

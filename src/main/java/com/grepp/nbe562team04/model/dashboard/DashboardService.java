@@ -1,8 +1,10 @@
 package com.grepp.nbe562team04.model.dashboard;
 
+import com.grepp.nbe562team04.model.dashboard.dto.AlertDto;
 import com.grepp.nbe562team04.model.dashboard.dto.DashboardDto;
 import com.grepp.nbe562team04.model.dashboard.dto.GoalCompanyDto;
 import com.grepp.nbe562team04.model.goalcompany.GoalCompanyRepository;
+import com.grepp.nbe562team04.model.goalcompany.code.GoalStatus;
 import com.grepp.nbe562team04.model.goalcompany.entity.GoalCompany;
 import com.grepp.nbe562team04.model.interest.code.Type;
 import com.grepp.nbe562team04.model.interest.dto.InterestDto;
@@ -13,6 +15,7 @@ import com.grepp.nbe562team04.model.user.UserRepository;
 import com.grepp.nbe562team04.model.user.entity.User;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -89,8 +92,8 @@ public class DashboardService {
         user.setLevel(currentLevel);
 
         // 다음 레벨 계산
-        Optional<Level> nextLevelOpt = levelRepository.findTopByXpGreaterThanOrderByXpAsc(user.getExp());
-
+        Optional<Level> nextLevelOpt = levelRepository.findTopByXpGreaterThanOrderByXpAsc(
+            user.getExp());
 
         // xp bar - 진행률 계산
         int progress = 0;
@@ -100,12 +103,10 @@ public class DashboardService {
             int curXp = currentLevel.getXp();
             int nextXp = nextLevel.getXp();
 
-            progress = (int) (((double)(curExp - curXp) / (nextXp - curXp)) * 100);
+            progress = (int) (((double) (curExp - curXp) / (nextXp - curXp)) * 100);
         } else {
             progress = 100;
         }
-
-
 
         // 레벨 정보 - 대시보드 반영
         dto.setLevelName(user.getLevel().getLevelName());
@@ -113,7 +114,7 @@ public class DashboardService {
         dto.setExp(user.getExp());
         dto.setProgressPercent(progress);
 
-        // 알림
+        // 알림 토글
         dto.setNotificationOn(user.isNotificationOn());
 
         // 목표기업 정보
@@ -121,12 +122,40 @@ public class DashboardService {
         List<GoalCompanyDto> companyDtos = goalCompanies.stream()
             .map(this::convertToDto)
             .filter(Objects::nonNull)
+            .sorted(Comparator.comparing(GoalCompanyDto::getEndDate))
             .toList();
 
         dto.setGoalCompanies(companyDtos);
+
+        // 주요 알림 : D-7 이내 알림만 화면에 표시 & 정렬
+        LocalDate today = LocalDate.now();
+        List<AlertDto> alerts = goalCompanies.stream()
+            .map(g -> {
+                LocalDate endDate = g.getEndDate(); // goal이 아니라 goalCompany의 endDate 사용
+                if (endDate == null) {
+                    return null;
+                }
+
+                long dDay = ChronoUnit.DAYS.between(today, endDate);
+                GoalStatus status = g.getStatus();
+
+                return new AlertDto(
+                    g.getCompanyName(),
+                    status,
+                    dDay
+                );
+            })
+            .filter(Objects::nonNull)
+            .filter(alert -> alert.getDDay() >= 0 && alert.getDDay() <= 7)
+            .sorted(Comparator.comparingLong(AlertDto::getDDay))
+            .toList();
+        System.out.println("🔔 ALERT COUNT: " + alerts.size());
+        alerts.forEach(a -> System.out.println(
+            a.getCompanyName() + " / " + a.getStatus() + " / D-" + a.getDDay()));
+
+        dto.setAlerts(alerts);
         return dto;
     }
-
 
     // Id 로 목표기업 조회
     public GoalCompanyDto getCompanyDetailById(Long id) {
@@ -139,10 +168,9 @@ public class DashboardService {
     @Transactional
     public void toggleNotification(User user) {
         User managedUser = userRepository.findById(user.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
+            .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
         managedUser.setNotificationOn(!managedUser.isNotificationOn());
     }
-
 
     private GoalCompanyDto convertToDto(GoalCompany company) {
         long dDay = ChronoUnit.DAYS.between(LocalDate.now(), company.getEndDate());
@@ -167,20 +195,3 @@ public class DashboardService {
         return dto;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
