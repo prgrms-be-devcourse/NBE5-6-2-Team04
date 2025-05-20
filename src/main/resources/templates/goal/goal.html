@@ -238,6 +238,9 @@
         <input type="text" name="title" placeholder="할 일을 입력해주세요" required><br><br>
         <input type="hidden" name="goalId">
         <button type="submit">추가</button>
+        <input type="hidden" name="startDate" />
+        <input type="hidden" name="endDate" />
+        <input type="hidden" name="isDone" />
       </form>
     </div>
   </div>
@@ -373,6 +376,9 @@
                   form.reset();
                   form.goalId.value = data.goalId; // 필요 시 포함
                   form.title.value = data.content;
+                  form.startDate.value = data.startDate ?? "";
+                  form.endDate.value = data.endDate ?? "";
+                  form.isDone.value = data.isDone ? "true" : "false";
 
                   document.querySelector("#todoModal h2").textContent = "todo 수정";
                   document.querySelector("#todoModal button[type='submit']").textContent = "수정";
@@ -550,7 +556,10 @@
     const content = form.title.value;
 
     const data = {
-      content: content
+      content: content,
+      startDate: form.startDate.value || null,
+      endDate: form.endDate.value || null,
+      isDone: form.isDone.value === "true"
     };
 
     fetch(`/todos/${todoId}/update`, {
