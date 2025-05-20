@@ -122,6 +122,7 @@ public class DashboardService {
         List<GoalCompanyDto> companyDtos = goalCompanies.stream()
             .map(this::convertToDto)
             .filter(Objects::nonNull)
+            .sorted(Comparator.comparing(GoalCompanyDto::getEndDate))
             .toList();
 
         dto.setGoalCompanies(companyDtos);
@@ -156,7 +157,6 @@ public class DashboardService {
         return dto;
     }
 
-
     // Id 로 목표기업 조회
     public GoalCompanyDto getCompanyDetailById(Long id) {
         GoalCompany company = dashboardRepository.findByCompanyId(id)
@@ -168,7 +168,7 @@ public class DashboardService {
     @Transactional
     public void toggleNotification(User user) {
         User managedUser = userRepository.findById(user.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
+            .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
         managedUser.setNotificationOn(!managedUser.isNotificationOn());
     }
 
@@ -195,20 +195,3 @@ public class DashboardService {
         return dto;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
