@@ -99,16 +99,6 @@
     <div class="alert-box">
       <h3>
         🔔 주요 알림
-<!--        <span class="count" th:text="${#lists.size(dashboard.goalCompanies)}">0</span>-->
-<!--      </h3>-->
-<!--      <ul th:if="${dashboard.notificationOn}">-->
-<!--        <li th:each="company : ${dashboard.goalCompanies}">-->
-<!--          <span class="material-icons">access_alarms</span>-->
-<!--          <strong th:text="${company.companyName} + ' - '">기업명</strong>-->
-<!--          <span th:text="${company.statusLabel != null ? company.statusLabel : '상태없음'}">상태</span>-->
-<!--          <span th:text="${company.DDay == 0} ? '입니다. 🐣' : 'D-' + ${company.DDay} + ' 일 입니다.'">일 입니다. 🐣</span>-->
-<!--        </li>-->
-<!--      </ul>-->
         <span class="count" th:text="${#lists.size(dashboard.alerts)}">0</span>
       </h3>
       <ul th:if="${dashboard.notificationOn}">
@@ -131,8 +121,9 @@
     <p class="section-title">Company List</p>
 
     <div class="company-list">
+
       <div th:each="company : ${dashboard.goalCompanies}"
-          class="company-card"
+           class="company-card"
            th:classappend="|
              ${company.companyName.toLowerCase()}
              ${(company.companyName == '네이버') ? ' naver' : ''}
@@ -142,19 +133,19 @@
              ${(company.companyName == '카카오') ? ' kakao' : ''}
            |">
 
-          <div class="card-header">
-            <span class="status" th:text="${company.statusLabel}">진행 상태</span>
-            <span class="dDay" th:text="'D-' + ${company.DDay}">D-day</span>
+        <div class="card-header">
+          <span class="status" th:text="${company.statusLabel}">진행 상태</span>
+          <span class="dDay" th:text="'D-' + ${company.DDay}">D-day</span>
 
-            <!-- 수정/삭제 드롭다운  -->
-            <div class="dropdown" onclick="event.stopPropagation()">
-              <button class="dropdown-toggle" type="button"> ⋮  </button>
-              <ul class="dropdown-menu">
-                <li class="update-btn" th:attr="data-id=${company.companyId}">수정</li>
-                <li class="delete-btn" th:attr="data-id=${company.companyId}">삭제</li>
-              </ul>
-            </div>
+          <!-- 수정/삭제 드롭다운  -->
+          <div class="dropdown" onclick="event.stopPropagation()">
+            <button class="dropdown-toggle" type="button"> ⋮  </button>
+            <ul class="dropdown-menu">
+              <li class="update-btn" th:attr="data-id=${company.companyId}">수정</li>
+              <li class="delete-btn" th:attr="data-id=${company.companyId}">삭제</li>
+            </ul>
           </div>
+        </div>
 
         <a th:href="@{/companies/{companyId}/select(companyId=${company.companyId})}"
            style="text-decoration: none; color: inherit; ">
