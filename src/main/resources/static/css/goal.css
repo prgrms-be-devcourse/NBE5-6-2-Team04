@@ -64,7 +64,7 @@
 / / 줄 바뀌지 않도록
 }
 
-/* goal 짅행률 */
+/* goal 진행률 */
 .goal-item {
     margin-bottom: 20px;
 }
@@ -267,7 +267,7 @@
     color: #1c3ed5;
 }
 
-/* 삭제 버튼 */
+/* 투두 삭제 버튼 */
 .delete-todo-btn {
     color: #f8231f;
     margin-left: 2px;

@@ -5,7 +5,7 @@
   <title>DevQuest Dashboard</title>
   <meta name="_csrf" th:content="${_csrf.token}"/>
   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-  <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+<!--  <link rel="stylesheet" th:href="@{/css/dashboard.css}">-->
   <link rel="stylesheet" th:href="@{/css/goal.css}">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -134,8 +134,8 @@
     <!--  Goal List   -->
     <p class="section-title" th:text="${company.companyName}">Goal List</p>
 
-    <div class="company-list">
-      <div th:each="goal : ${goals}" class="company-card">
+    <div class="goal-list">
+      <div th:each="goal : ${goals}" class="goal-card">
 
 
         <div class="card-header">
@@ -169,7 +169,7 @@
       </div>
 
       <!-- 목표 생성 카드 -->
-      <div class="company-card create goal-create-btn" onclick="openModal('goalModal')">
+      <div class="goal-card create goal-create-btn" onclick="openModal('goalModal')">
         <p class="goal-todo-desc-top">
           <span class="material-icons">control_point</span>
           목표 생성
