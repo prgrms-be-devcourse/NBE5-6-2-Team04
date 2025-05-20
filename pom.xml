@@ -90,6 +90,12 @@
             <artifactId>modelmapper</artifactId>
             <version>3.2.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version> <!-- 최신버전은 상황 따라 다름 -->
+        </dependency>
     </dependencies>
 
     <build>

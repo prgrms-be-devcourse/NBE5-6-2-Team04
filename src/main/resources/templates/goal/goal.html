@@ -56,6 +56,22 @@
          target="_blank">#프레임워크</a>
     </div>
 
+
+
+      <!-- TODO: AI 데브 -->
+
+    <div class="ai-box">
+      <!-- AI 응답 표시 -->
+      <p id="aiFeedBack">금쪽이 어서와~ 호호</p>
+
+      <div class="button-row">
+        <!-- 긍정 버튼 -->
+        <button onclick="sendAiMessage('긍정적인 대답 및 네')" type="button" class="btn-positive" >긍정</button>
+
+        <!-- 부정 버튼 -->
+        <button onclick="sendAiMessage('부정적인 대답 및 아니요')" type="button" class="btn-negative">
+          부정</button>
+      </div>
     <!--  마이페이지  -->
     <p class="mypage">
       <a th:href="@{/user/mypage}" style="text-decoration: none; color: inherit;">
@@ -89,6 +105,7 @@
         </div>
       </div>
     </div>
+
 
     <div class="goal-item" th:each="goal : ${goals}">
       <div class="goal-info">
@@ -620,5 +637,32 @@
 
 </script>
 
+    //Gemini 답장 메시지
+
+    function sendAiMessage(message) {
+      const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+      const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+      fetch("/api/ai/feedback", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          [csrfHeader]: csrfToken
+        },
+        body: JSON.stringify({ prompt: message })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("aiFeedBack").textContent = data.reply;
+      })
+      .catch(err => {
+        console.error("AI 응답 실패", err);
+        alert("AI 응답 중 오류발생");
+      });
+    }
+
+  </script>
+
+</div>
 </body>
 </html>

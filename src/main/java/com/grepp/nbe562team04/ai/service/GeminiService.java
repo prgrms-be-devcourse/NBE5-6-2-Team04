@@ -1,14 +1,17 @@
 package com.grepp.nbe562team04.ai.service;
 
+import com.grepp.nbe562team04.ai.dto.ChatMessageDto;
 import com.grepp.nbe562team04.ai.dto.GeminiRequestDto;
 import com.grepp.nbe562team04.ai.dto.GeminiResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import java.util.List;
 import reactor.core.publisher.Mono;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -17,62 +20,63 @@ public class GeminiService {
     @Value("${gemini.api-key}")
     private String geminiApiKey;
 
-
-    // WebClient 초기화
     private final WebClient webClient = WebClient.create();
 
-    // 사용자 메시지에 대한 Gemini 응답 받기
-    public String getGeminiReply(String userMessage) {
-
-        // 요청 객체 생성
-        GeminiRequestDto request = new GeminiRequestDto(
-            List.of(
-                // 제미나이 제한조건 하나씩 늘려가며 주면됨
-                new GeminiRequestDto.Content(
-                    "user",
-                    List.of(
-                        new GeminiRequestDto.Part("역할을 부여할게 너는 나의 mental케어 해주는 친구이며 나의 취업을 도와주는 관리사야"),
-                        new GeminiRequestDto.Part("너의 성격은 ENFP와 같고 반말해"),
-                        new GeminiRequestDto.Part("너의 대답은 50글자를 초과하지 않게 제한할게"),
-                        new GeminiRequestDto.Part("너의 질문은 내가  '긍정', '부정' 두 가지로 답변 가능한 질문만 해줘 그리고 긍정/부정 이건 말하지마"),
-                        new GeminiRequestDto.Part("만약 질문을 한다면 한 가지만 할 것"),
-                        new GeminiRequestDto.Part("내가 무엇을 해야 취업에 도움이 될지 조언을 해줘"),
-                        new GeminiRequestDto.Part("질문만 하지말고 내가 더 성장 할 수 있는 방식도 추천해줘"),
-                        new GeminiRequestDto.Part("했던 질문은 하지마")
+    public String getGeminiReply(List<ChatMessageDto> history) {
 
 
-                    )
-                ),
-                // 사용자의 입력 but! 우린 "긍정" "부정" 버튼으로 처리
-                new GeminiRequestDto.Content(
-                    "user",
-                    List.of(
-                    new GeminiRequestDto.Part(userMessage)//userMessage에 입력값 담김
-                    )
-                )
-            )
+        GeminiRequestDto.Content systemPrompt = new GeminiRequestDto.Content(
+            "user",
+            List.of(new GeminiRequestDto.Part(
+                "너의 역할을 부여할게 너는 사용자의 멘탈을 케어하고 취업 준비를 도와주는 AI 친구야. " +
+                    "한국 아동심리 상담가 오은영 선생님의 화법을 확인하고 응용해서 말해줘. " +
+                    "사용자가 힘들어하면 위로하고, 약간의 조언과 격려를 해줘" +
+                    "질문은 반드시 내가 `긍정`,`네` 혹은 `부정`,`아니요` 로만 대답할 수 있는 질문을 해줘" +
+                    "너의 답변은 글자 50자를 초과하지마" +
+                    "나에게 말을 할 땐 반말로 해" +
+                    "답변을 할 땐 꼭 상황에 맞는 이모지를 사용해줘"
+            ))
         );
 
-        // API 호출
-        return webClient.post()
-            .uri(uriBuilder -> uriBuilder
-                .scheme("https")
-                .host("generativelanguage.googleapis.com")
-                .path("/v1/models/gemini-1.5-flash:generateContent")
-                .queryParam("key", geminiApiKey)
-                .build())
+
+        List<GeminiRequestDto.Content> messageContents = history.stream()
+            .map(msg -> new GeminiRequestDto.Content(
+                msg.getRole().name().toLowerCase(),
+                List.of(new GeminiRequestDto.Part(msg.getMessage()))
+            ))
+            .toList();
+
+        List<GeminiRequestDto.Content> contents = new ArrayList<>();
+        contents.add(systemPrompt); // 프롬프트
+        contents.addAll(messageContents); // 대화 히스토리
+
+        GeminiRequestDto request = new GeminiRequestDto(contents);
+
+
+
+        GeminiResponseDto response = webClient.post()
+            .uri("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + geminiApiKey)
             .bodyValue(request)
             .retrieve()
-            // 예외처리
-            .onStatus(
-                status -> status.isError(),
-                response -> response.bodyToMono(String.class)
-                    .flatMap(errorBody ->
-                        Mono.error(new RuntimeException("Gemini API 호출 실패: " + errorBody))
-                    )
-            )
             .bodyToMono(GeminiResponseDto.class)
-            .map(res -> res.getCandidates().get(0).getContent().getParts().get(0).getText())
+            .onErrorResume(e -> {
+                e.printStackTrace();
+                return Mono.just(new GeminiResponseDto());
+            })
             .block();
+
+
+        try {
+            assert response != null;
+            return response.getCandidates()
+                .getFirst()
+                .getContent()
+                .getParts()
+                .getFirst()
+                .getText();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "다시 시도";
+        }
     }
 }
