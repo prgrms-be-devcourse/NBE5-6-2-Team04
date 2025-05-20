@@ -1,16 +1,15 @@
-package com.grepp.nbe562team04.ai.service;
+package com.grepp.nbe562team04.model.ai;
 
-import com.grepp.nbe562team04.ai.dto.ChatMessageDto;
-import com.grepp.nbe562team04.ai.dto.GeminiRequestDto;
-import com.grepp.nbe562team04.ai.dto.GeminiResponseDto;
+import com.grepp.nbe562team04.model.ai.dto.ChatMessageDto;
+import com.grepp.nbe562team04.model.ai.dto.GeminiRequestDto;
+import com.grepp.nbe562team04.model.ai.dto.GeminiResponseDto;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Service
