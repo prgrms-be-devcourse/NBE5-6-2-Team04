@@ -29,23 +29,30 @@ function handleGoalCompleteClick(event) {
 function goalComplete(goalId) {
   fetch(`/goals/${goalId}/complete`, {
     method: 'POST',
-    headers: {
-      ...getCsrfHeaders()
-    }
+    headers: {...getCsrfHeaders()}
   })
-  .then(response => {
-    if (response.ok) {
-      alert('목표 완료! 경험치 +10');
-      location.reload();
-    } else {
-      alert('목표 완료 처리 실패');
-    }
-  })
-  .catch(error => {
-    console.error('에러 발생:', error);
-    alert('요청 중 오류가 발생했습니다.');
-  });
+      .then(response => response.json())
+      .then(data => {
+        if (data.leveledUp) {
+          // 모달 띄우기
+          // document.getElementById('levelUpModal').style.display = 'flex';
+          // document.getElementById('levelUpText').innerText = `축하합니다! ${data.newLevelName}로 레벨업 했어요!`;
+          showLevelUpModal(data.newLevelName, data.newLevelId);
+          setTimeout(() => {
+            document.getElementById('levelUpModal').style.display = 'none';
+            location.reload();
+          }, 4000);
+        } else {
+          alert('목표 완료! 경험치 +10');
+          location.reload();
+        }
+      })
+      .catch(error => {
+        console.error('에러 발생:', error);
+        alert('요청 중 오류가 발생했습니다.');
+      });
 }
+
 
 const toggleBtn = document.getElementById('toggleCompletedBtn');
 const completedSection = document.getElementById('completedGoalsSection');
@@ -376,29 +383,31 @@ function deleteTodo(todoId) {
 }
 
 // 투두 완료 toggle 함수
-function toggleTodoStatus(todoId, isDone) {
-  const data = {
-    isDone: isDone
-  };
-
-  fetch(`/todos/${todoId}/toggle`, {
-    method: 'PUT',
+function toggleTodoStatus(todoId) {
+  fetch(`/todos/${todoId}/toggle-check`, {
+    method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
       ...getCsrfHeaders()
-    },
-    body: JSON.stringify(data)
-  })
-  .then(res => {
-    if (!res.ok) {
-      throw new Error("업데이트 실패");
     }
-    location.reload();
   })
-  .catch(err => {
-    console.error("체크박스 상태 변경 실패", err);
-    alert("상태 변경 중 오류 발생");
-  });
+      .then(res => {
+        if (!res.ok) throw new Error("업적 확인 실패");
+        return res.json();
+      })
+      .then(data => {
+        if (data.achievementName) {
+          const baseUrl = `${window.location.origin}${window.location.pathname}`;
+          const redirectUrl = `${baseUrl}?achievementName=${encodeURIComponent(data.achievementName)}`;
+          window.location.href = redirectUrl;
+        } else {
+          // 업적이 없는 경우는 단순 리로드
+          location.reload();
+        }
+      })
+      .catch(err => {
+        console.error("체크박스 상태 변경 실패", err);
+        alert("상태 변경 중 오류 발생");
+      });
 }
 
 // goal modal 열기 함수
