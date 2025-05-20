@@ -55,7 +55,7 @@
         <h3 class="ai-title">AI 데브</h3>
       </div>
       <!-- AI 응답 표시 -->
-      <p id="aiFeedBack" th:text="'미래의 개발자, ' + ${dashboard.nickname} + '...! 오늘도 준비됐지?'"></p>
+      <p id="aiFeedBack">미래의 개발자님 어서와요!</p>
       <div class="reaction">
       <!-- 긍정 버튼 -->
       <button onclick="sendAiMessage('긍정적인 대답 및 네')" type="button" class="btn-positive" th:text="좋아"/>
@@ -113,6 +113,15 @@
           <div class="card-header">
             <p class="goal-name" th:text="${goal.title}">목표명</p>
             <span class="status" th:text="${goal.isDone}? '완료' : '진행 중'">진행 상태</span>
+
+            <!-- 수정/삭제 드롭다운  -->
+            <div class="dropdown" onclick="event.stopPropagation()">
+              <button class="dropdown-toggle" type="button"> ⋮  </button>
+              <ul class="dropdown-menu">
+                <li class="update-btn" th:attr="data-id=${goal.goalId}">수정</li>
+                <li class="delete-btn" th:attr="data-id=${goal.goalId}">삭제</li>
+              </ul>
+            </div>
           </div>
           <div class="plus-todo">
             <button type="button" class="add-todo-btn" th:attr="data-goal-id=${goal.goalId}">TODO
@@ -140,10 +149,10 @@
             </li>
           </ul>
         </div>
-        <div class="goal-actions">
-          <button type="button" class="update-goal-btn" th:attr="data-id=${goal.goalId}">수정</button>
-          <button type="button" class="delete-goal-btn" th:attr="data-id=${goal.goalId}">삭제</button>
-        </div>
+<!--        <div class="goal-actions">-->
+<!--          <button type="button" class="update-goal-btn" th:attr="data-id=${goal.goalId}">수정</button>-->
+<!--          <button type="button" class="delete-goal-btn" th:attr="data-id=${goal.goalId}">삭제</button>-->
+<!--        </div>-->
       </div>
 
       <!-- 목표 생성 카드 -->
@@ -226,7 +235,6 @@
     <div th:replace="~{fragments/levelup-modal.html :: levelUpModal}"></div>
 
   <script src="/js/goal.js"></script>
-
 </div>
 </body>
 <script defer src="/js/achievement/congratulation.js"></script>

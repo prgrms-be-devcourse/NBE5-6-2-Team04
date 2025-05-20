@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // goal 수정 이벤트
-  document.querySelectorAll(".update-goal-btn").forEach(btn => {
+  document.querySelectorAll(".update-btn").forEach(btn => {
     btn.addEventListener("click", async () => {
       const goalId = btn.dataset.id;
 
@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // goal 삭제 이벤트
-  document.querySelectorAll(".delete-goal-btn").forEach(btn => {
+  document.querySelectorAll(".delete-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       const goalId = btn.dataset.id;
       deleteGoal(goalId);
@@ -452,3 +452,43 @@ function sendAiMessage(message) {
   });
 }
 
+
+// 드롭다운(수정, 삭제)
+document.addEventListener('DOMContentLoaded', () => {
+  const toggles = document.querySelectorAll('.dropdown-toggle');
+
+  toggles.forEach((toggle) => {
+    toggle.addEventListener('click', (e) => {
+      e.stopPropagation(); // 다른 곳 클릭 막기
+      // 모든 드롭다운 닫기
+      document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        if (menu !== toggle.nextElementSibling) {
+          menu.style.display = 'none';
+        }
+      });
+      // 현재 것만 토글
+      const menu = toggle.nextElementSibling;
+      menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+
+      const items = menu.querySelectorAll('li');
+      items.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.stopPropagation(); // 수정, 삭제 눌러도 상세 진입 안 됨
+        });
+      });
+    });
+  });
+
+  document.querySelectorAll('.dropdown-toggle, .dropdown-menu').forEach(el => {
+    el.addEventListener('click', e => {
+      e.stopPropagation();
+    });
+  });
+
+  // 페이지 어디든 클릭하면 메뉴 닫힘
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.dropdown-menu').forEach(menu => {
+      menu.style.display = 'none';
+    });
+  });
+});
