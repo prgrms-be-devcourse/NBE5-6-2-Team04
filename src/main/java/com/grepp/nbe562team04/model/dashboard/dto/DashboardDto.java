@@ -35,6 +35,9 @@ public class DashboardDto {
     // 알림 토글
     private boolean notificationOn;
 
+    // 주요 알림
+    private List<AlertDto> alerts;
+
 
 
 }
