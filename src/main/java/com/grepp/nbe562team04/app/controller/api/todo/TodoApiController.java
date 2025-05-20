@@ -57,7 +57,6 @@ public class TodoApiController {
         return ResponseEntity.ok("투두 삭제 완료!");
     }
 
-    // 투두 완료(토글)
     @PutMapping("/{todoId}/toggle")
     public ResponseEntity<String> toggleTodoStatus(@PathVariable Long todoId, @RequestBody Map<String, Object> request) {
         Boolean isDone = (Boolean) request.get("isDone");

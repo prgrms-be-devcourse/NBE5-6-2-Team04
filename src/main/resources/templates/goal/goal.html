@@ -190,7 +190,8 @@
       </form>
     </div>
   </div>
-
+  <div th:replace="~{fragments/achievement-modal :: achievementModal}"></div>
+  <div th:replace="~{fragments/levelup-modal.html :: levelUpModal}"></div>
 
   <script>
     const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
