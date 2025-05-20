@@ -18,16 +18,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -181,5 +179,25 @@ public class UserService implements UserDetailsService {
 
     public Boolean isDuplicatedEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    @Transactional
+    public void updateXpAndLevel(User user, int gainedXp) {
+        user.addXp(gainedXp);
+
+        List<Level> levels = levelRepository.findAll();
+        levels.sort(Comparator.comparingInt(Level::getXp));
+
+        for (Level level : levels) {
+            if (user.getExp() >= level.getXp()) {
+                user.setLevel(level);
+            }
+        }
+
+        userRepository.save(user);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails updatedUser = new Principal(user); // 새 User로 Principal 재생성
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedUser, auth.getCredentials(), auth.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
     }
 }
