@@ -55,7 +55,7 @@
         <h3 class="ai-title">AI 데브</h3>
       </div>
       <!-- AI 응답 표시 -->
-      <p id="aiFeedBack">미래의 개발자님 어서와요!</p>
+      <p id="aiFeedBack" th:text="'미래의 개발자, ' + ${dashboard.nickname} + '...! 오늘도 준비됐지?'"></p>
       <div class="reaction">
       <!-- 긍정 버튼 -->
       <button onclick="sendAiMessage('긍정적인 대답 및 네')" type="button" class="btn-positive" th:text="좋아"/>
