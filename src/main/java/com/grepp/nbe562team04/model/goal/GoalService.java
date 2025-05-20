@@ -16,7 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,9 +54,12 @@ public class GoalService {
     public List<GoalResponseDto> getGoalsByCompanyId(Long companyId) {
         return goalRepository.findByCompanyCompanyId(companyId).stream()
                 .map(goal -> {
-                    List<Todo> todos = todoRepository.findByGoalGoalId(goal.getGoalId());
+                    List<Todo> todos = Optional.ofNullable(todoRepository.findByGoalGoalId(goal.getGoalId()))
+                            .orElse(Collections.emptyList());
                     long total = todos.size();
-                    long done = todos.stream().filter(Todo::getIsDone).count();
+                    long done = todos.stream()
+                            .filter(todo -> Boolean.TRUE.equals(todo.getIsDone()))
+                            .count();
                     int progress = total == 0 ? 0 : (int) ((done * 100.0) / total);
 
                     return GoalResponseDto.builder()
@@ -92,6 +97,8 @@ public class GoalService {
         Goal goal = goalRepository.findById(goalId)
                 .orElseThrow(() -> new RuntimeException("해당 목표가 존재하지 않습니다."));
 
+        todoRepository.deleteByGoalGoalId(goalId); // 목표 삭제시 하위 존재하는 투두들 함께 삭제
+
         goalRepository.delete(goal);
     }
 
@@ -100,9 +107,12 @@ public class GoalService {
         Goal goal = goalRepository.findById(goalId)
                 .orElseThrow(() -> new RuntimeException("목표 없음"));
 
-        List<Todo> todos = todoRepository.findByGoalGoalId(goalId);
+        List<Todo> todos = Optional.ofNullable(todoRepository.findByGoalGoalId(goalId))
+                .orElse(Collections.emptyList());
         long total = todos.size();
-        long done = todos.stream().filter(Todo::getIsDone).count();
+        long done = todos.stream()
+                .filter(todo -> Boolean.TRUE.equals(todo.getIsDone()))
+                .count();
         int percent = total == 0 ? 0 : (int) ((done * 100.0) / total);
 
         return GoalResponseDto.builder()
