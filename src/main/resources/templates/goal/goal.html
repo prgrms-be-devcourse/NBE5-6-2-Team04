@@ -18,10 +18,8 @@
     <div class="logo">
       <span>DevQuest</span>
     </div>
-   <!--노선우 테스트용으로 수정-->
+
     <h1 class="company-name" th:text="${company.companyName} + ' 개발자'">기업명 로딩 실패</h1>
-
-
     <span class="comment" th:text="${dashboard.comment}">한마디</span>
     <span class="nickname" th:text="${dashboard.nickname} + ' 님'">회원</span>
 
@@ -50,29 +48,17 @@
     </div>
 
 
-    <div>
+
       <!-- TODO: AI 데브 -->
-            <div class="ai-box">
-        <p th:text="${reply != null ? reply : '안녕 우리 금쪽이? 나는 오은영 선생님이야 호호'}">
-          안녕 우리 금쪽이 만나서 반가워</p>
+    <div class="ai-box">
+      <p id="aiFeedBack">무엇이든 물어보세요 😊</p>
 
-        <div class = "button-row">
-
-        <form action="/ai/feedback" method="post">
-          <input type="hidden" value="긍적적인대답 혹은 네" name="userMessage">
-          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-          <button type="submit">긍정</button>
-        </form>
-
-        <form action="/ai/feedback" method="post">
-          <input type="hidden" value="부정적인대답 혹은 아니요" name="userMessage">
-          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-          <button type="submit">부정</button>
-        </form>
-
-        </div>
+      <div>
+        <input type="text" id="userMessageInput" placeholder="취업 관련 질문을 입력하세요!" style="width: 80%;">
+        <button onclick="sendAiMessage()">전송</button>
       </div>
     </div>
+
 
     <!-- 진행률 -->
     <div class="goal-item" th:each="goal : ${goals}">
@@ -552,7 +538,38 @@
       closeModal("todoModal");
     }
 
+    //Gemini 답장 메시지
+    function sendAiMessage() {
+      const input = document.getElementById("userMessageInput");
+      const userMessage = input.value.trim();
+
+      if (!userMessage) {
+        alert("질문을 입력해주세요!");
+        return;
+      }
+
+      fetch("/api/ai/feedback", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...getCsrfHeaders()
+        },
+        body: JSON.stringify({ prompt: userMessage })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("aiFeedBack").textContent = data.reply;
+        input.value = "";
+      })
+      .catch(err => {
+        console.error("AI 응답 실패", err);
+        alert("AI 응답 중 오류가 발생했어요 😢");
+      });
+    }
+
+
   </script>
+
 </div>
 </body>
 </html>

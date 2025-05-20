@@ -1,9 +1,9 @@
 package com.grepp.nbe562team04.ai.dto;
 
-
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
