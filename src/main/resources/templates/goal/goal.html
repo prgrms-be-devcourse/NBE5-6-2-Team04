@@ -82,6 +82,7 @@
       <div class="goal-info">
         <span class="goal-status" th:text="${goal.status}">상태</span>
         <span class="goal-title" th:text="${goal.title}">제목</span>
+        <span class="done-label" th:if="${goal.isDone}">(완료)</span>
 
         <div class="goal-progress-text"
              th:if="${goal.progress != null}"
@@ -209,6 +210,8 @@
       [csrfHeader]: csrfToken
     };
   }
+
+  // 이벤트 모음
 
   // 목표 완료 이벤트
   document.querySelectorAll('.goal-complete-btn').forEach(button => {
@@ -462,6 +465,9 @@
             });
   }
 
+  // 함수 모음
+
+
   // 투두 생성 함수
   function createTodo() {
 
@@ -496,7 +502,7 @@
             });
   }
 
-  // todo 수정 함수
+  // 투두 수정 함수
   function updateTodo(todoId) {
     const form = document.getElementById("todo-form");
     const content = form.title.value;
@@ -528,7 +534,7 @@
   }
 
 
-  // todo 삭제 함수
+  // 투두 삭제 함수
   function deleteTodo(todoId) {
     if (confirm("정말 삭제하시겠습니까?")) {
       fetch(`/todos/${todoId}/delete`, {

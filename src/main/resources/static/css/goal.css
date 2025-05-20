@@ -251,7 +251,7 @@
     margin-left: auto;
 }
 
-.modify-todo-btn,
+.update-todo-btn,
 .delete-todo-btn {
     padding: 3px 7px;
     font-size: 11px;
@@ -263,7 +263,7 @@
     background-color: transparent;
 }
 
-.modify-todo-btn {
+.update-todo-btn {
     color: #1c3ed5;
 }
 
@@ -273,9 +273,9 @@
     margin-left: 2px;
 }
 
-.todo-modify-btn,
-.todo-delete-btn,
-.todo-add-btn {
+.update-goal-btn,
+.delete-goal-btn,
+.add-todo-btn {
     padding: 5px 10px;
     font-size: 11px;
     font-weight: bolder;
@@ -292,36 +292,36 @@
 }
 
 /* 수정 버튼 */
-.todo-modify-btn {
+.update-goal-btn {
     color: #5d7be1;
     border-color: #5d7be1;
 }
 
-.todo-modify-btn:hover {
+.update-goal-btn:hover {
     color: white;
     background-color: rgba(78, 104, 197, 0.5);
 }
 
 /* 삭제 버튼 */
-.todo-delete-btn {
+.delete-goal-btn {
     color: #ff6262;
     border-color: #ff6262;
     margin-left: 2px;
 }
 
-.todo-delete-btn:hover {
+.delete-goal-btn:hover {
     color: white;
     background-color: rgba(255, 98, 98, 0.5);
 }
 
 /* 추가 버튼 */
-.todo-add-btn {
+.add-todo-btn {
     color: #218325;
     border-color: #218325;
     margin-left: 2px;
 }
 
-.todo-add-btn:hover {
+.add-todo-btn:hover {
     color: white;
     background-color: rgba(49, 140, 51, 0.5);
 }
