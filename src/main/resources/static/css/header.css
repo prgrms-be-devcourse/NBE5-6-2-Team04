@@ -16,7 +16,7 @@ body {
 .logo {
   font-size: 2rem;
   font-weight: bold;
-  color: #5f3dc4;
+  color: #3F2296;
 }
 
 .top-menu {
@@ -24,12 +24,12 @@ body {
   align-items: center;
   justify-content: flex-end;
   flex: 1;
-  margin-left: auto;  /* ✅ 오른쪽 정렬 */
+  margin-left: auto;
 }
 
 .menu-item {
   cursor: pointer;
   color: #666;
   font-weight: 500;
-  margin-left: 1rem; /* ✅ 로고와 거리 확보 */
+  margin-left: 1rem;
 }

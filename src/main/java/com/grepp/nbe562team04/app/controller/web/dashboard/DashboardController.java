@@ -53,8 +53,13 @@ public class DashboardController {
         User user = userRepository.findById(principal.getUser().getUserId())
             .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
 
+        // 💡 user.getLevel()이 LAZY라면, 여기서 미리 호출해서 로딩해두면 좋음
+        user.getLevel().getLevelName(); // 강제 초기화
+
         DashboardDto dto = dashboardService.getDashboard(user);
+
         model.addAttribute("dashboard", dto);
+        model.addAttribute("user", user); // ⭐️ 유저도 모델에 포함!
         model.addAttribute("_csrf", csrfToken);
         return "dashboard/dashboard";
     }
@@ -65,7 +70,6 @@ public class DashboardController {
         dashboardService.toggleNotification(principal.getUser());
         return "redirect:/dashboard";
     }
-
 
     // todo 페이지
     @GetMapping("/todo")

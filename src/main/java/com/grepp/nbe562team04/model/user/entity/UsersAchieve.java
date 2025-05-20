@@ -1,9 +1,8 @@
 package com.grepp.nbe562team04.model.user.entity;
 
-import com.grepp.nbe562team04.model.achieve.entity.Achievement;
+import com.grepp.nbe562team04.model.achievement.entity.Achievement;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +10,9 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "users_achieve")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class UsersAchieve {
 
     @Id
