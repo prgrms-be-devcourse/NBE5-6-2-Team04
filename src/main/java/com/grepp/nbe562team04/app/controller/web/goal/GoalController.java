@@ -10,6 +10,7 @@ import com.grepp.nbe562team04.model.todo.TodoService;
 import com.grepp.nbe562team04.model.todo.dto.TodoResponseDto;
 import com.grepp.nbe562team04.model.user.UserRepository;
 import com.grepp.nbe562team04.model.user.entity.User;
+import java.util.Comparator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.web.csrf.CsrfToken;
@@ -53,6 +54,7 @@ public class GoalController {
 
         model.addAttribute("dashboard", dto);
         model.addAttribute("company", companyDto);   // 기업 정보
+        goalList.sort(Comparator.comparing(GoalResponseDto::getIsDone));
         model.addAttribute("goals", goalList);       // 목표 리스트(진행률 포함)
         model.addAttribute("todoMap", todoMap);
 

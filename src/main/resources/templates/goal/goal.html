@@ -66,6 +66,7 @@
 
     <!-- 진행률 -->
     <div class="goal-process">
+      <span class="progress-title">목표 진행률</span>
       <div class="goal-item" th:each="goal : ${goals}">
         <div class="goal-info">
           <span class="goal-status" th:text="${goal.status}">상태</span>
@@ -107,7 +108,7 @@
 
     <!--  Goal List   -->
     <div class="goal-list">
-      <div th:each="goal : ${goals}" class="goal-card">
+      <div th:each="goal : ${goals}" th:if="${!goal.isDone}" class="goal-card">
         <div>
           <div class="card-header">
             <p class="goal-name" th:text="${goal.title}">목표명</p>
@@ -158,6 +159,35 @@
       </div>
     </div>
 
+      <!-- 완료된 목표 보기 토글 버튼-->
+      <div class="completed-toggle-wrapper">
+        <button id="toggleCompletedBtn">완료된 목표 보기</button>
+      </div>
+
+      <!-- 완료된 목표 목록 (초기에 숨김) -->
+      <div id="completedGoalsSection" class="goal-list" style="display: none;">
+        <div th:each="goal : ${goals}"
+             th:if="${goal.isDone}"
+             class="goal-card done">
+          <div>
+            <div class="card-header">
+              <p class="goal-name" th:text="${goal.title}">목표명</p>
+              <span class="status">완료</span>
+            </div>
+          </div>
+          <div class="todo-list-container">
+            <ul>
+              <li class="todo-item" th:each="todo : ${todoMap[goal.goalId]}">
+                <input type="checkbox"
+                       th:checked="${todo.isDone}"
+                       th:attr="data-id=${todo.todoId}"
+                       class="todo-checkbox" disabled>
+                <span class="todo-content" th:text="${todo.content}">투두 내용</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
   </main>
 
   <!-- 목표  생성 모달 -->
@@ -192,7 +222,6 @@
       </form>
     </div>
   </div>
-
 
   <script src="/js/goal.js"></script>
 
