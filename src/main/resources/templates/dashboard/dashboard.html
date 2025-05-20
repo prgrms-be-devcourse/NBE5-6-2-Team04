@@ -12,10 +12,12 @@
 
 </head>
 <body>
-<div class="logo">
-  <a href="/admin/dashboard">DevQuest</a>
+<div class="top-bar">
+  <div class="logo">
+    <a href="/admin/dashboard">DevQuest</a>
+  </div>
+  <div th:replace="~{fragments/header :: header}"></div>
 </div>
-<div th:replace="~{fragments/header :: header}"></div>
 <div class="dashboard">
 
   <!-- 좌측 사이드바 -->
