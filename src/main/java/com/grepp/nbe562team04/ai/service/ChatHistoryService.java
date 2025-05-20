@@ -15,9 +15,7 @@ public class ChatHistoryService {
 
     public List<ChatMessageDto> saveMessage(HttpSession session, ChatMessageDto message) {
 
-        //val은 재할당이 안됨
-//        @SuppressWarnings("unchecked")
-//        val history = (List<ChatMessageDto>) session.getAttribute("chatHistory");
+
           List<ChatMessageDto> history = (List<ChatMessageDto>) session.getAttribute("chatHistory");
 
 

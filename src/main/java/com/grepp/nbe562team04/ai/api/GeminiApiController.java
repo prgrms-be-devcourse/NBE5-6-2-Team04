@@ -23,10 +23,10 @@ public class GeminiApiController {
 
     @PostMapping("/feedback")
     public ResponseEntity<Map<String, String>> getGeminiReply(
-        @RequestBody GeminiInputDto inputDto, // ✅ 바뀐 DTO!
+        @RequestBody GeminiInputDto inputDto,
         HttpSession session
     ) {
-        String userMessage = inputDto.getPrompt(); // 🔁 그대로 사용 가능
+        String userMessage = inputDto.getPrompt();
 
         // 세션에 사용자 메시지 저장
         List<ChatMessageDto> history = chatHistoryService.saveMessage(

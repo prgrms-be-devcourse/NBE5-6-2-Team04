@@ -346,6 +346,9 @@
         max-height: 600px;
         overflow-y: auto;
     }
+
+
+
 /* AI Box 스타일 */
 #aiFeedBack {
     font-weight: bold;             /* 볼드체 */
@@ -358,23 +361,30 @@
     white-space: pre-line;         /* 줄바꿈 유지 */
 }
 
-.button-row {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 12px;
-}
-.button-row form {
-    margin: 0;
-}
-.button-row button {
-    padding: 8px 16px;
-    border-radius: 8px;
-    background-color: white;
-    border: 1px solid #ccc;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-.button-row button:hover {
-    background-color: #e2e8f0;
-}
+
+/*선긋기*/
+    .btn-positive {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .btn-negative {
+        background-color: #f44336;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .btn-positive:hover {
+        background-color: #45a049;
+    }
+
+    .btn-negative:hover {
+        background-color: #d32f2f;
+    }

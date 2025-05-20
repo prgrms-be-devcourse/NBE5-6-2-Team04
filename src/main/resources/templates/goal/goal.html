@@ -50,12 +50,18 @@
 
 
       <!-- TODO: AI 데브 -->
-    <div class="ai-box">
-      <p id="aiFeedBack">무엇이든 물어보세요 😊</p>
 
-      <div>
-        <input type="text" id="userMessageInput" placeholder="취업 관련 질문을 입력하세요!" style="width: 80%;">
-        <button onclick="sendAiMessage()">전송</button>
+    <div class="ai-box">
+      <!-- AI 응답 표시 -->
+      <p id="aiFeedBack">금쪽이 어서와~ 호호</p>
+
+      <div class="button-row">
+        <!-- 긍정 버튼 -->
+        <button onclick="sendAiMessage('긍정적인 대답 및 네')" type="button" class="btn-positive" >긍정</button>
+
+        <!-- 부정 버튼 -->
+        <button onclick="sendAiMessage('부정적인 대답 및 아니요')" type="button" class="btn-negative">
+          부정</button>
       </div>
     </div>
 
@@ -539,34 +545,28 @@
     }
 
     //Gemini 답장 메시지
-    function sendAiMessage() {
-      const input = document.getElementById("userMessageInput");
-      const userMessage = input.value.trim();
 
-      if (!userMessage) {
-        alert("질문을 입력해주세요!");
-        return;
-      }
+    function sendAiMessage(message) {
+      const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+      const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
       fetch("/api/ai/feedback", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...getCsrfHeaders()
+          [csrfHeader]: csrfToken
         },
-        body: JSON.stringify({ prompt: userMessage })
+        body: JSON.stringify({ prompt: message })
       })
       .then(res => res.json())
       .then(data => {
         document.getElementById("aiFeedBack").textContent = data.reply;
-        input.value = "";
       })
       .catch(err => {
         console.error("AI 응답 실패", err);
-        alert("AI 응답 중 오류가 발생했어요 😢");
+        alert("AI 응답 중 오류발생");
       });
     }
-
 
   </script>
 

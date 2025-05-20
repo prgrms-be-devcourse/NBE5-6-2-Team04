@@ -13,32 +13,9 @@ import java.time.LocalDate;
 public class ChatMessageDto {
 
     private String message;
-    private Role role; // ✅ 문자열 말고 Enum으로!
+    private Role role;
 
-    @JsonFormat(pattern = "yyyy-MM-dd") // ✅ 날짜 포맷 지정
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate timestamp;
 }
 
-
-/**
-import java.time.LocalDate;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-//AI와 나눈 대화 내용 저장
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class ChatMessageDto {
-
-
-    private String role; // 기존 타입을 String -> Role 로 변경
-    private String message;
-    private LocalDate timestamp;
-
-
-}
-**/
