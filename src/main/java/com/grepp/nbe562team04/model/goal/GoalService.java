@@ -1,5 +1,7 @@
 package com.grepp.nbe562team04.model.goal;
 
+import com.grepp.nbe562team04.model.achievement.AchievementService;
+import com.grepp.nbe562team04.model.achievement.entity.Achievement;
 import com.grepp.nbe562team04.model.goal.dto.GoalRequestDto;
 import com.grepp.nbe562team04.model.goal.dto.GoalResponseDto;
 import com.grepp.nbe562team04.model.goal.entity.Goal;
@@ -14,7 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,10 +29,10 @@ public class GoalService {
     private final GoalCompanyRepository goalCompanyRepository;
     private final TodoRepository todoRepository;
     private final UserRepository userRepository;
-
+    private final AchievementService achievementService;
     // 목표 생성
     @Transactional
-    public void createGoal(GoalRequestDto dto) {
+    public String createGoal(GoalRequestDto dto, Long userId) {
         GoalCompany company = goalCompanyRepository.findById(dto.getCompanyId())
                 .orElseThrow(() -> new RuntimeException("해당 기업이 존재하지 않습니다."));
 
@@ -42,6 +46,7 @@ public class GoalService {
                 .build();
 
         goalRepository.save(goal);
+        return achievementService.giveFirstGoalCreateAchievement(userId);
     }
 
     // 기업별 목표 목록 조회
@@ -49,9 +54,12 @@ public class GoalService {
     public List<GoalResponseDto> getGoalsByCompanyId(Long companyId) {
         return goalRepository.findByCompanyCompanyId(companyId).stream()
                 .map(goal -> {
-                    List<Todo> todos = todoRepository.findByGoalGoalId(goal.getGoalId());
+                    List<Todo> todos = Optional.ofNullable(todoRepository.findByGoalGoalId(goal.getGoalId()))
+                            .orElse(Collections.emptyList());
                     long total = todos.size();
-                    long done = todos.stream().filter(Todo::getIsDone).count();
+                    long done = todos.stream()
+                            .filter(todo -> Boolean.TRUE.equals(todo.getIsDone()))
+                            .count();
                     int progress = total == 0 ? 0 : (int) ((done * 100.0) / total);
 
                     return GoalResponseDto.builder()
@@ -89,6 +97,8 @@ public class GoalService {
         Goal goal = goalRepository.findById(goalId)
                 .orElseThrow(() -> new RuntimeException("해당 목표가 존재하지 않습니다."));
 
+        todoRepository.deleteByGoalGoalId(goalId); // 목표 삭제시 하위 존재하는 투두들 함께 삭제
+
         goalRepository.delete(goal);
     }
 
@@ -97,9 +107,12 @@ public class GoalService {
         Goal goal = goalRepository.findById(goalId)
                 .orElseThrow(() -> new RuntimeException("목표 없음"));
 
-        List<Todo> todos = todoRepository.findByGoalGoalId(goalId);
+        List<Todo> todos = Optional.ofNullable(todoRepository.findByGoalGoalId(goalId))
+                .orElse(Collections.emptyList());
         long total = todos.size();
-        long done = todos.stream().filter(Todo::getIsDone).count();
+        long done = todos.stream()
+                .filter(todo -> Boolean.TRUE.equals(todo.getIsDone()))
+                .count();
         int percent = total == 0 ? 0 : (int) ((done * 100.0) / total);
 
         return GoalResponseDto.builder()
@@ -138,5 +151,15 @@ public class GoalService {
 
         user.addXp(10);
         userRepository.save(user);
+    }
+
+    public String giveFirstGoalAchievementIfNeeded(User user) {
+        Long userId = user.getUserId();
+        long count = goalRepository.countByCompany_User_UserId(userId);
+
+        if (count == 1) { // 처음 생성한 경우
+            return achievementService.giveFirstGoalCreateAchievement(userId); // 이름 반환
+        }
+        return null;
     }
 }

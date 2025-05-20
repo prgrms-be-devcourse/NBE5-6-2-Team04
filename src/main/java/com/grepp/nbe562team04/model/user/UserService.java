@@ -1,6 +1,6 @@
 package com.grepp.nbe562team04.model.user;
 
-import com.grepp.nbe562team04.model.achieve.AchievementService;
+import com.grepp.nbe562team04.model.achievement.AchievementService;
 import com.grepp.nbe562team04.model.user.entity.UsersAchieve;
 import com.grepp.nbe562team04.model.auth.code.Role;
 import com.grepp.nbe562team04.model.auth.domain.Principal;
@@ -90,6 +90,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void updateUser(String email, UserDto dto, MultipartFile file) throws IOException {
+        log.info(">> 수정 요청 진입: " + email);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
 
@@ -100,6 +101,7 @@ public class UserService implements UserDetailsService {
             String hashed = passwordEncoder.encode(dto.getPassword());
             user.setPassword(hashed);
         }
+
 
         if (file != null && !file.isEmpty()) {
             String uploadDir = System.getProperty("user.dir") + "/uploads/profile/";

@@ -12,6 +12,7 @@ import com.grepp.nbe562team04.model.user.UserRepository;
 import com.grepp.nbe562team04.model.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

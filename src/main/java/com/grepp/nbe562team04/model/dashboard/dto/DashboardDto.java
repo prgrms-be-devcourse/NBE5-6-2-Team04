@@ -29,6 +29,9 @@ public class DashboardDto {
     private int exp;
     private int progressPercent;
 
+    @Getter
+    private String jobType;
+
     // 목표 기업
     private List<GoalCompanyDto> goalCompanies;
 
@@ -37,7 +40,6 @@ public class DashboardDto {
 
     // 주요 알림
     private List<AlertDto> alerts;
-
 
 
 }
