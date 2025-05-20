@@ -1,9 +1,9 @@
-package com.grepp.nbe562team04.ai.service;
+package com.grepp.nbe562team04.model.ai;
 
 
-import java.util.ArrayList;
-import com.grepp.nbe562team04.ai.dto.ChatMessageDto;
+import com.grepp.nbe562team04.model.ai.dto.ChatMessageDto;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;

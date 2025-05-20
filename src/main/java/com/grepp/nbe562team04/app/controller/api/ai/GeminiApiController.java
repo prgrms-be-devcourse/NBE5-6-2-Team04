@@ -1,17 +1,19 @@
-package com.grepp.nbe562team04.ai.api;
+package com.grepp.nbe562team04.app.controller.api.ai;
 
-import com.grepp.nbe562team04.ai.dto.ChatMessageDto;
-import com.grepp.nbe562team04.ai.dto.GeminiInputDto;
-import com.grepp.nbe562team04.ai.dto.Role;
-import com.grepp.nbe562team04.ai.service.ChatHistoryService;
-import com.grepp.nbe562team04.ai.service.GeminiService;
+import com.grepp.nbe562team04.model.ai.dto.ChatMessageDto;
+import com.grepp.nbe562team04.model.ai.dto.GeminiInputDto;
+import com.grepp.nbe562team04.model.ai.dto.Role;
+import com.grepp.nbe562team04.model.ai.ChatHistoryService;
+import com.grepp.nbe562team04.model.ai.GeminiService;
 import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor

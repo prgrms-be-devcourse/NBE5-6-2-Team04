@@ -291,13 +291,13 @@
   border-radius: 16px;
   padding: 1.2rem 1.5rem;
   width: 280px;
-  /*box-shadow: 0 2px 4px rgba(0,0,0,0.05);*/
+  border: 2px solid #8e8e8e;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   text-decoration: none;
-  color: inherit;
+  color: #5f3dc4;
 }
 
 .company-card.create {
