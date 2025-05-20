@@ -97,6 +97,8 @@ public class GoalService {
         Goal goal = goalRepository.findById(goalId)
                 .orElseThrow(() -> new RuntimeException("해당 목표가 존재하지 않습니다."));
 
+        todoRepository.deleteByGoalGoalId(goalId); // 목표 삭제시 하위 존재하는 투두들 함께 삭제
+
         goalRepository.delete(goal);
     }
 
