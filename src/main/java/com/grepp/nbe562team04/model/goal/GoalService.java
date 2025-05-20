@@ -127,6 +127,7 @@ public class GoalService {
     }
 
 
+    //목표 완료
     @Transactional
     public void completeGoal(Long goalId, User user) {
 

@@ -161,10 +161,23 @@
             </li>
           </ul>
         </div>
-        <div class="todo-actions">
-          <button type="button" class="update-goal-btn" th:attr="data-id=${goal.goalId}">수정</button>
-          <button type="button" class="delete-goal-btn" th:attr="data-id=${goal.goalId}">삭제</button>
-          <button type="button" class="add-todo-btn" th:attr="data-goal-id=${goal.goalId}">투두 추가</button>
+        <div class="todo-actions" th:if="${goal.isDone == false}">
+          <button type="button"
+                  class="update-goal-btn"
+                  th:attr="data-id=${goal.goalId}, disabled=${goal.isDone != null and goal.isDone ? 'disabled' : null}">
+            수정
+          </button>
+          <button type="button"
+                  class="delete-goal-btn"
+                  th:attr="data-id=${goal.goalId}, disabled=${goal.isDone != null and goal.isDone ? 'disabled' : null}">
+            삭제
+          </button>
+
+          <button type="button"
+                  class="add-todo-btn"
+                  th:attr="data-goal-id=${goal.goalId}, disabled=${goal.isDone != null and goal.isDone ? 'disabled' : null}">
+            투두 추가
+          </button>
         </div>
       </div>
 
@@ -199,7 +212,7 @@
   </div>
 </div>
 
-  <!-- todo  생성 모달 -->
+  <!-- 투두  생성 모달 -->
   <div id="todoModal" class="modal" style="display: none;">
     <div class="modal-content">
       <span class="close" onclick="closeModal('todoModal')">&times;</span>
