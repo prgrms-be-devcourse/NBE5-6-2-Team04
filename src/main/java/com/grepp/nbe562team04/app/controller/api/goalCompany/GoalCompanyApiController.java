@@ -48,7 +48,7 @@ public class GoalCompanyApiController {
         return ResponseEntity.ok("수정 완료");
     }
 
-    // 목표 기업 수정
+    // 삭제
     @DeleteMapping("/{companyId}/delete")
     public ResponseEntity<String> deleteCompany(@PathVariable Long companyId) {
         goalCompanyService.deleteGoalCompany(companyId);

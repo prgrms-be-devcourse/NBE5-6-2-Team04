@@ -1,7 +1,13 @@
-<header class="top-bar">
-  <div class="logo">DevQuest</div>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<header th:fragment="header" class="top-bar">
   <nav class="top-menu">
-    <a href="/user/mypage"> Mypage </a>
-    <span class="menu-item" onclick="logout()"> | Logout</span>
+    <form id="logoutForm" th:action="@{/logout}" method="post"></form>
+    <span class="menu-item" onclick="document.getElementById('logoutForm').submit()">로그아웃</span>
   </nav>
 </header>
+</body>
+</html>

@@ -1,29 +1,35 @@
 body {
   margin: 0;
   font-family: 'Pretendard', sans-serif;
-  /*background-color: #f7f7f7;*/
   color: #333;
 }
 
 .top-bar {
-  /*background-color: white;*/
   padding: 20px 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /*box-shadow: 0 2px 6px rgba(0,0,0,0.05);*/
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .logo {
   font-size: 2rem;
   font-weight: bold;
-  color: #5f3dc4;
+  color: #3F2296;
 }
 
-.top-menu a{
-  margin-left: 1rem;
-  text-decoration: none;
+.top-menu {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
+  margin-left: auto;
+}
+
+.menu-item {
+  cursor: pointer;
   color: #666;
   font-weight: 500;
+  margin-left: 1rem;
 }
-

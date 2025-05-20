@@ -1,7 +1,7 @@
 package com.grepp.nbe562team04.app.controller.web.mypage;
 
-import com.grepp.nbe562team04.model.achieve.AchievementService;
-import com.grepp.nbe562team04.model.achieve.dto.AchievementDto;
+import com.grepp.nbe562team04.model.achievement.AchievementService;
+import com.grepp.nbe562team04.model.achievement.dto.AchievementDto;
 import com.grepp.nbe562team04.model.auth.domain.Principal;
 import com.grepp.nbe562team04.model.level.LevelService;
 import com.grepp.nbe562team04.model.user.UserService;
@@ -58,14 +58,14 @@ public class MypageController {
     }
 
     @GetMapping("update")
-    public String showUpdatePage(@AuthenticationPrincipal Principal principal, Model model) {
+    public String showUpdatePage(@AuthenticationPrincipal Principal principal, Model model,CsrfToken csrfToken) {
         String email = principal.getUsername();
         User user = userService.findByEmail(email);
 
         int progress = levelService.levelProgress(user);
         model.addAttribute("user", user);
         model.addAttribute("progressPercent", progress);
-//        model.addAttribute("_csrf", csrfToken);
+        model.addAttribute("_csrf", csrfToken);
         return "mypage/mypageUpdate";
     }
 
@@ -90,13 +90,26 @@ public class MypageController {
         }
 
         userService.updateUser(email, dto, file);
-        String achievedName = achievementService.giveTutorialAchievement(user.getUserId());
 
-        if (achievedName != null) {
-            redirectAttributes.addAttribute("achievementName", URLEncoder.encode(achievedName, StandardCharsets.UTF_8));
+        User updatedUser = userService.findByEmail(email);
+        boolean isProfileComplete = updatedUser.getNickname() != null && !updatedUser.getNickname().isBlank()
+                && updatedUser.getComment() != null && !updatedUser.getComment().isBlank()
+                && updatedUser.getUserImage() != null && !updatedUser.getUserImage().isBlank();
+
+        if (isProfileComplete) {
+            String achievedName = achievementService.giveTutorialAchievement(updatedUser.getUserId());
+
+            if (achievedName != null) {
+                redirectAttributes.addAttribute("achievementName", URLEncoder.encode(achievedName, StandardCharsets.UTF_8));
+            }
         }
 
         return "redirect:/user/mypage";
+    }
+
+    @GetMapping("/withdraw-success")
+    public String showWithdrawSuccess() {
+        return "mypage/withdrawSuccess"; // → withdrawSuccess.html
     }
 
     @PostMapping("delete")
@@ -107,11 +120,6 @@ public class MypageController {
         return ResponseEntity.ok("탈퇴 완료");
     }
 
-//    @GetMapping("achievements/all")
-//    @ResponseBody
-//    public List<Achievement> getAllAchievements() {
-//        return achievementService.getAllAchievements(); // findAll() 등
-//    }
 
     @GetMapping("achievements")
     @ResponseBody

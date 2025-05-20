@@ -32,16 +32,16 @@ public class GoalController {
     private final TodoService todoService;
 
     // 목표기업 단일 조회(진행률 조회 포함)
-    @GetMapping("/companies/{CompanyId}/select")
-    public String companyDetail(@AuthenticationPrincipal Principal principal, @PathVariable Long CompanyId, Model model, CsrfToken csrfToken) {
+    @GetMapping("/companies/{companyId}/select")
+    public String companyDetail(@AuthenticationPrincipal Principal principal,@PathVariable Long companyId, Model model) {
         User detachedUser = principal.getUser();
 
         User managedUser = userRepository.findById(detachedUser.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
 
         DashboardDto dto = dashboardService.getDashboard(managedUser);
-        GoalCompanyDto companyDto = dashboardService.getCompanyDetailById(CompanyId);
-        List<GoalResponseDto> goalList = goalService.getGoalsByCompanyId(CompanyId);
+        GoalCompanyDto companyDto = dashboardService.getCompanyDetailById(companyId);
+        List<GoalResponseDto> goalList = goalService.getGoalsByCompanyId(companyId);
 
 
         Map<Long, List<TodoResponseDto>> todoMap = new HashMap<>(); // 목표별 투두 리스트 맵으로 저장
@@ -55,7 +55,6 @@ public class GoalController {
         model.addAttribute("company", companyDto);   // 기업 정보
         model.addAttribute("goals", goalList);       // 목표 리스트(진행률 포함)
         model.addAttribute("todoMap", todoMap);
-        model.addAttribute("_csrf", csrfToken);
 
         return "goal/goal";
     }

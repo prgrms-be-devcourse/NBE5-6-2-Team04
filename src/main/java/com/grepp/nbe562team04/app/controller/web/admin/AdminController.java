@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -53,14 +55,24 @@ public class AdminController {
         Model model,
         CsrfToken csrfToken) {
 
+        // 로그인한 관리자 정보
         User admin = userService.findByEmail(principal.getUsername());
-        Map<String, List<UserDto>> userGroups = userService.findUsersGroupedByStatus();
 
+        // 사용자 그룹 정보 (활성, 삭제됨, 관리자)
+        Map<String, List<UserDto>> userGroups = userService.findUsersGroupedByStatus();
+        List<UserDto> activeUsers = userGroups.get("activeUsers");
+        List<UserDto> deletedUsers = userGroups.get("deletedUsers");
+        List<UserDto> adminUsers = userGroups.get("adminUsers");
+
+        // 모델에 값 설정
         model.addAttribute("admin", admin);
-        model.addAttribute("activeUsers", userGroups.get("activeUsers"));
-        model.addAttribute("deletedUsers", userGroups.get("deletedUsers"));
-        model.addAttribute("adminUsers", userGroups.get("adminUsers"));
+        model.addAttribute("activeUsers", activeUsers);
+        model.addAttribute("deletedUsers", deletedUsers);
+        model.addAttribute("adminUsers", adminUsers);
         model.addAttribute("_csrf", csrfToken);
+        model.addAttribute("nickname", principal.getUser().getNickname());
+
+        log.info("닉네임: {}", principal.getUser().getNickname());
 
         return "admin/dashboard";
     }
@@ -76,6 +88,5 @@ public class AdminController {
 
         return "redirect:/admin/dashboard";
     }
-
 
 }

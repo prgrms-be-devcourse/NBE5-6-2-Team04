@@ -2,18 +2,20 @@ package com.grepp.nbe562team04.model.dashboard;
 
 import com.grepp.nbe562team04.model.dashboard.dto.DashboardDto;
 import com.grepp.nbe562team04.model.dashboard.dto.GoalCompanyDto;
-import com.grepp.nbe562team04.model.dashboard.dto.InterestDto;
 import com.grepp.nbe562team04.model.goalcompany.GoalCompanyRepository;
 import com.grepp.nbe562team04.model.goalcompany.entity.GoalCompany;
 import com.grepp.nbe562team04.model.interest.code.Type;
+import com.grepp.nbe562team04.model.interest.dto.InterestDto;
 import com.grepp.nbe562team04.model.interest.entity.Interest;
+import com.grepp.nbe562team04.model.level.LevelRepository;
+import com.grepp.nbe562team04.model.level.entity.Level;
 import com.grepp.nbe562team04.model.user.UserRepository;
 import com.grepp.nbe562team04.model.user.entity.User;
-import com.grepp.nbe562team04.model.user.entity.UserInterest;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,11 +25,14 @@ public class DashboardService {
 
     private final DashboardRepository dashboardRepository;
     private final UserRepository userRepository;
+    private final LevelRepository levelRepository;
 
     public DashboardService(DashboardRepository dashboardRepository,
-        UserRepository userRepository, GoalCompanyRepository goalCompanyRepository) {
+        UserRepository userRepository, GoalCompanyRepository goalCompanyRepository,
+        LevelRepository levelRepository) {
         this.dashboardRepository = dashboardRepository;
         this.userRepository = userRepository;
+        this.levelRepository = levelRepository;
     }
 
     // 대시보드 조회
@@ -49,31 +54,64 @@ public class DashboardService {
 
         // 관심 분야 필터링
         List<InterestDto> interests = user.getUserInterests().stream()
-            .map(UserInterest::getInterest)
-            .map(i -> new InterestDto(i.getType().name(), i.getInterestName()))
+            .map(userInterest -> {
+                Interest interest = userInterest.getInterest();
+                return new InterestDto(interest);
+            })
             .toList();
         dto.setInterests(interests);
 
-        List<String> roles = user.getUserInterests().stream()
-            .map(UserInterest::getInterest)
+        // type으로 필터링
+        List<InterestDto> roles = interests.stream()
             .filter(i -> i.getType() == Type.ROLE)
-            .map(Interest::getInterestName)
             .toList();
 
-        List<String> skills = user.getUserInterests().stream()
-            .map(UserInterest::getInterest)
+        List<InterestDto> skills = interests.stream()
             .filter(i -> i.getType() == Type.SKILL)
-            .map(Interest::getInterestName)
             .toList();
 
         // 빈 리스트 방어처리
-        dto.setJobType(roles.isEmpty() ? List.of("직무 없음") : roles);
-        dto.setDevLang(skills.isEmpty() ? List.of("언어 없음") : skills);
+        dto.setRoles(
+            roles.isEmpty()
+                ? List.of(new InterestDto(null, Type.ROLE, "직무 없음", null))
+                : roles
+        );
 
-        // 레벨 정보
+        dto.setDevLangs(
+            skills.isEmpty()
+                ? List.of(new InterestDto(null, Type.SKILL, "언어 없음", null))
+                : skills
+        );
+
+        // 현재 레벨 계산
+        Level currentLevel = levelRepository.findTopByXpLessThanEqualOrderByXpDesc(user.getExp())
+            .orElseThrow(() -> new IllegalStateException("레벨 데이터가 없습니다."));
+        user.setLevel(currentLevel);
+
+        // 다음 레벨 계산
+        Optional<Level> nextLevelOpt = levelRepository.findTopByXpGreaterThanOrderByXpAsc(user.getExp());
+
+
+        // xp bar - 진행률 계산
+        int progress = 0;
+        if (nextLevelOpt.isPresent()) {
+            Level nextLevel = nextLevelOpt.get();
+            int curExp = user.getExp();
+            int curXp = currentLevel.getXp();
+            int nextXp = nextLevel.getXp();
+
+            progress = (int) (((double)(curExp - curXp) / (nextXp - curXp)) * 100);
+        } else {
+            progress = 100;
+        }
+
+
+
+        // 레벨 정보 - 대시보드 반영
         dto.setLevelName(user.getLevel().getLevelName());
         dto.setLevelValue(user.getLevel().getLevelId().intValue());
         dto.setExp(user.getExp());
+        dto.setProgressPercent(progress);
 
         // 알림
         dto.setNotificationOn(user.isNotificationOn());
@@ -100,8 +138,9 @@ public class DashboardService {
     // 알림 토글 처리 로직
     @Transactional
     public void toggleNotification(User user) {
-        user.setNotificationOn(!user.isNotificationOn());
-        userRepository.save(user);
+        User managedUser = userRepository.findById(user.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
+        managedUser.setNotificationOn(!managedUser.isNotificationOn());
     }
 
 
