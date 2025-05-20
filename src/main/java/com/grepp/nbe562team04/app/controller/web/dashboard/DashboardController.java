@@ -71,7 +71,6 @@ public class DashboardController {
         return "redirect:/dashboard";
     }
 
-
     // todo 페이지
     @GetMapping("/todo")
     public String showTodo() {

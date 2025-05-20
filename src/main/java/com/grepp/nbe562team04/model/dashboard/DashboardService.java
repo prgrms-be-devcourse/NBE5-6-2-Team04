@@ -138,8 +138,9 @@ public class DashboardService {
     // 알림 토글 처리 로직
     @Transactional
     public void toggleNotification(User user) {
-        user.setNotificationOn(!user.isNotificationOn());
-        userRepository.save(user);
+        User managedUser = userRepository.findById(user.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
+        managedUser.setNotificationOn(!managedUser.isNotificationOn());
     }
 
 
