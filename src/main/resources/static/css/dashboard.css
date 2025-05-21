@@ -8,8 +8,7 @@
 .sidebar {
   width: 400px;
   background: #f1f1f5;
-  padding: 2rem 1.5rem;
-  /*border-right: 1px solid #ddd;*/
+  padding: 0rem 0.3rem 3rem 3rem;
   position: relative;
 }
 
@@ -53,7 +52,8 @@
 /* 관심분야 태그 */
 .tags {
   display: flex;
-  justify-content: flex-end;
+  flex-wrap: wrap;
+  justify-content: flex-start;
   gap: 0.3rem;
   margin-bottom: 1rem;
 }
@@ -65,6 +65,10 @@
   border-radius: 5px;
   padding: 2px 8px;
   font-size: 0.8rem;
+  height: 1.6rem;
+  line-height: 1.6rem;
+  white-space: nowrap;
+  text-decoration: none;
 }
 
 .tags .tag:hover {
@@ -231,7 +235,7 @@
 }
 
 .alert-box .count {
-  background: #5f3dc4;
+  background: #f8231f;
   color: white;
   border-radius: 50%;
   padding: 2px 8px;
@@ -285,6 +289,8 @@
   border-radius: 10px;
   padding: 1rem;
   margin-bottom: 1rem;
+  align-items: center;
+  justify-content: center;
 }
 
 .company-card {
@@ -494,20 +500,93 @@
   cursor: pointer;
 }
 
+.modal,
+.modal * {
+  box-sizing: border-box;
+}
+
 .modal {
-  position: fixed;            /* 화면 기준 고정 */
+  position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);  /* 가운데 정렬 */
-  z-index: 9999;              /* 거의 최상위 */
-  background-color: white;
-  padding: 2rem;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-  border-radius: 8px;
-  display: none;              /* 기본은 숨김 */
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  background-color: #ffffff;
+  padding: 3rem;
+  max-width: 90vw;
+  width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  display: none;
+  transition: all 0.3s ease-in-out;
+  font-family: 'Segoe UI', sans-serif;           /* 기본은 숨김 */
 }
 
 .modal.active {
   display: block;
 }
 
+.modal-large {
+  padding: 3rem 4rem;
+  max-width: 70vw;
+}
+
+.modal-small {
+  padding: 1.5rem 2rem;
+  max-width: 350px;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
+  width: 100%;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="date"],
+select{
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.modal label {
+  font-weight: bold;
+  color: #444;
+}
+
+.modal button[type="submit"] {
+  background-color: #7860c6;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.modal button[type="submit"]:hover {
+  background-color: #4c29c6;
+}
+
+.close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.9rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #aaa;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.close:hover {
+  color: #000;
+}

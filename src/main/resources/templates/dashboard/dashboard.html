@@ -109,7 +109,7 @@
           <span class="material-icons">access_alarms</span>
           <strong th:text="${alert.companyName} + ' - '">기업명</strong>
           <span th:text="${alert.status != null ? alert.status.label : '상태 없음'}">상태</span>
-          <span th:text="${alert.dDay == 0} ? '입니다. 🐣' : 'D-' + ${alert.dDay} + ' 일 입니다.'">일 입니다. 🐣</span>
+          <span style="color: #6331b1; font-weight: bold" th:text="'D - ' + ${alert.dDay}"></span><span th:text="${alert.dDay == 0} ? '입니다. 🐣' : '입니다.'"></span>
         </li>
       </ul>
       <p th:unless="${dashboard.notificationOn}">
@@ -121,7 +121,7 @@
   <main class="main-content">
 
     <!--  Company List   -->
-    <p class="section-title">Company List</p>
+    <p class="section-title">목표 기업 목록</p>
 
     <div class="company-list">
 
@@ -170,7 +170,7 @@
           목표 기업 TODO 생성
         </p>
         <p class="goal-todo-desc-bottom">
-          목표 기업은 최대 3개까지 생성 가능합니다.
+          목표 기업을 생성하시려면 이곳을 클릭해주세요
         </p>
       </div>
     </div>
@@ -196,7 +196,7 @@
           <option value="INTERVIEW_3">3차 면접 (컬처핏)</option>
         </select><br><br>
         <label>마감일</label><br>
-        <input type="date" name="endDate"><br><br>
+        <input type="date" name="endDate" required><br><br>
         <button type="submit">생성</button>
       </form>
     </div>

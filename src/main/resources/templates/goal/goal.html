@@ -20,8 +20,11 @@
       <span>DevQuest</span>
     </div>
     <h1 class="company-name" th:text="${company.companyName}">기업명 로딩 실패</h1>
-    <span class="comment" th:text="${dashboard.comment}">한마디</span>
-    <span class="nickname" th:text="${dashboard.nickname} + ' 님'">회원</span>
+    <span class="comment" th:text="${company.content}">한마디</span>
+    <div>
+    <span class="nickname" th:text="${dashboard.nickname}"></span>
+      <span style="font-size: 2rem">님</span>
+    </div>
 
     <!-- 관심분야 태그 -->
     <div class="tags">
@@ -103,7 +106,10 @@
     <div class="menu">
       <a th:href="@{/dashboard}" th:text="대시보드"/>
       <a th:href="@{/user/mypage}" th:text="마이페이지"/>
-      <a th:href="@{/logout}" th:text="로그아웃"/>
+      <div>
+      <form id="logoutForm" th:action="@{/logout}" method="post"></form>
+      <span onclick="document.getElementById('logoutForm').submit()">로그아웃</span>
+      </div>
     </div>
 
     <!--  Goal List   -->
