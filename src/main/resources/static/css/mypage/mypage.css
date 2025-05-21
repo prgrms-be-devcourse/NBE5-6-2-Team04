@@ -25,13 +25,21 @@ body {
 
 .menu {
     font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
     color: #666;
+    display: flex;
+    height: 7vh;
+    margin-top: -5px;
+    margin-bottom: 20px;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 .menu-item {
     cursor: pointer;
     color: #666; /* 기본 색상 유지 */
-    text-decoration: none;
 }
 
 .menu-item:hover {
@@ -102,7 +110,7 @@ body {
 .achievements {
     background-color: #eaeaea;
     border-radius: 12px;
-    padding: 15px;
+    padding: 20px;
     max-width: 300px;
     margin: 20px auto;
 }
@@ -130,6 +138,10 @@ body {
     align-items: center;
     gap: 6px;
     color: #444;
+}
+
+.logout-hover:hover {
+    text-decoration: underline;
 }
 
 .logout img {
