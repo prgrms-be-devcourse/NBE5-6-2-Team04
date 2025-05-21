@@ -18,7 +18,7 @@
     </div>
     <div class="menu">
         <span class="menu-item" onclick="goToDashboard()">대시보드</span>
-        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <span> </span>
         <span class="menu-item" onclick="logout()">로그아웃</span>
     </div>
 </div>
@@ -65,7 +65,7 @@
 
 <div class="logout" onclick="deleteAccount()">
     <img alt="탈퇴 아이콘" src="https://cdn-icons-png.flaticon.com/512/847/847969.png">
-    <div>계정 탈퇴</div>
+    <span class="logout-hover">계정 탈퇴</span>
 </div>
 
 <div th:replace="~{fragments/achievement-modal :: achievementModal}"></div>
