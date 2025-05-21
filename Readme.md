@@ -7,7 +7,7 @@
 
 🔗 배포 링크 추후 추가 예정
 
-<img src="./src/assets/DevQuestLogo.png" alt="DevQuest 로고 이미지"/>
+<img src=".src/main/resources/static/img/DevQuestLogo.png" alt="DevQuest 로고 이미지"/
 
 </div>
 
