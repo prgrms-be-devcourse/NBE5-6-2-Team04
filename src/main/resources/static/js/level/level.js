@@ -2,7 +2,7 @@ function showLevelUpModal(levelName, levelId) {
     const modal = document.getElementById("levelUpModal");
     const text = document.getElementById("levelUpText");
 
-    text.innerHTML = `축하합니다! Lv.${levelId} <span class="highlight-level">${levelName}</span>에 도달했습니다!`;
+    text.innerHTML = `축하합니다! <span class="highlight-level">Lv.${levelId}</span> <span class="highlight-level">${levelName}</span>에 도달했습니다!`;
     modal.style.display = "block";
     modal.style.display = "flex";
 
