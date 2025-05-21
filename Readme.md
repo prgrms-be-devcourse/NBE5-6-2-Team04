@@ -41,7 +41,7 @@
 | -------- | -----------------------                   | ------------------------------------------------   |
 | 채철민 (팀장) | 마이페이지 / 업적 시스템                | [@moooonbong](https://github.com/moooonbong)       |
 | 임서현        | 인덱스, 회원가입, 로그인, 관리자 페이지 | [@nunLSH](https://github.com/nunLSH)                |
-| 노선우        | AI 기능                               | [@shtjsdn2000](https://github.com/shtjsdn2000)     |
+| 노선우        | AI 기능                               | [@noopy2020](https://github.com/shtjsdn2000)     |
 | 김나단        | 목표 기업 TODO                         | [@nathan960307](https://github.com/nathan960307) |
 | 이초롱        | 대시보드                               | [@0802222](https://github.com/0802222)           |
 
