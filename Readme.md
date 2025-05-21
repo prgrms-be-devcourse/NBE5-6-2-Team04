@@ -5,8 +5,6 @@
 <h1><b>DevQuest - 게이미피케이션 기반 TODO 서비스</b></h1>
 <h3><b>프로그래머스 5기 6회차 Team 04 프로젝트</b></h3>
 
-🔗 배포 링크 추후 추가 예정
-
 <img src="/src/main/resources/static/img/DevQuestLogo.png" alt="DevQuest 로고 이미지"/>
 
 </div>
@@ -47,9 +45,9 @@
 
 <br>
 
-## <span id="3">📅 3. 개발 일정</span>
+## <span id="3">📅 3. 프로젝트 일정</span>
 
-> 프로젝트 개발 기간: 2025.04.25 - 2025.05.19 (25일)
+> 프로젝트 기간: 2025.04.25 - 2025.05.19 (25일)
 
 <br>
 
