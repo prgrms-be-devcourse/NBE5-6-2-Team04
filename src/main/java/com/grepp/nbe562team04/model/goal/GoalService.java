@@ -10,21 +10,21 @@ import com.grepp.nbe562team04.model.goalcompany.GoalCompanyRepository;
 import com.grepp.nbe562team04.model.todo.TodoRepository;
 import com.grepp.nbe562team04.model.todo.entity.Todo;
 import com.grepp.nbe562team04.model.user.UserRepository;
+import com.grepp.nbe562team04.model.user.UserService;
 import com.grepp.nbe562team04.model.user.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class GoalService {
 
+    private final UserService userService;
     private final GoalRepository goalRepository;
     private final GoalCompanyRepository goalCompanyRepository;
     private final TodoRepository todoRepository;
@@ -74,8 +74,6 @@ public class GoalService {
                 })
                 .collect(Collectors.toList());
     }
-
-
 
 
 
@@ -129,8 +127,7 @@ public class GoalService {
 
     //목표 완료
     @Transactional
-    public void completeGoal(Long goalId, User user) {
-
+    public Map<String, Object> completeGoal(Long goalId, User user) {
         Goal goal = goalRepository.findById(goalId)
                 .orElseThrow(() -> new RuntimeException("해당 목표가 존재하지 않습니다."));
 
@@ -139,9 +136,7 @@ public class GoalService {
         }
 
         List<Todo> todos = todoRepository.findByGoalGoalId(goalId);
-
-
-        boolean allDone = todos.stream().allMatch(Todo::getIsDone);
+        boolean allDone = todos.stream().allMatch(todo -> Boolean.TRUE.equals(todo.getIsDone()));
         if (!allDone) {
             throw new IllegalStateException("아직 완료되지 않은 할 일이 있습니다.");
         }
@@ -149,18 +144,19 @@ public class GoalService {
         goal.setIsDone(true);
         goalRepository.save(goal);
 
+        User dbUser = userRepository.findById(user.getUserId())
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
-        user.addXp(10);
-        userRepository.save(user);
-    }
+        Long beforeLevelId = dbUser.getLevel().getLevelId();
+        userService.updateXpAndLevel(dbUser, 10);  // 여기에 실제 DB User 넘기기
+        Long afterLevelId = dbUser.getLevel().getLevelId();
+        boolean leveledUp = !beforeLevelId.equals(afterLevelId);
 
-    public String giveFirstGoalAchievementIfNeeded(User user) {
-        Long userId = user.getUserId();
-        long count = goalRepository.countByCompany_User_UserId(userId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("leveledUp", leveledUp);
+        result.put("newLevelId", afterLevelId);
+        result.put("newLevelName", dbUser.getLevel().getLevelName());
 
-        if (count == 1) { // 처음 생성한 경우
-            return achievementService.giveFirstGoalCreateAchievement(userId); // 이름 반환
-        }
-        return null;
+        return result;
     }
 }

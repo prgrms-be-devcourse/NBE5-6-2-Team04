@@ -31,6 +31,7 @@ import lombok.Setter;
 public class User {
 
     @Id
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
     private String email;
@@ -39,7 +40,8 @@ public class User {
     private Role role;
     private String profileImageUrl;
     private String nickname;
-    private String userImage;
+    @Column(name = "user_image")
+    private String userImage = "default.png";
     @ManyToOne
     @JoinColumn(name = "level_id")
     private Level level;

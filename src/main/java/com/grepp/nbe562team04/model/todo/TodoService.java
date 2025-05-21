@@ -5,7 +5,9 @@ import com.grepp.nbe562team04.model.goal.GoalRepository;
 import com.grepp.nbe562team04.model.todo.dto.TodoRequestDto;
 import com.grepp.nbe562team04.model.todo.dto.TodoResponseDto;
 import com.grepp.nbe562team04.model.todo.entity.Todo;
-import jakarta.transaction.Transactional;
+import com.grepp.nbe562team04.model.user.UsersAchieveRepository;
+import com.grepp.nbe562team04.model.user.entity.User;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -105,6 +107,20 @@ public class TodoService {
         } else {
             todo.setEndDate(null);
         }
+        todoRepository.save(todo);
+    }
+
+    @Transactional
+    public void toggleCheck(Long todoId, User user) {
+        Todo todo = todoRepository.findById(todoId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 투두가 존재하지 않습니다."));
+
+        // 권한 체크
+        if (!todo.getGoal().getCompany().getUser().getUserId().equals(user.getUserId())) {
+            throw new SecurityException("해당 사용자의 투두가 아닙니다.");
+        }
+        // 체크 상태 토글
+        todo.setIsDone(!todo.getIsDone()); // isChecked()는 boolean 필드 getter
         todoRepository.save(todo);
     }
 }

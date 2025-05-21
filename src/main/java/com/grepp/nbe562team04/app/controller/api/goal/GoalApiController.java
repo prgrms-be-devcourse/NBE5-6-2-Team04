@@ -57,13 +57,13 @@ public class GoalApiController {
         return ResponseEntity.ok("목표 삭제 완료");
     }
 
-    // 목표 완료(진행률이 100%)
     @PostMapping("/{goalId}/complete")
-    public ResponseEntity<String> completeGoal(
+    public ResponseEntity<Map<String, Object>> completeGoal(
             @PathVariable Long goalId,
             @AuthenticationPrincipal Principal principal) {
 
-        goalService.completeGoal(goalId, principal.getUser());
-        return ResponseEntity.ok("완료 처리됨");
+        Map<String, Object> result = goalService.completeGoal(goalId, principal.getUser());
+
+        return ResponseEntity.ok(result);
     }
 }

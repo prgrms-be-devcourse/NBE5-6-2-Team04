@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>DevQuest Dashboard</title>
-  <meta name="_csrf" th:content="${_csrf.token}"/>
-  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-  <link rel="stylesheet" th:href="@{/css/common.css}">
-  <link rel="stylesheet" th:href="@{/css/goal.css}">
-
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
+    <meta charset="UTF-8">
+    <title>DevQuest Dashboard</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link rel="stylesheet" th:href="@{/css/goal.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/achievement/congratulation.css}">
+    <link rel="stylesheet" th:href="@{/css/levelup.css}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 <div class="dashboard">
@@ -231,8 +231,14 @@
       </form>
     </div>
   </div>
+    <div th:replace="~{fragments/achievement-modal :: achievementModal}"></div>
+    <div th:replace="~{fragments/levelup-modal.html :: levelUpModal}"></div>
 
   <script src="/js/goal.js"></script>
 </div>
 </body>
+<script defer src="/js/achievement/congratulation.js"></script>
+<script
+        src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+<script defer src="/js/level/level.js"></script>
 </html>
