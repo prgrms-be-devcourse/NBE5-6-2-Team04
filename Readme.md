@@ -48,6 +48,8 @@
 ## <span id="3">📅 3. 프로젝트 일정</span>
 
 > 프로젝트 기간: 2025.04.25 - 2025.05.19 (25일)
+ 
+<img src="/src/main/resources/static/img/WBS.jpg" alt="DevQuest 로고 이미지"/>
 
 <br>
 
